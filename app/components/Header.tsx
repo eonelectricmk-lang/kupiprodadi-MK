@@ -38,7 +38,7 @@ export function Header() {
 
   const h = dark ? {
     header: 'bg-[#07101c]/95 border-[#172334]',
-    search: 'bg-[#0b1727] border-[#1f3047]',
+    search: 'bg-[#0b1727] border-gray-500',
     searchInput: 'text-gray-100 placeholder-gray-500',
     searchIcon: 'text-gray-400',
     location: 'bg-[#0b1727] border-[#1f3047] text-gray-200',
@@ -46,15 +46,15 @@ export function Header() {
     locationItem: 'text-gray-200 hover:bg-[#14243a]',
     icon: 'text-gray-400 hover:text-white',
     navBar: 'bg-[#050c16] border-[#172334]',
-    allCats: 'bg-[#121f33] hover:bg-[#1a2d49] text-white',
-    navCat: 'bg-[#0f1a2b] text-gray-300 hover:text-white hover:bg-[#16263d]',
+    allCats: 'bg-[#121f33] hover:bg-[#1a2d49] text-white border-2 border-[#1d2c43]',
+    navCat: 'bg-[#0f1a2b] text-gray-300 hover:text-white hover:bg-[#16263d] border-2 border-[#1d2c43]',
     more: 'text-gray-400 hover:text-white',
     dropdown: 'bg-[#0d1727] border-[#1f3047]',
     subText: 'text-gray-300 hover:text-white',
     logo: 'text-white',
   } : {
     header: 'bg-white/95 border-gray-200',
-    search: 'bg-gray-100 border-gray-300',
+    search: 'bg-gray-100 border-gray-400',
     searchInput: 'text-gray-900 placeholder-gray-400',
     searchIcon: 'text-gray-700',
     location: 'bg-gray-100 border-gray-300 text-gray-900',
@@ -62,8 +62,8 @@ export function Header() {
     locationItem: 'text-gray-900 hover:bg-gray-100',
     icon: 'text-gray-700 hover:text-gray-900',
     navBar: 'bg-gray-50 border-gray-200',
-    allCats: 'bg-white hover:bg-gray-50 text-gray-900',
-    navCat: 'bg-white text-gray-900 hover:text-gray-900 hover:bg-gray-50',
+    allCats: 'bg-white hover:bg-gray-50 text-gray-900 border-2 border-gray-300',
+    navCat: 'bg-white text-gray-900 hover:text-gray-900 hover:bg-gray-50 border-2 border-gray-300',
     more: 'text-gray-700 hover:text-gray-900',
     dropdown: 'bg-white border-gray-200',
     subText: 'text-gray-700 hover:text-gray-900',
@@ -114,7 +114,7 @@ export function Header() {
     <header className={`sticky top-0 z-50 backdrop-blur transition-colors duration-300 ${h.header}`}>
       <Container>
         <div className="flex flex-wrap items-center gap-3 py-3 md:flex-nowrap md:justify-between md:gap-4">
-          <Link href="/" className="flex-shrink-0 transition hover:opacity-90">
+          <Link href="/" className="ml-2 flex-shrink-0 transition hover:opacity-90">
             <span className={`text-3xl font-extrabold tracking-tight sm:text-4xl ${h.logo}`}>kupi</span>
             <span className="text-3xl font-extrabold tracking-tight text-red-500 sm:text-4xl">prodadi</span>
           </Link>
