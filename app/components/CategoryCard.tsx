@@ -15,8 +15,8 @@ export default function CategoryCard({ icon: Icon, iconClassName, title, count, 
   const { dark } = useTheme();
   return (
     <Link href={href}>
-      <div className={`group flex items-center gap-2 rounded border-2 p-2 transition hover:-translate-y-0.5 ${dark ? 'border-[#1d2c43] bg-[#0f1a2b] hover:border-[#2d4f7d] hover:bg-[#122038]' : 'border-gray-300 bg-white hover:border-gray-400 hover:bg-gray-50'}`}>
-        <div className={`rounded-lg p-1.5 ${dark ? 'bg-[#0b1321]' : 'bg-gray-100'}`}>
+      <div className={`group flex items-center gap-2 rounded-xl border-2 p-2 transition hover:-translate-y-0.5 ${dark ? 'border-[#1d2c43] bg-[#0f1a2b] hover:border-[#2d4f7d] hover:bg-[#122038]' : 'border-gray-300 bg-white hover:border-gray-400 hover:bg-gray-50'}`}>
+        <div className={`rounded-xl p-1.5 ${dark ? 'bg-[#0b1321]' : 'bg-gray-100'}`}>
           <Icon className={`h-4.5 w-4.5 ${iconClassName || 'text-blue-400'}`} />
         </div>
         <div className="min-w-0">
