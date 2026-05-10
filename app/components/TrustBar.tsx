@@ -12,7 +12,7 @@ const TRUST_ITEMS = [
 export default function TrustBar() {
   const { dark } = useTheme();
   return (
-    <section className={`mx-auto mt-2 max-w-[1120px] rounded-2xl border transition-colors duration-300 ${dark ? 'border-[#1d2c43] bg-[#0b1423]' : 'border-gray-200 bg-white'}`}>
+    <section className={`mx-auto mt-2 max-w-6xl rounded-2xl border transition-colors duration-300 ${dark ? 'border-[#1d2c43] bg-[#0b1423]' : 'border-gray-200 bg-white'}`}>
       <div className="grid grid-cols-2 gap-3 px-4 py-2 md:grid-cols-4">
         {TRUST_ITEMS.map((item) => (
           <div key={item.title} className="flex items-center gap-2">

@@ -122,7 +122,7 @@ export default function Home() {
 
       <section
         id="hero-banner"
-        className="relative mx-auto mt-2 h-[230px] max-w-[1120px] overflow-hidden rounded-2xl border-2 border-[#1d2c43] md:h-[280px]"
+        className="relative mx-auto mt-3 h-[230px] max-w-6xl overflow-hidden rounded-2xl border-2 border-[#1d2c43] md:h-[280px]"
       >
         <div
           className="absolute inset-0 flex transition-transform duration-700 ease-in-out"
