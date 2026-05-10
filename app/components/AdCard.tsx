@@ -97,7 +97,7 @@ export function AdCard({
                 <MapPin className="h-3.5 w-3.5" />
                 {card.location || 'Македонија'}
               </span>
-              <span className="ml-auto text-white">ID: KP-{card.id.toString().padStart(6, '0')}</span>
+              <span className="ml-auto text-slate-400">ID: KP-{card.id.toString().padStart(6, '0')}</span>
             </p>
 
             <p className="mt-2 line-clamp-2 text-xs leading-5 text-slate-300">
@@ -144,7 +144,7 @@ export function AdCard({
             </span>
           </p>
           <div className="flex items-center gap-2">
-            <span className="text-[10px] font-medium text-white">ID: KP-{card.id.toString().padStart(6, '0')}</span>
+            <span className="text-[10px] font-medium text-slate-400">ID: KP-{card.id.toString().padStart(6, '0')}</span>
             {resolvedVerified && (
               <span title="Проверен продавач" className="inline-flex shrink-0 items-center text-green-400">
                 <ShieldCheck className="h-3.5 w-3.5" />

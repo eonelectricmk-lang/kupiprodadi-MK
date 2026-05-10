@@ -114,12 +114,12 @@ export function Header() {
     <header className={`sticky top-0 z-50 backdrop-blur transition-colors duration-300 ${h.header}`}>
       <Container>
         <div className="py-3 flex items-center justify-between gap-4">
-          <Link href="/" className="flex-shrink-0 hover:opacity-90 transition">
+          <Link href="/" className="flex-shrink-0 hover:opacity-90 transition ml-2">
             <span className={`text-4xl font-extrabold tracking-tight ${h.logo}`}>kupi</span>
             <span className="text-4xl font-extrabold text-red-500 tracking-tight">prodadi</span>
           </Link>
 
-          <form onSubmit={submitSearch} className={`hidden md:flex flex-1 max-w-xl items-center border rounded-lg overflow-hidden focus-within:border-blue-400 ${h.search}`}>
+          <form onSubmit={submitSearch} className={`hidden md:flex flex-1 max-w-xl items-center border-2 rounded-lg overflow-hidden focus-within:border-blue-400 ${h.search}`}>
             <span className={`pl-3 text-sm ${h.searchIcon}`}><Search className="h-4 w-4" /></span>
             <input
               type="text"

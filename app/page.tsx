@@ -122,7 +122,7 @@ export default function Home() {
 
       <section
         id="hero-banner"
-        className="relative mx-auto mt-3 h-[230px] max-w-[1120px] overflow-hidden rounded-2xl border-2 border-[#1d2c43] md:h-[280px]"
+        className="relative mx-auto mt-1 h-[230px] max-w-[1120px] overflow-hidden rounded-2xl border-2 border-[#1d2c43] md:h-[280px]"
       >
         <div
           className="absolute inset-0 flex transition-transform duration-700 ease-in-out"
@@ -154,7 +154,7 @@ export default function Home() {
 
       <TrustBar />
 
-      <section className="mx-auto max-w-6xl px-4 py-4">
+      <section className="mx-auto max-w-6xl px-4 py-3">
         <div className="grid gap-2.5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6">
           {HOME_CATEGORIES.slice(0, 6).map((category) => {
             const Icon = CATEGORY_ICONS[category.icon];
