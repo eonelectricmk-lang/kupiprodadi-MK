@@ -182,7 +182,7 @@ export function Header() {
 
       <div className={`transition-colors duration-300 ${h.navBar}`}>
         <Container>
-          <div className="flex items-center gap-2.5 overflow-x-auto py-2 no-scrollbar">
+          <div className="flex items-center gap-2.5 overflow-x-auto py-2 no-scrollbar pr-4">
             <button
               onClick={() => setShowCategories(!showCategories)}
               className={`shrink-0 inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-semibold whitespace-nowrap transition ${h.allCats}`}
