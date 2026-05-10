@@ -47,7 +47,7 @@ export function Header() {
     icon: 'text-gray-400 hover:text-white',
     navBar: 'bg-[#050c16] border-[#172334]',
     allCats: 'bg-[#121f33] hover:bg-[#1a2d49] text-white',
-    navCat: 'text-gray-300 hover:text-white hover:bg-[#16263d]',
+    navCat: 'bg-[#0f1a2b] text-gray-300 hover:text-white hover:bg-[#16263d]',
     more: 'text-gray-400 hover:text-white',
     dropdown: 'bg-[#0d1727] border-[#1f3047]',
     subText: 'text-gray-300 hover:text-white',
@@ -63,7 +63,7 @@ export function Header() {
     icon: 'text-gray-700 hover:text-gray-900',
     navBar: 'bg-gray-50 border-gray-200',
     allCats: 'bg-white hover:bg-gray-50 text-gray-900',
-    navCat: 'text-gray-900 hover:text-gray-900 hover:bg-gray-50',
+    navCat: 'bg-white text-gray-900 hover:text-gray-900 hover:bg-gray-50',
     more: 'text-gray-700 hover:text-gray-900',
     dropdown: 'bg-white border-gray-200',
     subText: 'text-gray-700 hover:text-gray-900',
@@ -185,7 +185,7 @@ export function Header() {
           <div className="flex items-center gap-1 overflow-x-auto py-1 no-scrollbar">
             <button
               onClick={() => setShowCategories(!showCategories)}
-              className={`shrink-0 inline-flex items-center gap-1.5 rounded px-3 py-2 text-sm font-semibold whitespace-nowrap transition ${h.allCats}`}
+              className={`inline-flex shrink-0 items-center gap-1.5 rounded px-3 py-2 text-sm font-semibold whitespace-nowrap transition ${h.allCats}`}
             >
               <LayoutGrid className="h-4 w-4" />
               Сите категории
@@ -193,8 +193,8 @@ export function Header() {
             </button>
 
             {navCategories.map(cat => (
-              <Link key={cat.slug} href={`/products?category=${cat.slug}`}>
-                <button className={`shrink-0 inline-flex items-center gap-1.5 rounded px-3 py-2 text-sm whitespace-nowrap transition ${h.navCat}`}>
+              <Link key={cat.slug} href={`/products?category=${cat.slug}`} className="flex-1">
+                <button className={`inline-flex w-full items-center justify-center gap-1.5 rounded px-3 py-2 text-sm whitespace-nowrap transition ${h.navCat}`}>
                   <cat.iconMeta.Icon className={`h-4 w-4 ${cat.iconMeta.className}`} />
                   {cat.name}
                 </button>
