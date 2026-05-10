@@ -117,38 +117,40 @@ export default function Home() {
   }, [bannerSlides.length]);
 
   return (
-    <main className="min-h-screen bg-[#040914] text-white">
+    <main className="min-h-screen overflow-x-hidden bg-[#040914] text-white">
       <Header />
 
-      <section
-        id="hero-banner"
-        className="relative mx-auto mt-6 h-[230px] max-w-6xl overflow-hidden rounded-2xl border-2 border-[#1d2c43] md:h-[280px] px-4"
-      >
+      <section className="mx-auto mt-3 max-w-6xl px-4">
         <div
-          className="absolute inset-0 flex transition-transform duration-700 ease-in-out"
-          style={{ transform: `translateX(-${activeBanner * 100}%)` }}
+          id="hero-banner"
+          className="relative h-[230px] overflow-hidden rounded-2xl border border-[#1d2c43] bg-[#07101c] md:h-[280px]"
         >
-          {bannerSlides.map((slide) => (
-            <Link
-              key={slide.id || slide.image_url}
-              href={slide.link_url || '#'}
-              aria-label={`Банер ${slide.id || slide.image_url}`}
-              className={`relative h-full w-full shrink-0 bg-cover bg-center ${slide.link_url ? 'cursor-pointer' : 'pointer-events-none'}`}
-              style={{ backgroundImage: `url('${slide.image_url}')` }}
-            />
-          ))}
-        </div>
+          <div
+            className="absolute inset-0 flex transition-transform duration-700 ease-in-out"
+            style={{ transform: `translateX(-${activeBanner * 100}%)` }}
+          >
+            {bannerSlides.map((slide) => (
+              <Link
+                key={slide.id || slide.image_url}
+                href={slide.link_url || '#'}
+                aria-label={`Банер ${slide.id || slide.image_url}`}
+                className={`relative h-full w-full shrink-0 bg-contain bg-center bg-no-repeat md:bg-cover ${slide.link_url ? 'cursor-pointer' : 'pointer-events-none'}`}
+                style={{ backgroundImage: `url('${slide.image_url}')` }}
+              />
+            ))}
+          </div>
 
-        <div className="absolute bottom-3 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2 rounded-full bg-black/30 px-2 py-1 backdrop-blur-sm">
-          {bannerSlides.map((_, idx) => (
-            <button
-              key={idx}
-              type="button"
-              aria-label={`Промени банер ${idx + 1}`}
-              onClick={() => setActiveBanner(idx)}
-              className={`h-1.5 rounded-full transition ${activeBanner === idx ? 'w-6 bg-white' : 'w-2 bg-white/55 hover:bg-white/80'}`}
-            />
-          ))}
+          <div className="absolute bottom-3 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2 rounded-full bg-black/30 px-2 py-1 backdrop-blur-sm">
+            {bannerSlides.map((_, idx) => (
+              <button
+                key={idx}
+                type="button"
+                aria-label={`Промени банер ${idx + 1}`}
+                onClick={() => setActiveBanner(idx)}
+                className={`h-1.5 rounded-full transition ${activeBanner === idx ? 'w-6 bg-white' : 'w-2 bg-white/55 hover:bg-white/80'}`}
+              />
+            ))}
+          </div>
         </div>
       </section>
 

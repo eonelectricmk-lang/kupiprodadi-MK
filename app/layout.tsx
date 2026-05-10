@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="mk" className={`${geistSans.variable} ${geistMono.variable} ${nunito.variable} h-full antialiased`}>
-      <body className="min-h-full flex flex-col bg-[#050b17] text-white transition-colors duration-300">
+      <body className="min-h-full max-w-full overflow-x-hidden flex flex-col bg-[#050b17] text-white transition-colors duration-300">
         <ThemeProvider>
           {children}
           <Footer />

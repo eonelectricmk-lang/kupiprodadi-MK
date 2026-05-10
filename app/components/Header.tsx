@@ -46,8 +46,8 @@ export function Header() {
     locationItem: 'text-gray-200 hover:bg-[#14243a]',
     icon: 'text-gray-400 hover:text-white',
     navBar: 'bg-[#050c16] border-[#172334]',
-    allCats: 'bg-[#121f33] hover:bg-[#1a2d49] text-white border-2 border-white/10',
-    navCat: 'bg-[#0f1a2b] text-gray-300 hover:text-white hover:bg-[#16263d] border-2 border-white/10',
+    allCats: 'bg-[#121f33] hover:bg-[#1a2d49] text-white',
+    navCat: 'text-gray-300 hover:text-white hover:bg-[#16263d]',
     more: 'text-gray-400 hover:text-white',
     dropdown: 'bg-[#0d1727] border-[#1f3047]',
     subText: 'text-gray-300 hover:text-white',
@@ -62,8 +62,8 @@ export function Header() {
     locationItem: 'text-gray-900 hover:bg-gray-100',
     icon: 'text-gray-700 hover:text-gray-900',
     navBar: 'bg-gray-50 border-gray-200',
-    allCats: 'bg-white hover:bg-gray-50 text-gray-900 border-2 border-gray-200',
-    navCat: 'bg-white text-gray-900 hover:text-gray-900 hover:bg-gray-50 border-2 border-gray-200',
+    allCats: 'bg-white hover:bg-gray-50 text-gray-900',
+    navCat: 'text-gray-900 hover:text-gray-900 hover:bg-gray-50',
     more: 'text-gray-700 hover:text-gray-900',
     dropdown: 'bg-white border-gray-200',
     subText: 'text-gray-700 hover:text-gray-900',
@@ -113,13 +113,13 @@ export function Header() {
   return (
     <header className={`sticky top-0 z-50 backdrop-blur transition-colors duration-300 ${h.header}`}>
       <Container>
-        <div className="py-3 flex items-center justify-between gap-4">
-          <Link href="/" className="flex-shrink-0 hover:opacity-90 transition ml-2">
-            <span className={`text-4xl font-extrabold tracking-tight ${h.logo}`}>kupi</span>
-            <span className="text-4xl font-extrabold text-red-500 tracking-tight">prodadi</span>
+        <div className="flex flex-wrap items-center gap-3 py-3 md:flex-nowrap md:justify-between md:gap-4">
+          <Link href="/" className="flex-shrink-0 transition hover:opacity-90">
+            <span className={`text-3xl font-extrabold tracking-tight sm:text-4xl ${h.logo}`}>kupi</span>
+            <span className="text-3xl font-extrabold tracking-tight text-red-500 sm:text-4xl">prodadi</span>
           </Link>
 
-          <form onSubmit={submitSearch} className={`hidden md:flex flex-1 max-w-xl items-center border-2 rounded-lg overflow-hidden focus-within:border-blue-400 ${h.search}`}>
+          <form onSubmit={submitSearch} className={`order-3 hidden w-full items-center overflow-hidden rounded-lg border-2 focus-within:border-blue-400 md:order-none md:flex md:max-w-xl md:flex-1 ${h.search}`}>
             <span className={`pl-3 text-sm ${h.searchIcon}`}><Search className="h-4 w-4" /></span>
             <input
               type="text"
@@ -155,8 +155,8 @@ export function Header() {
             )}
           </div>
 
-          <div className="flex items-center gap-3 flex-shrink-0">
-            <button onClick={() => setDark(!dark)} className={`transition ${h.icon}`} title={dark ? 'Светла тема' : 'Темна тема'}>
+          <div className="ml-auto flex flex-shrink-0 items-center gap-2 sm:gap-3">
+            <button onClick={() => setDark(!dark)} className={`hidden transition sm:inline-flex ${h.icon}`} title={dark ? 'Светла тема' : 'Темна тема'}>
               {dark ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
             </button>
             <Link href="/favorites">
@@ -172,7 +172,7 @@ export function Header() {
               <button className={`transition ${h.icon}`}><UserCircle className="h-5 w-5" /></button>
             </Link>
             <Link href="/sell">
-              <button className="bg-red-600 hover:bg-red-700 text-white font-bold px-4 py-2 rounded-lg text-sm transition whitespace-nowrap">
+              <button className="hidden whitespace-nowrap rounded-lg bg-red-600 px-4 py-2 text-sm font-bold text-white transition hover:bg-red-700 sm:inline-flex">
                 + Објави оглас
               </button>
             </Link>
@@ -182,10 +182,10 @@ export function Header() {
 
       <div className={`transition-colors duration-300 ${h.navBar}`}>
         <Container>
-          <div className="flex items-center gap-2.5 overflow-x-auto py-2 no-scrollbar pr-4">
+          <div className="flex items-center gap-1 overflow-x-auto py-1 no-scrollbar">
             <button
               onClick={() => setShowCategories(!showCategories)}
-              className={`shrink-0 inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-semibold whitespace-nowrap transition ${h.allCats}`}
+              className={`shrink-0 inline-flex items-center gap-1.5 rounded px-3 py-2 text-sm font-semibold whitespace-nowrap transition ${h.allCats}`}
             >
               <LayoutGrid className="h-4 w-4" />
               Сите категории
@@ -194,21 +194,19 @@ export function Header() {
 
             {navCategories.map(cat => (
               <Link key={cat.slug} href={`/products?category=${cat.slug}`}>
-                <button className={`shrink-0 inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl text-sm whitespace-nowrap transition ${h.navCat}`}>
+                <button className={`shrink-0 inline-flex items-center gap-1.5 rounded px-3 py-2 text-sm whitespace-nowrap transition ${h.navCat}`}>
                   <cat.iconMeta.Icon className={`h-4 w-4 ${cat.iconMeta.className}`} />
                   {cat.name}
                 </button>
               </Link>
             ))}
-
-
           </div>
         </Container>
 
         {showCategories && (
           <div className={`absolute left-0 right-0 border-t shadow-2xl z-40 max-h-[70vh] overflow-y-auto ${h.dropdown}`}>
             <Container>
-              <div className="grid grid-cols-4 gap-4 py-5">
+              <div className="grid grid-cols-2 gap-4 py-5 md:grid-cols-4">
                 {categories.map((category, i) => {
                   const { Icon, className } = getCategoryIconMeta(category.slug);
                   return (

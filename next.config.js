@@ -4,8 +4,8 @@ const path = require('path');
 const nextConfig = {
   devIndicators: false,
   turbopack: {
-    root: __dirname
-  }
+    root: path.resolve(__dirname),
+  },
 }
 
 module.exports = nextConfig
