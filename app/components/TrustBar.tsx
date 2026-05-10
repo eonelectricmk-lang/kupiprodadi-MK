@@ -1,0 +1,29 @@
+'use client';
+import { BadgeCheck, ShieldCheck, Users, Zap } from 'lucide-react';
+import { useTheme } from '@/app/context/ThemeContext';
+
+const TRUST_ITEMS = [
+  { icon: ShieldCheck, title: 'Безбедно купување', subtitle: 'Проверени продавачи', color: 'text-blue-400' },
+  { icon: BadgeCheck, title: '100% Бесплатно', subtitle: 'Објави оглас без надомест', color: 'text-emerald-400' },
+  { icon: Zap, title: 'Брзо и лесно', subtitle: 'Само неколку клика', color: 'text-amber-400' },
+  { icon: Users, title: '10,000+ активни', subtitle: 'Купувачи секој ден', color: 'text-pink-400' },
+];
+
+export default function TrustBar() {
+  const { dark } = useTheme();
+  return (
+    <section className={`mx-auto mt-3 max-w-[1120px] rounded-2xl border transition-colors duration-300 ${dark ? 'border-[#1d2c43] bg-[#0b1423]' : 'border-gray-200 bg-white'}`}>
+      <div className="grid grid-cols-2 gap-3 px-4 py-3 md:grid-cols-4">
+        {TRUST_ITEMS.map((item) => (
+          <div key={item.title} className="flex items-center gap-2.5">
+            <item.icon className={`h-4.5 w-4.5 ${item.color}`} />
+            <div>
+              <p className={`text-[13px] font-semibold leading-tight ${dark ? 'text-white' : 'text-gray-900'}`}>{item.title}</p>
+              <p className={`text-[11px] ${dark ? 'text-slate-400' : 'text-gray-500'}`}>{item.subtitle}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
