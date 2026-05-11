@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import { Heart, MapPin, ShieldCheck } from 'lucide-react';
 
 interface AdCardItem {
@@ -70,13 +71,23 @@ export function AdCard({
   const resolvedImage = card.image || card.image_url || FALLBACK_IMAGE;
   const resolvedVerified = card.isVerified ?? card.verified ?? false;
   const postedLabel = card.postedAt || 'Денес 22:43';
+  const [imageSrc, setImageSrc] = useState(resolvedImage);
+
+  useEffect(() => {
+    setImageSrc(resolvedImage);
+  }, [resolvedImage]);
 
   if (layout === 'list') {
     return (
       <div className="h-full overflow-hidden rounded-2xl border border-white/10 bg-[#0f1a2b] transition duration-200 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-red-950/20">
         <div className="flex gap-3 p-3">
           <div className="relative h-28 w-28 shrink-0 overflow-hidden rounded-xl border border-white/10 bg-[#0a1322] sm:h-32 sm:w-32">
-            <img src={resolvedImage} alt={card.title} className="h-full w-full object-cover transition duration-300 hover:scale-105" />
+            <img
+              src={imageSrc}
+              alt={card.title}
+              className="h-full w-full object-cover transition duration-300 hover:scale-105"
+              onError={() => setImageSrc(FALLBACK_IMAGE)}
+            />
             {card.badge && (
               <span className="absolute left-2 top-2 rounded bg-red-600 px-1.5 py-0.5 text-[10px] font-semibold text-white">
                 {card.badge}
@@ -124,7 +135,12 @@ export function AdCard({
   return (
     <div className="h-full overflow-hidden rounded-2xl border border-white/10 bg-[#0f1a2b] transition duration-200 hover:-translate-y-1 hover:shadow-xl hover:shadow-red-950/20">
       <div className="relative h-36 overflow-hidden">
-        <img src={resolvedImage} alt={card.title} className="h-full w-full object-cover transition duration-300 hover:scale-105" />
+        <img
+          src={imageSrc}
+          alt={card.title}
+          className="h-full w-full object-cover transition duration-300 hover:scale-105"
+          onError={() => setImageSrc(FALLBACK_IMAGE)}
+        />
         {card.badge && (
           <span className="absolute left-3 top-3 rounded bg-red-600 px-2 py-1 text-[11px] font-semibold text-white">
             {card.badge}
