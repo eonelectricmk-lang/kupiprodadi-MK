@@ -86,7 +86,7 @@ type RecentView = {
   viewedAt: string;
 };
 
-type TabKey = 'ads' | 'saved' | 'settings';
+type TabKey = 'ads' | 'saved' | 'settings' | 'messages';
 
 function formatDate(value?: string, options?: Intl.DateTimeFormatOptions) {
   if (!value) return 'Денес';
@@ -532,6 +532,14 @@ export default function ProfilePage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const requestedTab = new URLSearchParams(window.location.search).get('tab');
+    if (requestedTab === 'ads' || requestedTab === 'saved' || requestedTab === 'settings' || requestedTab === 'messages') {
+      setActiveTab(requestedTab);
+    }
+  }, []);
+
+  useEffect(() => {
     const userData = JSON.parse(localStorage.getItem('user') || '{}');
     if (!userData.id) {
       window.location.href = '/auth';
@@ -703,7 +711,13 @@ export default function ProfilePage() {
     { id: 'ads', label: 'Мои огласи' },
     { id: 'saved', label: 'Зачувани' },
     { id: 'settings', label: 'Уреди профил' },
+    { id: 'messages', label: 'Пораки' },
   ];
+
+  const changeTab = (tab: TabKey) => {
+    setActiveTab(tab);
+    router.replace(`/profile?tab=${tab}`, { scroll: false });
+  };
 
   if (loading || !user) {
     return (
@@ -782,7 +796,7 @@ export default function ProfilePage() {
 
           <div className="flex gap-1.5 overflow-x-auto rounded-[14px] border border-[#1d2c43] bg-[#0b1423] p-[5px]">
             {tabs.map((tab) => (
-              <TabButton key={tab.id} active={activeTab === tab.id} onClick={() => setActiveTab(tab.id)}>
+              <TabButton key={tab.id} active={activeTab === tab.id} onClick={() => changeTab(tab.id)}>
                 {tab.label}
               </TabButton>
             ))}
@@ -965,39 +979,49 @@ export default function ProfilePage() {
                   </div>
                 </Card>
 
-                <Card className="!rounded-[16px] border-[#1d2c43] bg-[#0b1423] p-4 sm:p-5">
-                  <div className="flex items-center justify-between gap-2">
-                    <div>
-                      <h3 className="text-[15px] font-bold text-white sm:text-base">Пораки</h3>
-                      <p className="mt-1 text-[13px] text-slate-400 sm:text-sm">{unreadMessages} непрочитани</p>
-                    </div>
-                    <MessageSquare className="h-5 w-5 text-amber-400" />
-                  </div>
-
-                  {messages.length === 0 ? (
-                    <p className="mt-4 text-sm leading-6 text-slate-400">
-                      Кога ќе добиеш нова порака, таа ќе се појави тука.
-                    </p>
-                  ) : (
-                    <div className="mt-4 space-y-2.5">
-                      {messages.slice(0, 3).map((message) => (
-                        <div key={message.id} className="rounded-xl border border-[#223653] bg-[#081223] px-3 py-2.5">
-                          <div className="flex items-start justify-between gap-2">
-                            <div className="min-w-0">
-                              <p className="truncate text-sm font-semibold text-white">
-                                {message.sender_id === user.id ? message.receiver_name : message.sender_name}
-                              </p>
-                              <p className="truncate text-xs text-slate-400">{message.product_title}</p>
-                            </div>
-                            {!message.read && <span className="mt-1 h-2.5 w-2.5 shrink-0 rounded-full bg-red-500" />}
-                          </div>
-                          <p className="mt-2 line-clamp-2 text-xs leading-5 text-slate-300">{message.content}</p>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </Card>
               </div>
+            </section>
+          )}
+
+          {activeTab === 'messages' && (
+            <section className="space-y-3">
+              <div className="flex items-center justify-between gap-3">
+                <div className="min-w-0">
+                  <h2 className="text-[17px] font-bold sm:text-xl">Пораки</h2>
+                  <p className="mt-1 text-[13px] text-slate-400 sm:text-sm">Преглед на сите разговори поврзани со твоите огласи.</p>
+                </div>
+                <span className="shrink-0 text-sm text-slate-400">{messages.length} разговори</span>
+              </div>
+
+              {messages.length === 0 ? (
+                <EmptyState
+                  title="Немаш пораки"
+                  description="Кога некој ќе ти пише за оглас, пораката ќе се појави тука."
+                />
+              ) : (
+                <div className="space-y-2.5">
+                  {messages.map((message) => (
+                    <div
+                      key={message.id}
+                      className="rounded-[16px] border border-[#1d2c43] bg-[#0b1423] px-4 py-3 transition hover:border-[#2d4f7d] hover:bg-[#10203a]"
+                    >
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="min-w-0">
+                          <div className="flex items-center gap-2">
+                            <p className="truncate text-sm font-semibold text-white">
+                              {message.sender_id === user.id ? message.receiver_name : message.sender_name}
+                            </p>
+                            {!message.read && <span className="h-2 w-2 rounded-full bg-red-500" />}
+                          </div>
+                          <p className="mt-1 truncate text-xs text-slate-400">{message.product_title}</p>
+                        </div>
+                        <span className="shrink-0 text-[11px] text-slate-500">{formatDate(message.created_at)}</span>
+                      </div>
+                      <p className="mt-2 line-clamp-2 text-sm leading-6 text-slate-300">{message.content}</p>
+                    </div>
+                  ))}
+                </div>
+              )}
             </section>
           )}
         </div>
