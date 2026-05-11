@@ -435,10 +435,12 @@ export default function ProfilePage() {
 
           {activeTab === 'ads' && (
             <section className="space-y-3">
-              <div className="flex items-center justify-between gap-3">
+              <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                 <div className="min-w-0">
-                  <h2 className="text-[17px] font-bold sm:text-xl">Мои огласи</h2>
-                  <p className="mt-1 text-[13px] text-slate-400 sm:text-sm">Компактна листа со активни, во преглед и архивирани огласи.</p>
+                  <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
+                    <h2 className="text-[17px] font-bold sm:text-xl">Мои огласи</h2>
+                    <p className="text-[13px] text-slate-400 sm:text-sm">Компактна листа со активни, во преглед и архивирани огласи.</p>
+                  </div>
                 </div>
                 <Link
                   href="/sell"
