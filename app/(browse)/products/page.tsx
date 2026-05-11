@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import AdCard from '@/app/components/AdCard';
 import { Button, Container } from '@/app/components/ui';
+import { normalizeCategorySlug } from '@/lib/category-aliases';
 
 interface Product {
   id: number;
@@ -24,14 +25,6 @@ interface Product {
 }
 
 const ITEMS_PER_PAGE = 12;
-
-const TRAIL_ALIASES: Record<string, string> = {
-  nedviznosti: 'nedvoznosti',
-  'dom-i-gradina': 'dom-gradina',
-  moda: 'moda-obleka',
-  sport: 'sportska-oprema',
-  biznis: 'biznis-masini',
-};
 
 function formatPostedAt(value?: string) {
   if (!value) return 'Денес';
@@ -77,8 +70,8 @@ function ProductsPageContent() {
         apiParams.set('limit', String(ITEMS_PER_PAGE));
         apiParams.set('offset', String((pageNumber - 1) * ITEMS_PER_PAGE));
 
-        if (category) apiParams.set('category', TRAIL_ALIASES[category] || category);
-        if (sub) apiParams.set('sub', TRAIL_ALIASES[sub] || sub);
+        if (category) apiParams.set('category', normalizeCategorySlug(category));
+        if (sub) apiParams.set('sub', normalizeCategorySlug(sub));
         if (search) apiParams.set('search', search);
         if (location) apiParams.set('location', location);
 
@@ -162,7 +155,7 @@ function ProductsPageContent() {
           <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
             {products.map((product) => {
               const primaryImage = product.images?.[0] || product.image_url || undefined;
-              const hrefCategory = category || product.category;
+              const hrefCategory = normalizeCategorySlug(category || product.category);
 
               return (
                 <Link key={product.id} href={`/products/${product.id}?category=${encodeURIComponent(hrefCategory)}`}>

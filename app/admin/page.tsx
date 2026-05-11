@@ -96,8 +96,10 @@ export default function AdminPage() {
   const [busy, setBusy] = useState(false);
   const [login, setLogin] = useState({ email: '', password: '' });
   const [setup, setSetup] = useState({ name: '', email: '', password: '', phone: '' });
-  const [newCategory, setNewCategory] = useState({ name: '', slug: '', icon: 'layout-grid' });
-  const [newSubcategory, setNewSubcategory] = useState({ parentId: '', name: '', slug: '' });
+  const [categoryForm, setCategoryForm] = useState({ name: '', slug: '', icon: 'layout-grid', isActive: true });
+  const [subcategoryForm, setSubcategoryForm] = useState({ parentId: '', name: '', slug: '', isActive: true });
+  const [editingCategoryId, setEditingCategoryId] = useState<number | null>(null);
+  const [editingSubcategoryId, setEditingSubcategoryId] = useState<number | null>(null);
   const [categorySlugTouched, setCategorySlugTouched] = useState(false);
   const [subcategorySlugTouched, setSubcategorySlugTouched] = useState(false);
   const [editingBannerId, setEditingBannerId] = useState<number | null>(null);
@@ -219,51 +221,59 @@ export default function AdminPage() {
     }
   };
 
-  const createCategory = async (event: React.FormEvent) => {
+  const submitCategory = async (event: React.FormEvent) => {
     event.preventDefault();
     setBusy(true);
     setMessage(null);
     try {
-      const response = await fetch('/api/categories', {
-        method: 'POST',
+      const response = await fetch(editingCategoryId ? `/api/categories/${editingCategoryId}` : '/api/categories', {
+        method: editingCategoryId ? 'PATCH' : 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(newCategory),
+        body: JSON.stringify({
+          name: categoryForm.name,
+          slug: categoryForm.slug,
+          icon: categoryForm.icon,
+          isActive: categoryForm.isActive,
+        }),
       });
       const data = await response.json();
-      if (!response.ok) throw new Error(data?.error || 'Не успеа додавање категорија');
-      setNewCategory({ name: '', slug: '', icon: 'layout-grid' });
+      if (!response.ok) throw new Error(data?.error || 'Не успеа зачувување категорија');
+      setCategoryForm({ name: '', slug: '', icon: 'layout-grid', isActive: true });
       setCategorySlugTouched(false);
+      setEditingCategoryId(null);
       await refreshCategories();
-      setMessage('Категоријата е додадена.');
+      setMessage(editingCategoryId ? 'Категоријата е ажурирана.' : 'Категоријата е додадена.');
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : 'Грешка при додавање категорија.');
+      setMessage(error instanceof Error ? error.message : 'Грешка при зачувување категорија.');
     } finally {
       setBusy(false);
     }
   };
 
-  const createSubcategory = async (event: React.FormEvent) => {
+  const submitSubcategory = async (event: React.FormEvent) => {
     event.preventDefault();
     setBusy(true);
     setMessage(null);
     try {
-      const response = await fetch('/api/categories', {
-        method: 'POST',
+      const response = await fetch(editingSubcategoryId ? `/api/categories/${editingSubcategoryId}` : '/api/categories', {
+        method: editingSubcategoryId ? 'PATCH' : 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          parentId: Number(newSubcategory.parentId),
-          name: newSubcategory.name,
-          slug: newSubcategory.slug,
+          parentId: Number(subcategoryForm.parentId),
+          name: subcategoryForm.name,
+          slug: subcategoryForm.slug,
+          isActive: subcategoryForm.isActive,
         }),
       });
       const data = await response.json();
-      if (!response.ok) throw new Error(data?.error || 'Не успеа додавање подкатегорија');
-      setNewSubcategory({ parentId: '', name: '', slug: '' });
+      if (!response.ok) throw new Error(data?.error || 'Не успеа зачувување подкатегорија');
+      setSubcategoryForm({ parentId: '', name: '', slug: '', isActive: true });
       setSubcategorySlugTouched(false);
+      setEditingSubcategoryId(null);
       await refreshCategories();
-      setMessage('Подкатегоријата е додадена.');
+      setMessage(editingSubcategoryId ? 'Подкатегоријата е ажурирана.' : 'Подкатегоријата е додадена.');
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : 'Грешка при додавање подкатегорија.');
+      setMessage(error instanceof Error ? error.message : 'Грешка при зачувување подкатегорија.');
     } finally {
       setBusy(false);
     }
@@ -291,6 +301,50 @@ export default function AdminPage() {
     } finally {
       setBusy(false);
     }
+  };
+
+  const startEditCategory = (category: CategoryNode) => {
+    setEditingCategoryId(category.id);
+    setEditingSubcategoryId(null);
+    setCategoryForm({
+      name: category.name,
+      slug: category.slug,
+      icon: category.icon || 'layout-grid',
+      isActive: true,
+    });
+    setCategorySlugTouched(false);
+    setSubcategoryForm({ parentId: '', name: '', slug: '', isActive: true });
+    setSubcategorySlugTouched(false);
+    setActiveTab('categories');
+    setMessage(null);
+  };
+
+  const startEditSubcategory = (parent: CategoryNode, subcategory: CategoryNode['subcategories'][number]) => {
+    setEditingSubcategoryId(subcategory.id);
+    setEditingCategoryId(null);
+    setSubcategoryForm({
+      parentId: String(parent.id),
+      name: subcategory.name,
+      slug: subcategory.slug,
+      isActive: true,
+    });
+    setSubcategorySlugTouched(false);
+    setCategoryForm({ name: '', slug: '', icon: 'layout-grid', isActive: true });
+    setCategorySlugTouched(false);
+    setActiveTab('categories');
+    setMessage(null);
+  };
+
+  const cancelCategoryEdit = () => {
+    setEditingCategoryId(null);
+    setCategoryForm({ name: '', slug: '', icon: 'layout-grid', isActive: true });
+    setCategorySlugTouched(false);
+  };
+
+  const cancelSubcategoryEdit = () => {
+    setEditingSubcategoryId(null);
+    setSubcategoryForm({ parentId: '', name: '', slug: '', isActive: true });
+    setSubcategorySlugTouched(false);
   };
 
   const resetBannerForm = () => {
@@ -401,7 +455,7 @@ export default function AdminPage() {
   };
 
   const handleCategoryNameChange = (value: string) => {
-    setNewCategory((prev) => ({
+    setCategoryForm((prev) => ({
       ...prev,
       name: value,
       slug: categorySlugTouched ? prev.slug : slugify(value),
@@ -409,7 +463,7 @@ export default function AdminPage() {
   };
 
   const handleSubcategoryNameChange = (value: string) => {
-    setNewSubcategory((prev) => ({
+    setSubcategoryForm((prev) => ({
       ...prev,
       name: value,
       slug: subcategorySlugTouched ? prev.slug : slugify(value),
@@ -562,20 +616,23 @@ export default function AdminPage() {
               {activeTab === 'categories' && (
                 <section className="grid gap-5 lg:grid-cols-[360px_1fr]">
                   <div className="space-y-5">
-                    <form onSubmit={createCategory} className="rounded-xl border border-[#1d2c43] bg-[#081223] p-5 space-y-3">
-                      <h2 className="text-lg font-bold">Нова категорија</h2>
+                    <form onSubmit={submitCategory} className="rounded-xl border border-[#1d2c43] bg-[#081223] p-5 space-y-3">
+                      <div>
+                        <h2 className="text-lg font-bold">{editingCategoryId ? 'Уреди категорија' : 'Нова категорија'}</h2>
+                        {editingCategoryId && <p className="mt-1 text-xs text-slate-400">Кога ќе го смениш slug-от, системот ќе ги префрли и огласите што ја користат оваа категорија.</p>}
+                      </div>
                       <div className="space-y-2">
                         <label className="block text-sm font-semibold text-slate-200">Име</label>
-                        <Input placeholder="на пр. Електрични возила" value={newCategory.name} onChange={(e) => handleCategoryNameChange(e.target.value)} />
+                        <Input placeholder="на пр. Електрични возила" value={categoryForm.name} onChange={(e) => handleCategoryNameChange(e.target.value)} />
                       </div>
                       <div className="space-y-2">
                         <label className="block text-sm font-semibold text-slate-200">Slug</label>
                         <Input
                           placeholder="се пополнува автоматски, на пр. elektricni-vozila"
-                          value={newCategory.slug}
+                          value={categoryForm.slug}
                           onChange={(e) => {
                             setCategorySlugTouched(true);
-                            setNewCategory((prev) => ({ ...prev, slug: slugify(e.target.value) }));
+                            setCategoryForm((prev) => ({ ...prev, slug: slugify(e.target.value) }));
                           }}
                         />
                         <p className="text-xs text-slate-400">Ова е адресата во линкот. Системот сам го прави од името, а можеш и рачно да го смениш.</p>
@@ -583,8 +640,8 @@ export default function AdminPage() {
                       <div className="space-y-2">
                         <label className="block text-sm font-semibold text-slate-200">Икона</label>
                         <select
-                          value={newCategory.icon}
-                          onChange={(e) => setNewCategory((prev) => ({ ...prev, icon: e.target.value }))}
+                          value={categoryForm.icon}
+                          onChange={(e) => setCategoryForm((prev) => ({ ...prev, icon: e.target.value }))}
                           className="h-11 w-full rounded-lg border border-[#223653] bg-[#0b1727] px-3 text-sm text-white"
                         >
                           <option value="layout-grid">Основна икона</option>
@@ -594,38 +651,83 @@ export default function AdminPage() {
                         </select>
                         <p className="text-xs text-slate-400">Избери ја иконата што најмногу одговара на категоријата.</p>
                       </div>
-                      <Button disabled={busy} className="admin-dark-button bg-red-600 hover:bg-red-700 text-white">Додај категорија</Button>
+                      {editingCategoryId && (
+                        <label className="flex items-center gap-3 rounded-lg border border-[#223653] bg-[#0b1727] px-4 py-3 text-sm text-slate-200">
+                          <input
+                            type="checkbox"
+                            checked={categoryForm.isActive}
+                            onChange={(e) => setCategoryForm((prev) => ({ ...prev, isActive: e.target.checked }))}
+                          />
+                          Категоријата да биде активна
+                        </label>
+                      )}
+                      <div className="flex gap-2">
+                        <Button disabled={busy} className="admin-dark-button bg-red-600 hover:bg-red-700 text-white">
+                          {editingCategoryId ? 'Зачувај измени' : 'Додај категорија'}
+                        </Button>
+                        {editingCategoryId && (
+                          <Button type="button" onClick={cancelCategoryEdit} className="admin-dark-button bg-slate-700 hover:bg-slate-600 text-white">
+                            Откажи
+                          </Button>
+                        )}
+                      </div>
                     </form>
 
-                    <form onSubmit={createSubcategory} className="rounded-xl border border-[#1d2c43] bg-[#081223] p-5 space-y-3">
-                      <h2 className="text-lg font-bold">Нова подкатегорија</h2>
+                    <form onSubmit={submitSubcategory} className="rounded-xl border border-[#1d2c43] bg-[#081223] p-5 space-y-3">
+                      <div>
+                        <h2 className="text-lg font-bold">{editingSubcategoryId ? 'Уреди подкатегорија' : 'Нова подкатегорија'}</h2>
+                        {editingSubcategoryId && <p className="mt-1 text-xs text-slate-400">Slug промената ќе се префрли и на огласите што ја користат оваа подкатегорија.</p>}
+                      </div>
                       <select
-                        value={newSubcategory.parentId}
-                        onChange={(e) => setNewSubcategory((prev) => ({ ...prev, parentId: e.target.value }))}
-                        className="h-11 w-full rounded-lg border border-[#223653] bg-[#0b1727] px-3 text-sm text-white"
+                        value={subcategoryForm.parentId}
+                        onChange={(e) => setSubcategoryForm((prev) => ({ ...prev, parentId: e.target.value }))}
+                        disabled={Boolean(editingSubcategoryId)}
+                        className="h-11 w-full rounded-lg border border-[#223653] bg-[#0b1727] px-3 text-sm text-white disabled:cursor-not-allowed disabled:opacity-60"
                       >
                         <option value="">Избери parent категорија</option>
                         {categories.map((category) => (
                           <option key={category.id} value={category.id}>{category.name}</option>
                         ))}
                       </select>
+                      {editingSubcategoryId && (
+                        <p className="text-xs text-slate-400">Parent категоријата не се менува тука. Ако треба да се премести, прво креирај ја под новата категорија.</p>
+                      )}
                       <div className="space-y-2">
                         <label className="block text-sm font-semibold text-slate-200">Име</label>
-                        <Input placeholder="на пр. Скутери електрични" value={newSubcategory.name} onChange={(e) => handleSubcategoryNameChange(e.target.value)} />
+                        <Input placeholder="на пр. Скутери електрични" value={subcategoryForm.name} onChange={(e) => handleSubcategoryNameChange(e.target.value)} />
                       </div>
                       <div className="space-y-2">
                         <label className="block text-sm font-semibold text-slate-200">Slug</label>
                         <Input
                           placeholder="се пополнува автоматски, на пр. skuteri-elektricni"
-                          value={newSubcategory.slug}
+                          value={subcategoryForm.slug}
                           onChange={(e) => {
                             setSubcategorySlugTouched(true);
-                            setNewSubcategory((prev) => ({ ...prev, slug: slugify(e.target.value) }));
+                            setSubcategoryForm((prev) => ({ ...prev, slug: slugify(e.target.value) }));
                           }}
                         />
                         <p className="text-xs text-slate-400">Исто како категоријата, ова е URL името за подкатегоријата.</p>
                       </div>
-                      <Button disabled={busy} className="admin-dark-button bg-red-600 hover:bg-red-700 text-white">Додај подкатегорија</Button>
+                      {editingSubcategoryId && (
+                        <label className="flex items-center gap-3 rounded-lg border border-[#223653] bg-[#0b1727] px-4 py-3 text-sm text-slate-200">
+                          <input
+                            type="checkbox"
+                            checked={subcategoryForm.isActive}
+                            onChange={(e) => setSubcategoryForm((prev) => ({ ...prev, isActive: e.target.checked }))}
+                          />
+                          Подкатегоријата да биде активна
+                        </label>
+                      )}
+                      <div className="flex gap-2">
+                        <Button disabled={busy} className="admin-dark-button bg-red-600 hover:bg-red-700 text-white">
+                          {editingSubcategoryId ? 'Зачувај измени' : 'Додај подкатегорија'}
+                        </Button>
+                        {editingSubcategoryId && (
+                          <Button type="button" onClick={cancelSubcategoryEdit} className="admin-dark-button bg-slate-700 hover:bg-slate-600 text-white">
+                            Откажи
+                          </Button>
+                        )}
+                      </div>
                     </form>
                   </div>
 
@@ -639,16 +741,24 @@ export default function AdminPage() {
                               <h3 className="font-semibold">{category.name}</h3>
                               <p className="text-sm text-slate-400">{category.slug}</p>
                             </div>
-                            <div className="flex gap-2">
-                              <Button onClick={() => toggleCategory(category.id, false)} className="admin-dark-button bg-slate-700 hover:bg-slate-600 text-white">Сокриј</Button>
-                              <Button onClick={() => deleteCategory(category.id)} className="admin-dark-button bg-red-700 hover:bg-red-600 text-white">Избриши</Button>
+                            <div className="flex flex-wrap gap-2">
+                              <Button type="button" onClick={() => startEditCategory(category)} className="admin-dark-button bg-slate-700 hover:bg-slate-600 text-white">Уреди</Button>
+                              <Button type="button" onClick={() => toggleCategory(category.id, false)} className="admin-dark-button bg-slate-700 hover:bg-slate-600 text-white">Сокриј</Button>
+                              <Button type="button" onClick={() => deleteCategory(category.id)} className="admin-dark-button bg-red-700 hover:bg-red-600 text-white">Избриши</Button>
                             </div>
                           </div>
                           <div className="mt-3 flex flex-wrap gap-2">
                             {category.subcategories.map((subcategory) => (
-                              <span key={subcategory.id} className="rounded-full border border-[#2c4264] bg-[#122038] px-3 py-1 text-xs text-slate-200">
-                                {subcategory.name}
-                              </span>
+                              <div key={subcategory.id} className="flex items-center gap-2 rounded-full border border-[#2c4264] bg-[#122038] px-3 py-1 text-xs text-slate-200">
+                                <span>{subcategory.name}</span>
+                                <button
+                                  type="button"
+                                  onClick={() => startEditSubcategory(category, subcategory)}
+                                  className="font-semibold text-cyan-300 hover:text-cyan-200"
+                                >
+                                  Уреди
+                                </button>
+                              </div>
                             ))}
                           </div>
                         </div>

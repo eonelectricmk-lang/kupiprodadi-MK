@@ -27,6 +27,7 @@ import {
   MessageCircle,
   Package,
 } from 'lucide-react';
+import { normalizeCategorySlug } from '@/lib/category-aliases';
 
 type IconMeta = {
   Icon: LucideIcon;
@@ -40,7 +41,7 @@ const DEFAULT_ICON: IconMeta = {
 
 const ICON_BY_SLUG_PREFIX: Record<string, IconMeta> = {
   'motorni-vozila': { Icon: Car, className: 'text-red-400' },
-  nedvoznosti: { Icon: House, className: 'text-emerald-400' },
+  nedviznosti: { Icon: House, className: 'text-emerald-400' },
   'dom-gradina': { Icon: Sofa, className: 'text-amber-400' },
   'moda-obleka': { Icon: Shirt, className: 'text-pink-400' },
   'mobilni-telefoni': { Icon: Smartphone, className: 'text-violet-400' },
@@ -57,7 +58,7 @@ const ICON_BY_SLUG_PREFIX: Record<string, IconMeta> = {
   'sportska-oprema': { Icon: Dumbbell, className: 'text-green-400' },
   'antikvar-umetnost': { Icon: Palette, className: 'text-pink-400' },
   'biznis-masini': { Icon: Briefcase, className: 'text-cyan-400' },
-  'hrana-gotvenj': { Icon: CookingPot, className: 'text-orange-400' },
+  'hrana-gotvenje': { Icon: CookingPot, className: 'text-orange-400' },
   'prodavnici-trgovija': { Icon: ShoppingCart, className: 'text-blue-400' },
   'uslugi-serzeri': { Icon: Wrench, className: 'text-teal-400' },
   vrabotuvanje: { Icon: Handshake, className: 'text-emerald-400' },
@@ -68,10 +69,11 @@ const ICON_BY_SLUG_PREFIX: Record<string, IconMeta> = {
 };
 
 export function getCategoryIconMeta(slug: string): IconMeta {
-  const exact = ICON_BY_SLUG_PREFIX[slug];
+  const normalizedSlug = normalizeCategorySlug(slug);
+  const exact = ICON_BY_SLUG_PREFIX[normalizedSlug];
   if (exact) return exact;
 
-  const entry = Object.entries(ICON_BY_SLUG_PREFIX).find(([prefix]) => slug.startsWith(prefix));
+  const entry = Object.entries(ICON_BY_SLUG_PREFIX).find(([prefix]) => normalizedSlug.startsWith(prefix));
   if (entry) return entry[1];
 
   return DEFAULT_ICON;

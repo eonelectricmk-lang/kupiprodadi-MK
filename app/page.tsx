@@ -2,49 +2,28 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
-import {
-  Briefcase,
-  Car,
-  Dumbbell,
-  House,
-  Laptop,
-  Shirt,
-  Smartphone,
-  Sofa,
-} from 'lucide-react';
 import Header from './components/Header';
 import CategoryCard from './components/CategoryCard';
 import AdCard from './components/AdCard';
 import TrustBar from './components/TrustBar';
-import { HOME_CATEGORIES } from './data/categories';
+import { CATEGORIES } from '@/lib/categories';
+import { getCategoryIconMeta } from './components/categoryIcons';
 import { DEFAULT_BANNERS } from '@/lib/banner-store';
 
-const ADS = [
-  { id: 1, title: 'iPhone 15 Pro Max', price: 1200, location: 'Скопје', image: 'https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=500&h=350&fit=crop', badge: 'НОВО', currency: '€', isVerified: true, category: 'mobilni-telefoni' },
-  { id: 2, title: 'MacBook Pro 16"', price: 2400, location: 'Охрид', image: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=500&h=350&fit=crop', currency: '€', isVerified: true, category: 'kompjuteri' },
-  { id: 3, title: 'Audi A4 2.0 TDI', price: 8500, location: 'Битола', image: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=500&h=350&fit=crop', badge: 'ТОП', currency: '€', category: 'motorni-vozila' },
-  { id: 4, title: 'Стан 80м² во центар', price: 72000, location: 'Прилеп', image: 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=500&h=350&fit=crop', currency: '€', isVerified: true, category: 'nedvoznosti' },
-  { id: 5, title: 'Trek Domane AL 2', price: 850, location: 'Тетово', image: 'https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=500&h=350&fit=crop', currency: '€', isVerified: true, category: 'sportska-oprema' },
-  { id: 6, title: 'Двосед кауч', price: 220, location: 'Куманово', image: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=500&h=350&fit=crop', currency: '€', category: 'dom-gradina' },
-  { id: 7, title: 'Samsung Galaxy S24 Ultra', price: 980, location: 'Скопје', image: 'https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?w=500&h=350&fit=crop', currency: '€', isVerified: true, category: 'mobilni-telefoni' },
-  { id: 8, title: 'Dell XPS 15 OLED', price: 1650, location: 'Струмица', image: 'https://images.unsplash.com/photo-1593642702821-c8da6771f0c6?w=500&h=350&fit=crop', badge: 'НОВО', currency: '€', category: 'kompjuteri' },
-  { id: 9, title: 'BMW 320d M Sport', price: 14900, location: 'Штип', image: 'https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=500&h=350&fit=crop', currency: '€', isVerified: true, category: 'motorni-vozila' },
-  { id: 10, title: 'Куќа 140м² со двор', price: 98000, location: 'Кавадарци', image: 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=500&h=350&fit=crop', currency: '€', category: 'nedvoznosti' },
-  { id: 11, title: 'Орбитрек + тегови сет', price: 320, location: 'Гостивар', image: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=500&h=350&fit=crop', currency: '€', category: 'sportska-oprema' },
-  { id: 12, title: 'Трпезариска маса + 6 столици', price: 390, location: 'Велес', image: 'https://images.unsplash.com/photo-1617806118233-18e1de247200?w=500&h=350&fit=crop', currency: '€', category: 'dom-gradina' },
-  { id: 13, title: 'iPad Pro M4 11"', price: 940, location: 'Охрид', image: 'https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=500&h=350&fit=crop', badge: 'ТОП', currency: '€', category: 'mobilni-telefoni' },
-  { id: 14, title: 'GeForce RTX 4080 Gaming', price: 1200, location: 'Скопје', image: 'https://images.unsplash.com/photo-1591489378430-ef2f4c626b35?w=500&h=350&fit=crop', currency: '€', category: 'kompjuteri' },
-  { id: 15, title: 'VW Golf 7 1.6 TDI', price: 9200, location: 'Кочани', image: 'https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=500&h=350&fit=crop', currency: '€', category: 'motorni-vozila' },
-  { id: 16, title: 'Деловен простор 60м²', price: 54000, location: 'Битола', image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=500&h=350&fit=crop', currency: '€', isVerified: true, category: 'nedvoznosti' },
-  { id: 17, title: 'Планински велосипед Scott', price: 680, location: 'Тетово', image: 'https://images.unsplash.com/photo-1532298229144-0ec0c57515c7?w=500&h=350&fit=crop', currency: '€', category: 'sportska-oprema' },
-  { id: 18, title: 'Аголна гарнитура во кожа', price: 520, location: 'Прилеп', image: 'https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?w=500&h=350&fit=crop', currency: '€', category: 'dom-gradina' },
-  { id: 19, title: 'Xiaomi 14 Pro 512GB', price: 760, location: 'Куманово', image: 'https://images.unsplash.com/photo-1589492477829-5e65395b66cc?w=500&h=350&fit=crop', currency: '€', category: 'mobilni-telefoni' },
-  { id: 20, title: 'Apple Watch Ultra 2', price: 690, location: 'Скопје', image: 'https://images.unsplash.com/photo-1434493789847-2f02dc6ca35d?w=500&h=350&fit=crop', badge: 'НОВО', currency: '€', category: 'mobilni-telefoni' },
-  { id: 21, title: 'Mercedes C220 CDI', price: 13200, location: 'Струга', image: 'https://images.unsplash.com/photo-1553440569-bcc63803a83d?w=500&h=350&fit=crop', currency: '€', category: 'motorni-vozila' },
-  { id: 22, title: 'Стан 55м² во Аеродром', price: 63500, location: 'Скопје', image: 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=500&h=350&fit=crop', currency: '€', isVerified: true, category: 'nedvoznosti' },
-  { id: 23, title: 'Gaming сетап комплет', price: 2100, location: 'Гевгелија', image: 'https://images.unsplash.com/photo-1586899028174-e7098604235b?w=500&h=350&fit=crop', currency: '€', category: 'kompjuteri' },
-  { id: 24, title: 'Терасна маса + 4 столици', price: 260, location: 'Ресен', image: 'https://images.unsplash.com/photo-1524758631624-e2822e304c36?w=500&h=350&fit=crop', currency: '€', category: 'dom-gradina' },
-];
+type ProductCard = {
+  id: number;
+  title: string;
+  price: number;
+  currency?: string;
+  description?: string;
+  location?: string | null;
+  city?: string | null;
+  image_url?: string | null;
+  images?: string[];
+  seller_rating?: number;
+  created_at?: string;
+  category: string;
+};
 
 type BannerSlide = {
   id?: number;
@@ -52,25 +31,16 @@ type BannerSlide = {
   link_url?: string | null;
 };
 
-const CATEGORY_ICONS = {
-  car: Car,
-  home: House,
-  phone: Smartphone,
-  computer: Laptop,
-  sofa: Sofa,
-  shirt: Shirt,
-  dumbbell: Dumbbell,
-  briefcase: Briefcase,
-} as const;
-
 export default function Home() {
   const [activeBanner, setActiveBanner] = useState(0);
   const [bannerSlides, setBannerSlides] = useState<BannerSlide[]>(DEFAULT_BANNERS);
+  const [homeCategories, setHomeCategories] = useState(CATEGORIES);
+  const [featuredAds, setFeaturedAds] = useState<ProductCard[]>([]);
   const [cardsPerRow, setCardsPerRow] = useState<6 | 4 | 2>(4);
   const [sortBy, setSortBy] = useState<'newest' | 'oldest' | 'price-asc' | 'price-desc' | 'title-asc'>('newest');
 
   const sortedAds = useMemo(() => {
-    const next = [...ADS];
+    const next = [...featuredAds];
 
     switch (sortBy) {
       case 'oldest':
@@ -85,7 +55,7 @@ export default function Home() {
       default:
         return next.sort((a, b) => b.id - a.id);
     }
-  }, [sortBy]);
+  }, [featuredAds, sortBy]);
 
   const adsGridClassName = useMemo(() => {
     if (cardsPerRow === 6) {
@@ -103,6 +73,28 @@ export default function Home() {
       .then((data) => {
         if (Array.isArray(data?.banners) && data.banners.length > 0) {
           setBannerSlides(data.banners);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    fetch('/api/categories')
+      .then((response) => response.json())
+      .then((data) => {
+        if (Array.isArray(data?.categories) && data.categories.length > 0) {
+          setHomeCategories(data.categories);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    fetch('/api/products?limit=24&offset=0', { cache: 'no-store' })
+      .then((response) => response.json())
+      .then((data) => {
+        if (Array.isArray(data?.products)) {
+          setFeaturedAds(data.products);
         }
       })
       .catch(() => {});
@@ -158,16 +150,16 @@ export default function Home() {
 
       <section className="mx-auto max-w-6xl px-4 py-3">
         <div className="grid gap-2.5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6">
-          {HOME_CATEGORIES.slice(0, 6).map((category) => {
-            const Icon = CATEGORY_ICONS[category.icon];
+          {homeCategories.slice(0, 6).map((category) => {
+            const iconMeta = getCategoryIconMeta(category.slug);
+            const Icon = iconMeta.Icon;
             return (
               <CategoryCard
                 key={category.slug}
                 icon={Icon}
-                iconClassName={category.color}
-                title={category.title}
-                count={category.count}
-                href={`/products?category=${category.slug}`}
+                iconClassName={iconMeta.className}
+                title={category.name}
+                href={`/categories/${category.slug}`}
               />
             );
           })}
@@ -244,13 +236,37 @@ export default function Home() {
           </div>
         </div>
 
-        <div className={adsGridClassName}>
-          {sortedAds.map((ad) => (
-            <Link key={ad.id} href={`/products/${ad.id}?category=${encodeURIComponent(ad.category)}`}>
-              <AdCard ad={ad} layout={cardsPerRow === 2 ? 'list' : 'grid'} />
-            </Link>
-          ))}
-        </div>
+        {sortedAds.length > 0 ? (
+          <div className={adsGridClassName}>
+            {sortedAds.map((ad) => {
+              const image = ad.images?.[0] || ad.image_url || undefined;
+              return (
+                <Link key={ad.id} href={`/products/${ad.id}?category=${encodeURIComponent(ad.category)}`}>
+                  <AdCard
+                    ad={{
+                      id: ad.id,
+                      title: ad.title,
+                      price: ad.price,
+                      currency: ad.currency || '€',
+                      image_url: image,
+                      location: ad.location || ad.city || 'Македонија',
+                      description: ad.description,
+                      postedAt: ad.created_at,
+                      isVerified: Number(ad.seller_rating || 0) >= 4.7,
+                      badge: null,
+                    }}
+                    layout={cardsPerRow === 2 ? 'list' : 'grid'}
+                  />
+                </Link>
+              );
+            })}
+          </div>
+        ) : (
+          <div className="rounded-2xl border border-[#1d2c43] bg-[#0f1a2b] p-8 text-center text-slate-300">
+            <p className="text-lg font-semibold text-white">Нема активни огласи</p>
+            <p className="mt-2 text-sm text-slate-400">Кога ќе има огласи во базата, тие автоматски ќе се прикажат тука.</p>
+          </div>
+        )}
       </section>
     </main>
   );

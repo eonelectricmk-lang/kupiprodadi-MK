@@ -1,7 +1,24 @@
+'use client';
+
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Globe, Mail, Phone } from 'lucide-react';
+import { CATEGORIES } from '@/lib/categories';
 
 export default function Footer() {
+  const [categories, setCategories] = useState(CATEGORIES);
+
+  useEffect(() => {
+    fetch('/api/categories')
+      .then((response) => response.json())
+      .then((data) => {
+        if (Array.isArray(data?.categories) && data.categories.length) {
+          setCategories(data.categories);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
   return (
     <footer className="bg-[#050c16] border-t border-[#172334] text-slate-400 mt-auto">
       <div className="max-w-6xl mx-auto px-4 py-10">
@@ -51,11 +68,13 @@ export default function Footer() {
           <div>
             <h3 className="text-white font-bold mb-4 text-sm uppercase tracking-wider">Категории</h3>
             <ul className="space-y-2 text-sm">
-              <li><Link href="/products?category=motorni-vozila" className="hover:text-white transition">Моторни возила</Link></li>
-              <li><Link href="/products?category=nedvoznosti" className="hover:text-white transition">Недвижности</Link></li>
-              <li><Link href="/products?category=mobilni-telefoni" className="hover:text-white transition">Мобилни телефони</Link></li>
-              <li><Link href="/products?category=kompjuteri" className="hover:text-white transition">Компјутери</Link></li>
-              <li><Link href="/products?category=dom-gradina" className="hover:text-white transition">Дом и градина</Link></li>
+              {categories.slice(0, 5).map((category) => (
+                <li key={category.slug}>
+                  <Link href={`/categories/${category.slug}`} className="hover:text-white transition">
+                    {category.name}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
         </div>

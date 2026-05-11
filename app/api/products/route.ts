@@ -1,14 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
 import getDb from '@/lib/db';
+import { normalizeCategorySlug } from '@/lib/category-aliases';
 
 export async function GET(request: NextRequest) {
   try {
     const db = getDb();
     const searchParams = request.nextUrl.searchParams;
-    const category = searchParams.get('category');
+    const category = normalizeCategorySlug(searchParams.get('category'));
     const search = searchParams.get('search');
     const location = searchParams.get('location');
-    const subcategory = searchParams.get('subcategory') || searchParams.get('sub');
+    const subcategory = normalizeCategorySlug(searchParams.get('subcategory') || searchParams.get('sub'));
     const condition = searchParams.get('condition');
     const city = searchParams.get('city');
     const minPrice = searchParams.get('minPrice');
@@ -168,7 +169,10 @@ export async function POST(request: NextRequest) {
       images,
     } = await request.json();
 
-    if (!title || !description || !price || !category || !seller_id || (!location && !city)) {
+    const normalizedCategory = normalizeCategorySlug(category);
+    const normalizedSubcategory = normalizeCategorySlug(subcategory);
+
+    if (!title || !description || !price || !normalizedCategory || !seller_id || (!location && !city)) {
       return NextResponse.json(
         { error: 'Сите задолжителни полиња треба да бидат пополнети' },
         { status: 400 }
@@ -218,8 +222,8 @@ export async function POST(request: NextRequest) {
         description,
         Number(price),
         currency || 'дин',
-        category,
-        subcategory || null,
+        normalizedCategory,
+        normalizedSubcategory || null,
         condition || null,
         negotiable ? 1 : 0,
         resolvedLocation,

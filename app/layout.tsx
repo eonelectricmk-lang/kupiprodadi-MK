@@ -4,11 +4,14 @@ import "./globals.css";
 import { ThemeProvider } from "./context/ThemeContext";
 import Footer from "./components/Footer";
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
 const nunito = Nunito({ variable: "--font-nunito", weight: ["600", "700", "800"], subsets: ["latin"] });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: "КупиПродади - Огласи во Македонија",
   description: "Купи и продај производи локално во Македонија.",
 };

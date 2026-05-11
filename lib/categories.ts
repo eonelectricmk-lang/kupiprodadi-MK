@@ -25,7 +25,7 @@ export const CATEGORIES: Category[] = [
   },
   {
     name: 'Недвижности',
-    slug: 'nedvoznosti',
+    slug: 'nedviznosti',
     icon: 'house',
     subcategories: [
       { name: 'Куќи', slug: 'kuki' },
@@ -212,7 +212,7 @@ export const CATEGORIES: Category[] = [
   },
   {
     name: 'Храна и готвење',
-    slug: 'hrana-gotvenj',
+    slug: 'hrana-gotvenje',
     icon: 'cooking',
     subcategories: [
       { name: 'Кујнски прибор', slug: 'kujnski-pribor' },

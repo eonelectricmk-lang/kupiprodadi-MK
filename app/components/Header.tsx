@@ -1,13 +1,14 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { Container } from './ui';
 import { CATEGORIES } from '@/lib/categories';
 import {
   Bell, ChevronDown, Heart, LayoutGrid, MapPin,
-  Search, Shirt, Smartphone, Car, House, Sofa,
+  Search,
   UserCircle, Sun, Moon,
 } from 'lucide-react';
 import { getCategoryIconMeta } from './categoryIcons';
@@ -19,21 +20,16 @@ const MACEDONIAN_CITIES = [
   'Кичево', 'Коцани', 'Крива Паланка', 'Ресен', 'Берово',
 ];
 
-const NAV_CATEGORIES = [
-  { slug: 'motorni-vozila', name: 'Моторни возила', icon: Car, iconColor: 'text-red-400' },
-  { slug: 'nedviznosti', name: 'Недвижности', icon: House, iconColor: 'text-emerald-400' },
-  { slug: 'dom-i-gradina', name: 'Дом и градина', icon: Sofa, iconColor: 'text-amber-400' },
-  { slug: 'moda', name: 'Мода и убавина', icon: Shirt, iconColor: 'text-pink-400' },
-  { slug: 'mobilni-telefoni', name: 'Мобилни телефони', icon: Smartphone, iconColor: 'text-violet-400' },
-];
-
 export function Header() {
   const router = useRouter();
+  const pathname = usePathname();
+  const headerRef = useRef<HTMLElement | null>(null);
   const { dark, setDark } = useTheme();
   const [categories, setCategories] = useState(CATEGORIES);
   const [location, setLocation] = useState('Целa Македонија');
   const [showLocation, setShowLocation] = useState(false);
   const [showCategories, setShowCategories] = useState(false);
+  const [categoryMenuTop, setCategoryMenuTop] = useState(0);
   const [search, setSearch] = useState('');
 
   const h = dark ? {
@@ -88,12 +84,31 @@ export function Header() {
       .catch(() => {});
   }, []);
 
-  const navCategoryLookup = new Map(NAV_CATEGORIES.map((category) => [category.slug, category]));
+  useEffect(() => {
+    if (!showCategories) return undefined;
+
+    const updateMenuTop = () => {
+      const rect = headerRef.current?.getBoundingClientRect();
+      if (rect) {
+        setCategoryMenuTop(Math.round(rect.bottom));
+      }
+    };
+
+    updateMenuTop();
+    window.addEventListener('resize', updateMenuTop);
+
+    return () => window.removeEventListener('resize', updateMenuTop);
+  }, [showCategories]);
+
+  useEffect(() => {
+    setShowCategories(false);
+    setShowLocation(false);
+  }, [pathname]);
+
   const navCategories = categories.slice(0, 5).map((category) => {
-    const navMeta = navCategoryLookup.get(category.slug);
     return {
       slug: category.slug,
-      name: navMeta?.name || category.name,
+      name: category.name,
       iconMeta: getCategoryIconMeta(category.slug),
     };
   });
@@ -111,13 +126,14 @@ export function Header() {
   };
 
   return (
-    <header className={`sticky top-0 z-50 backdrop-blur transition-colors duration-300 ${h.header}`}>
-      <Container>
-        <div className="flex flex-wrap items-center gap-3 py-3 md:flex-nowrap md:justify-between md:gap-4">
-          <Link href="/" className="ml-2 flex-shrink-0 transition hover:opacity-90">
-            <span className={`text-3xl font-extrabold tracking-tight sm:text-4xl ${h.logo}`}>kupi</span>
-            <span className="text-3xl font-extrabold tracking-tight text-red-500 sm:text-4xl">prodadi</span>
-          </Link>
+    <>
+      <header ref={headerRef} className={`sticky top-0 z-50 backdrop-blur transition-colors duration-300 ${h.header}`}>
+        <Container>
+          <div className="flex flex-wrap items-center gap-3 py-3 md:flex-nowrap md:justify-between md:gap-4">
+            <Link href="/" className="ml-2 flex-shrink-0 transition hover:opacity-90">
+              <span className={`text-3xl font-extrabold tracking-tight sm:text-4xl ${h.logo}`}>kupi</span>
+              <span className="text-3xl font-extrabold tracking-tight text-red-500 sm:text-4xl">prodadi</span>
+            </Link>
 
           <form onSubmit={submitSearch} className={`order-3 hidden w-full items-center overflow-hidden rounded-lg border-2 focus-within:border-blue-400 md:order-none md:flex md:max-w-xl md:flex-1 ${h.search}`}>
             <span className={`pl-3 text-sm ${h.searchIcon}`}><Search className="h-4 w-4" /></span>
@@ -193,36 +209,59 @@ export function Header() {
             </button>
 
             {navCategories.map(cat => (
-              <Link key={cat.slug} href={`/products?category=${cat.slug}`} className="flex-1">
-                <button className={`inline-flex w-full items-center justify-center gap-1.5 rounded px-3 py-2 text-sm whitespace-nowrap transition ${h.navCat}`}>
-                  <cat.iconMeta.Icon className={`h-4 w-4 ${cat.iconMeta.className}`} />
-                  {cat.name}
-                </button>
-              </Link>
+              <a
+                key={cat.slug}
+                href={`/products?category=${cat.slug}`}
+                className={`flex-1 inline-flex w-full items-center justify-center gap-1.5 rounded px-3 py-2 text-sm whitespace-nowrap transition ${h.navCat}`}
+                onClick={() => setShowCategories(false)}
+              >
+              <cat.iconMeta.Icon className={`h-4 w-4 ${cat.iconMeta.className}`} />
+                {cat.name}
+              </a>
             ))}
           </div>
         </Container>
+      </div>
+      </header>
 
-        {showCategories && (
-          <div className={`absolute left-0 right-0 border-t shadow-2xl z-40 max-h-[70vh] overflow-y-auto ${h.dropdown}`}>
+      {showCategories && typeof window !== 'undefined' && createPortal(
+        <>
+          <button
+            type="button"
+            aria-label="Затвори категории"
+            onClick={() => setShowCategories(false)}
+            className="fixed inset-0 z-[998] cursor-default bg-black/20"
+          />
+          <div
+            className={`fixed left-0 right-0 z-[999] max-h-[70vh] overflow-y-auto border-t shadow-2xl ${h.dropdown}`}
+            style={{ top: `${categoryMenuTop}px` }}
+          >
             <Container>
               <div className="grid grid-cols-2 gap-4 py-5 md:grid-cols-4">
                 {categories.map((category, i) => {
                   const { Icon, className } = getCategoryIconMeta(category.slug);
                   return (
                     <div key={category.slug}>
-                      <Link href={`/products?category=${category.slug}`}>
-                        <div className={`inline-flex items-center gap-1 px-3 py-1 rounded-md text-sm font-bold mb-2 cursor-pointer transition ${colors[i % colors.length]}`} style={{ color: '#fff' }}>
+                      <a
+                        href={`/products?category=${category.slug}`}
+                        className={`block w-full rounded-md px-3 py-2 text-left text-sm font-bold mb-2 cursor-pointer transition ${colors[i % colors.length]}`}
+                        style={{ color: '#fff' }}
+                        onClick={() => setShowCategories(false)}
+                      >
+                        <span className="inline-flex items-center gap-1">
                           <Icon className={`h-4 w-4 ${className}`} /> {category.name}
-                        </div>
-                      </Link>
+                        </span>
+                      </a>
                       <div className="pl-1 space-y-0.5">
                         {category.subcategories.map(sub => (
-                          <Link key={sub.slug} href={`/products?category=${category.slug}&sub=${sub.slug}`}>
-                            <div className={`text-xs hover:underline py-0.5 cursor-pointer ${h.subText}`}>
-                              • {sub.name}
-                            </div>
-                          </Link>
+                          <a
+                            key={sub.slug}
+                            href={`/products?category=${category.slug}&sub=${sub.slug}`}
+                            className={`block w-full rounded-md px-2 py-1 text-left text-xs cursor-pointer transition hover:bg-[#16263d] hover:underline ${h.subText}`}
+                            onClick={() => setShowCategories(false)}
+                          >
+                            • {sub.name}
+                          </a>
                         ))}
                       </div>
                     </div>
@@ -231,9 +270,10 @@ export function Header() {
               </div>
             </Container>
           </div>
-        )}
-      </div>
-    </header>
+        </>,
+        document.body,
+      )}
+    </>
   );
 }
 

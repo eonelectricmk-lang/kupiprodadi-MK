@@ -6,6 +6,7 @@ import { usePathname, useSearchParams } from 'next/navigation';
 import { CATEGORIES } from '@/lib/categories';
 import { ChevronDown, ChevronRight, CornerUpLeft } from 'lucide-react';
 import { getCategoryIconMeta } from './categoryIcons';
+import { normalizeCategorySlug } from '@/lib/category-aliases';
 
 interface SidebarProps {
   activeCategory?: string;
@@ -27,15 +28,7 @@ export default function Sidebar({ activeCategory, variant = 'side' }: SidebarPro
     .filter(Boolean);
   const selectedSubParam = searchParams.get('sub');
 
-  const CATEGORY_ALIASES: Record<string, string> = {
-    nedviznosti: 'nedvoznosti',
-    'dom-i-gradina': 'dom-gradina',
-    moda: 'moda-obleka',
-    sport: 'sportska-oprema',
-    biznis: 'biznis-masini',
-  };
-
-  const normalizedCategoryParam = categoryParam ? CATEGORY_ALIASES[categoryParam] || categoryParam : undefined;
+  const normalizedCategoryParam = categoryParam ? normalizeCategorySlug(categoryParam) : undefined;
 
   const matchedCategory = normalizedCategoryParam
     ? categories.find(
@@ -45,7 +38,7 @@ export default function Sidebar({ activeCategory, variant = 'side' }: SidebarPro
     )
     : undefined;
 
-  const normalizedTrailParts = trailParts.map((part) => CATEGORY_ALIASES[part] || part);
+  const normalizedTrailParts = trailParts.map((part) => normalizeCategorySlug(part));
   const baseTrailParts = (() => {
     if (normalizedCategoryParam && normalizedTrailParts[0] !== normalizedCategoryParam) {
       return [normalizedCategoryParam, ...normalizedTrailParts];

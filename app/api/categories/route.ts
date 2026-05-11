@@ -2,15 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import getDb from '@/lib/db';
 import { getCategoryTree } from '@/lib/category-store';
 import { requireAdmin } from '@/lib/admin-auth';
-
-function slugify(input: string) {
-  return String(input || '')
-    .toLowerCase()
-    .trim()
-    .replace(/[^a-z0-9а-шѓжљњќџčćžšđ\s-]/gi, '')
-    .replace(/\s+/g, '-')
-    .replace(/-+/g, '-');
-}
+import { slugify } from '@/lib/slugify';
 
 export async function GET(request: NextRequest) {
   try {
