@@ -1,4 +1,5 @@
 import { CATEGORIES, type Category, type Subcategory } from '@/lib/categories';
+import { CATEGORY_SLUG_ALIASES } from '@/lib/category-aliases';
 
 type DbCategoryRow = {
   id: number;
@@ -38,6 +39,28 @@ export function seedDefaultCategories(database: any) {
       category.subcategories.forEach((subcategory: Subcategory, subIndex: number) => {
         insert.run(parentId, subcategory.name, subcategory.slug, null, subIndex, 1);
       });
+    });
+  });
+
+  transaction();
+}
+
+export function migrateCategorySlugs(database: any) {
+  const updateCategorySlug = database.prepare('UPDATE categories SET slug = ? WHERE slug = ?');
+  const updateProductCategory = database.prepare('UPDATE products SET category = ? WHERE category = ?');
+  const updateProductSubcategory = database.prepare('UPDATE products SET subcategory = ? WHERE subcategory = ?');
+  const updateBannerLinks = database.prepare('UPDATE banners SET link_url = REPLACE(link_url, ?, ?) WHERE link_url LIKE ?');
+
+  const transaction = database.transaction(() => {
+    Object.entries(CATEGORY_SLUG_ALIASES).forEach(([legacySlug, canonicalSlug]) => {
+      if (!legacySlug || !canonicalSlug || legacySlug === canonicalSlug) {
+        return;
+      }
+
+      updateCategorySlug.run(canonicalSlug, legacySlug);
+      updateProductCategory.run(canonicalSlug, legacySlug);
+      updateProductSubcategory.run(canonicalSlug, legacySlug);
+      updateBannerLinks.run(legacySlug, canonicalSlug, `%${legacySlug}%`);
     });
   });
 

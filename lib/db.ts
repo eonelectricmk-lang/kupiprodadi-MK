@@ -1,5 +1,5 @@
 import path from 'path';
-import { seedDefaultCategories } from '@/lib/category-store';
+import { migrateCategorySlugs, seedDefaultCategories } from '@/lib/category-store';
 import { seedDefaultBanners } from '@/lib/banner-store';
 
 let db: any = null;
@@ -181,6 +181,7 @@ function initializeDb() {
 
     addColumnIfMissing(db, 'users', 'role', "TEXT DEFAULT 'user'");
     seedDefaultCategories(db);
+    migrateCategorySlugs(db);
     seedDefaultBanners(db);
 
     return db;
