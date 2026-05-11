@@ -14,7 +14,7 @@ function BrowseLayoutContent({
   const searchParams = useSearchParams();
   const isDetailsPage = /^\/products\/[^/]+$/.test(pathname || '');
   const hasCategoryContext = Boolean(searchParams.get('category') || searchParams.get('sub'));
-  const shouldUseInlineSidebar = isDetailsPage || hasCategoryContext;
+  const shouldUseInlineSidebar = hasCategoryContext && !isDetailsPage;
 
   return (
     <>

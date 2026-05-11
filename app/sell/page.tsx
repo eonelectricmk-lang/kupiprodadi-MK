@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useMemo, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { CheckCircle2, ImagePlus, MapPin, Phone, ShieldCheck, Trash2, UploadCloud } from 'lucide-react';
 import Header from '../components/Header';
 import { Container, Button, Input } from '../components/ui';
@@ -75,15 +76,18 @@ const CITIES = [
   'Ресен',
 ];
 
-const fieldClass = 'bg-[#0b1727] border-[#223653] text-white placeholder:text-slate-500 focus:border-red-500 focus:ring-red-500/20';
+const fieldClass = '!bg-[#0b1727] !border-[#223653] !text-white !placeholder:text-slate-500 focus:!border-red-500 focus:!ring-red-500/20';
 const selectClass = 'h-12 w-full rounded-lg border border-[#223653] bg-[#0b1727] px-3 text-sm text-white outline-none transition focus:border-red-500 focus:ring-2 focus:ring-red-500/20';
 const labelClass = 'mb-2 block text-sm font-semibold text-slate-100';
 
 export default function SellPage() {
+  const router = useRouter();
   const [formData, setFormData] = useState<FormData>(INITIAL_FORM);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
   const [submitting, setSubmitting] = useState(false);
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
+  const [editingProductId, setEditingProductId] = useState<number | null>(null);
+  const [loadingEdit, setLoadingEdit] = useState(false);
   const [categories, setCategories] = useState<CategoryOption[]>(
     CATEGORIES.map((category, index) => ({
       id: index + 1,
@@ -108,6 +112,79 @@ export default function SellPage() {
       })
       .catch(() => {});
   }, []);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const editId = new URLSearchParams(window.location.search).get('edit');
+    const parsedEditId = editId ? Number(editId) : null;
+    if (parsedEditId && Number.isFinite(parsedEditId)) {
+      setEditingProductId(parsedEditId);
+      setLoadingEdit(true);
+    } else {
+      setEditingProductId(null);
+      setLoadingEdit(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!editingProductId || Number.isNaN(editingProductId)) {
+      setLoadingEdit(false);
+      return;
+    }
+
+    let cancelled = false;
+
+    const loadProduct = async () => {
+      try {
+        setLoadingEdit(true);
+        const response = await fetch(`/api/products/${editingProductId}?all=1`);
+        if (!response.ok) {
+          throw new Error('Не успеа да се вчита огласот за уредување');
+        }
+
+        const product = await response.json();
+        if (cancelled || !product?.id) return;
+
+        setFormData({
+          title: product.title || '',
+          category: product.category || '',
+          subcategory: product.subcategory || '',
+          condition: product.condition || '',
+          price: product.price ? String(product.price) : '',
+          currency: product.currency || '€',
+          negotiable: Boolean(product.negotiable),
+          description: product.description || '',
+          city: product.city || '',
+          neighborhood: product.neighborhood || '',
+          addressNote: product.address_note || '',
+          delivery: product.delivery || 'Лично преземање',
+          contactName: product.contact_name || '',
+          phone: product.contact_phone || '',
+          email: product.contact_email || '',
+          preferredContact: product.preferred_contact || 'Телефон',
+        });
+
+        const loadedImages = Array.isArray(product.images) && product.images.length > 0
+          ? product.images
+          : product.image_url
+            ? [product.image_url]
+            : [];
+        setImagePreviews(loadedImages);
+      } catch (error) {
+        console.error(error);
+        setStatusMessage('Не успеа вчитувањето на огласот за уредување.');
+      } finally {
+        if (!cancelled) setLoadingEdit(false);
+      }
+    };
+
+    loadProduct();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [editingProductId]);
 
   const selectedCategory = useMemo(
     () => categories.find((category) => category.slug === formData.category),
@@ -148,8 +225,11 @@ export default function SellPage() {
     setStatusMessage(null);
 
     try {
-      const response = await fetch('/api/products', {
-        method: 'POST',
+      const currentUser = typeof window !== 'undefined' ? JSON.parse(window.localStorage.getItem('user') || '{}') : {};
+      const sellerId = currentUser?.id || 1;
+      const isEditing = Boolean(editingProductId);
+      const response = await fetch(isEditing ? `/api/products/${editingProductId}` : '/api/products', {
+        method: isEditing ? 'PATCH' : 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           title: formData.title.trim(),
@@ -171,7 +251,8 @@ export default function SellPage() {
           location: [formData.city, formData.neighborhood].filter(Boolean).join(', '),
           image_url: imagePreviews[0] || null,
           images: imagePreviews,
-          seller_id: 1,
+          seller_id: sellerId,
+          ...(isEditing ? { action: 'update' } : {}),
         }),
       });
 
@@ -180,9 +261,15 @@ export default function SellPage() {
         throw new Error(error?.error || 'Огласот не беше зачуван');
       }
 
-      setStatusMessage('Вашиот оглас е успешно внесен. Се чека на одобрување.');
-      setFormData(INITIAL_FORM);
-      setImagePreviews([]);
+      setStatusMessage(
+        editingProductId ? 'Огласот е успешно ажуриран.' : 'Вашиот оглас е успешно внесен. Се чека на одобрување.',
+      );
+      if (editingProductId) {
+        router.push('/profile');
+      } else {
+        setFormData(INITIAL_FORM);
+        setImagePreviews([]);
+      }
     } catch (error) {
       setStatusMessage(error instanceof Error ? error.message : 'Грешка при објавување на огласот.');
     } finally {
@@ -197,11 +284,11 @@ export default function SellPage() {
         <Container>
           <div className="mb-6 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
             <div>
-              <h1 className="text-3xl font-bold tracking-tight">Внеси оглас</h1>
+              <h1 className="text-3xl font-bold tracking-tight">{editingProductId ? 'Уреди оглас' : 'Внеси оглас'}</h1>
               <p className="mt-1 text-sm text-slate-400">Пополнет и јасен оглас добива повеќе јавувања и пораки.</p>
             </div>
             <div className="sell-safe-badge inline-flex items-center gap-2 rounded-lg border border-green-500/25 bg-green-500/10 px-3 py-2 text-sm text-green-200">
-              <ShieldCheck className="h-4 w-4" /> Безбедно објавување
+              <ShieldCheck className="h-4 w-4" /> {editingProductId ? 'Режим на уредување' : 'Безбедно објавување'}
             </div>
           </div>
 
@@ -349,8 +436,8 @@ export default function SellPage() {
                       value={formData.description}
                       onChange={(e) => updateField('description', e.target.value)}
                       placeholder="Опиши состојба, старост, гаранција, што е вклучено, причина за продажба..."
-                      className="min-h-40 w-full resize-y rounded-lg border border-[#223653] bg-[#0b1727] px-4 py-3 text-sm text-white outline-none transition placeholder:text-slate-500 focus:border-red-500 focus:ring-2 focus:ring-red-500/20"
-                    />
+                    className="min-h-40 w-full resize-y rounded-lg border border-[#223653] bg-[#0b1727] px-4 py-3 text-sm text-white outline-none transition placeholder:text-slate-500 focus:border-red-500 focus:ring-2 focus:ring-red-500/20"
+                  />
                   </div>
 
                   <div>
@@ -454,10 +541,10 @@ export default function SellPage() {
 
               <Button
                 type="submit"
-                disabled={submitting}
+                disabled={submitting || loadingEdit}
                 className="h-12 w-full bg-red-600 text-base font-bold hover:bg-red-700 disabled:bg-slate-700"
               >
-                {submitting ? 'Објавување...' : 'Објави оглас'}
+                {submitting ? (editingProductId ? 'Зачувување...' : 'Објавување...') : editingProductId ? 'Зачувај измени' : 'Објави оглас'}
               </Button>
             </aside>
           </form>

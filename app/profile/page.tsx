@@ -7,18 +7,25 @@ import {
   AlertCircle,
   ArrowRight,
   BadgeCheck,
+  CalendarDays,
   Clock3,
+  Eye,
   Heart,
   Inbox,
+  MapPin,
   MessageSquare,
+  PencilLine,
   PenSquare,
+  RefreshCw,
   ShieldCheck,
   Sparkles,
   Star,
+  Trash2,
   UserCircle2,
 } from 'lucide-react';
 import { Header } from '@/app/components/Header';
 import { Card, Container } from '@/app/components/ui';
+import { useRouter } from 'next/navigation';
 
 type Product = {
   id: number;
@@ -26,8 +33,21 @@ type Product = {
   price: number;
   currency?: string;
   location?: string;
+  city?: string;
+  neighborhood?: string;
+  address_note?: string;
+  delivery?: string;
+  contact_phone?: string;
+  contact_email?: string;
+  preferred_contact?: string;
+  condition?: string;
+  negotiable?: boolean;
+  category?: string;
+  subcategory?: string;
   image_url?: string;
   images?: string[];
+  description?: string;
+  views?: number;
   created_at?: string;
   status?: string;
 };
@@ -36,6 +56,7 @@ type Message = {
   id: number;
   sender_id: number;
   receiver_id: number;
+  product_id?: number | null;
   sender_name: string;
   receiver_name: string;
   content: string;
@@ -183,6 +204,267 @@ function MiniAdCard({
   );
 }
 
+function OwnerAdCard({
+  productId,
+  title,
+  meta,
+  price,
+  image,
+  images,
+  href,
+  note,
+  status,
+  sellerName,
+  description,
+  createdAt,
+  views,
+  messageCount,
+  location,
+  category,
+  subcategory,
+  condition,
+  delivery,
+  phone,
+  email,
+  contactPreference,
+  negotiable,
+  onRefresh,
+  onEdit,
+  onDelete,
+  onPromote,
+}: {
+  productId?: number;
+  title: string;
+  meta: string;
+  price: string;
+  image?: string | null;
+  images?: string[];
+  href: string;
+  note?: string;
+  status?: string;
+  sellerName?: string;
+  description?: string;
+  createdAt?: string;
+  views?: number;
+  messageCount?: number;
+  location?: string;
+  category?: string;
+  subcategory?: string;
+  condition?: string;
+  delivery?: string;
+  phone?: string;
+  email?: string;
+  contactPreference?: string;
+  negotiable?: boolean;
+  onRefresh: () => void;
+  onEdit: () => void;
+  onDelete: () => void;
+  onPromote: () => void;
+}) {
+  const statusStyles: Record<string, string> = {
+    active: 'border-emerald-500/30 bg-emerald-500/10 text-emerald-300',
+    pending: 'border-amber-500/30 bg-amber-500/10 text-amber-300',
+    rejected: 'border-rose-500/30 bg-rose-500/10 text-rose-300',
+    sold: 'border-slate-500/30 bg-slate-500/10 text-slate-300',
+  };
+
+  const statusLabels: Record<string, string> = {
+    active: 'Активен',
+    pending: 'Во преглед',
+    rejected: 'Одбиен',
+    sold: 'Продаден',
+  };
+
+  const resolvedStatus = status || null;
+  const statusClass = resolvedStatus ? statusStyles[resolvedStatus] || statusStyles.active : '';
+  const statusLabel = resolvedStatus ? statusLabels[resolvedStatus] || statusLabels.active : '';
+  const galleryImages = (images || []).filter(Boolean);
+  const mainImage = galleryImages[0] || image || 'https://picsum.photos/640/480?grayscale&blur=1';
+  const thumbImages = [mainImage, ...galleryImages.slice(1, 4)];
+  const savedCount = 0;
+  const promoClicks = 0;
+
+  return (
+    <div className="w-full overflow-hidden rounded-[18px] border border-[#1d2c43] bg-[linear-gradient(135deg,#081120_0%,#0c182b_56%,#091423_100%)] shadow-[0_12px_24px_rgba(0,0,0,0.2)]">
+      <div className="grid gap-0 xl:grid-cols-[268px_minmax(0,1fr)_286px]">
+        <div className="border-b border-[#223653] p-3.5 xl:border-b-0 xl:border-r">
+          <Link href={href} className="group block">
+            <div className="relative h-[186px] overflow-hidden rounded-[14px] border border-[#223653] bg-[#0b1727] sm:h-[196px] xl:h-[208px]">
+              <img
+                src={mainImage}
+                alt={title}
+                className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
+              />
+              {resolvedStatus && (
+                <div className="absolute left-2 top-2">
+                  <span className={`inline-flex rounded-full border px-2 py-0.5 text-[10px] font-semibold ${statusClass}`}>
+                    {statusLabel}
+                  </span>
+                </div>
+              )}
+            </div>
+          </Link>
+
+          <div className="mt-2.5">
+            <div className="grid grid-cols-4 gap-1.5">
+              {Array.from({ length: 4 }).map((_, index) => {
+                const thumb = thumbImages[index];
+                return (
+                  <div
+                    key={`${title}-thumb-${index}`}
+                    className={`h-11 overflow-hidden rounded-[10px] border ${
+                      thumb
+                        ? index === 0
+                          ? 'border-sky-500/60 bg-[#0b1727]'
+                          : 'border-[#223653] bg-[#0b1727]'
+                        : 'border-dashed border-[#30435f] bg-[#081223]'
+                    }`}
+                  >
+                    {thumb ? (
+                      <img src={thumb} alt={`${title} ${index + 1}`} className="h-full w-full object-cover" />
+                    ) : (
+                      <div className="flex h-full w-full items-center justify-center text-[28px] leading-none text-slate-500">+</div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+
+        <div className="min-w-0 p-3.5 pb-2 xl:border-r xl:border-[#223653] xl:p-4 xl:pb-2.5">
+          <div className="flex h-full flex-col gap-0">
+            <div className="flex flex-wrap items-start justify-between gap-2.5">
+              <div className="flex min-w-0 flex-wrap items-center gap-2">
+                <span className="inline-flex items-center rounded-[8px] border border-[#28415f] bg-[#0d1b2f] px-3 py-1 text-[12px] font-medium text-slate-200">
+                  {sellerName || 'Продавач'}
+                </span>
+                <Link href={href} className="min-w-0">
+                  <p className="line-clamp-2 text-[22px] font-black tracking-[-0.03em] text-white transition hover:text-sky-300">
+                    {title}
+                  </p>
+                </Link>
+              </div>
+              {typeof productId === 'number' && (
+                <span className="inline-flex shrink-0 items-center rounded-[8px] border border-[#223653] bg-[#081223] px-3 py-1 text-[11px] font-semibold text-slate-400">
+                  ID: KP-{String(productId).padStart(5, '0')}
+                </span>
+              )}
+            </div>
+
+            <div className="mt-3 flex flex-wrap items-center gap-3 text-[12px] text-slate-400">
+              <span className="inline-flex items-center gap-2">
+                <MapPin className="h-4 w-4 text-slate-500" />
+                {location || meta}
+              </span>
+              <span className="text-slate-600">•</span>
+              <span className="inline-flex items-center gap-2">
+                <CalendarDays className="h-4 w-4 text-slate-500" />
+                {formatDate(createdAt)}
+              </span>
+            </div>
+
+            <p className="mt-3 line-clamp-2 max-w-3xl text-[13px] leading-5 text-slate-300">
+              {description || 'Нема внесен опис за овој оглас.'}
+            </p>
+
+            <div className="mt-auto -translate-y-1 border-t border-[#223653] pt-1.5">
+              <div className="flex items-center gap-2 overflow-x-auto xl:overflow-visible">
+                <button
+                  type="button"
+                  onClick={onEdit}
+                  className="inline-flex shrink-0 items-center justify-center gap-1.5 rounded-[10px] border border-[#2b3f5f] bg-[#0b1727] px-2.5 py-1.5 text-[11px] font-semibold text-slate-100 transition hover:bg-[#122038] hover:text-white"
+                >
+                  <PencilLine className="h-3.5 w-3.5" />
+                  Измени
+                </button>
+                <button
+                  type="button"
+                  onClick={onRefresh}
+                  className="inline-flex shrink-0 items-center justify-center gap-1.5 rounded-[10px] border border-sky-500/35 bg-sky-500/10 px-2.5 py-1.5 text-[11px] font-semibold text-sky-300 transition hover:bg-sky-500/15"
+                >
+                  <RefreshCw className="h-3.5 w-3.5" />
+                  Обнови
+                </button>
+                <button
+                  type="button"
+                  onClick={onPromote}
+                  className="inline-flex shrink-0 items-center justify-center gap-1.5 rounded-[10px] border border-amber-500/35 bg-amber-500/10 px-2.5 py-1.5 text-[11px] font-semibold text-amber-300 transition hover:bg-amber-500/15"
+                >
+                  <Sparkles className="h-3.5 w-3.5" />
+                  Промовирај
+                </button>
+                <button
+                  type="button"
+                  onClick={onDelete}
+                  className="inline-flex shrink-0 items-center justify-center gap-1.5 rounded-[10px] border border-rose-500/35 bg-rose-500/10 px-2.5 py-1.5 text-[11px] font-semibold text-rose-300 transition hover:bg-rose-500/15"
+                >
+                  <Trash2 className="h-3.5 w-3.5" />
+                  Избриши
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="flex flex-col gap-2 p-3.5 pb-2 xl:p-4 xl:pb-2.5">
+          <div className="flex items-start justify-between gap-3 border-b border-[#223653] pb-2">
+            <p className="text-[25px] font-black tracking-[-0.03em] text-red-400">{price}</p>
+            <span className={`inline-flex items-center gap-2 rounded-[12px] border px-3 py-1.5 text-[11px] font-semibold ${statusClass || 'border-emerald-500/30 bg-emerald-500/10 text-emerald-300'}`}>
+              <span className="h-2.5 w-2.5 rounded-full bg-current opacity-90" />
+              {resolvedStatus ? statusLabel : 'Активен'}
+            </span>
+          </div>
+
+          <div className="rounded-[16px] border border-[#223653] bg-[#0a1628] p-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.02)]">
+            <p className="text-[15px] font-bold text-white">Статистика за огласот</p>
+
+            <div className="mt-2.5 space-y-1.5">
+              <div className="flex items-center justify-between gap-3">
+                <span className="inline-flex items-center gap-2 text-[13px] text-slate-400">
+                  <Eye className="h-4 w-4 text-slate-500" />
+                  Прегледи
+                </span>
+                <span className="text-[14px] font-bold text-white">{Number((views || 0)).toLocaleString('mk-MK')}</span>
+              </div>
+              <div className="flex items-center justify-between gap-3">
+                <span className="inline-flex items-center gap-2 text-[13px] text-slate-400">
+                  <MessageSquare className="h-4 w-4 text-slate-500" />
+                  Пораки
+                </span>
+                <span className="text-[14px] font-bold text-white">{Number((messageCount || 0)).toLocaleString('mk-MK')}</span>
+              </div>
+              <div className="flex items-center justify-between gap-3">
+                <span className="inline-flex items-center gap-2 text-[13px] text-slate-400">
+                  <Heart className="h-4 w-4 text-slate-500" />
+                  Зачувувања
+                </span>
+                <span className="text-[14px] font-bold text-white">{savedCount}</span>
+              </div>
+              <div className="flex items-center justify-between gap-3">
+                <span className="inline-flex items-center gap-2 text-[13px] text-slate-400">
+                  <ArrowRight className="h-4 w-4 text-slate-500" />
+                  Промо кликови
+                </span>
+                <span className="text-[14px] font-bold text-white">{promoClicks}</span>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-[12px] border border-sky-500/35 bg-sky-500/10 px-4 py-2 text-[12px] font-semibold text-sky-300 transition hover:bg-sky-500/15"
+            >
+              <Inbox className="h-4 w-4" />
+              Детална статистика
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+
 function InfoRow({ label, value }: { label: string; value: ReactNode }) {
   return (
     <div className="flex items-center justify-between gap-3 rounded-xl bg-[#081223] px-3.5 py-2.5">
@@ -239,6 +521,7 @@ function TabButton({
 }
 
 export default function ProfilePage() {
+  const router = useRouter();
   const [user, setUser] = useState<any>(null);
   const [myProducts, setMyProducts] = useState<Product[]>([]);
   const [favorites, setFavorites] = useState<Product[]>([]);
@@ -345,6 +628,77 @@ export default function ProfilePage() {
 
   const maxRecentViews = Math.max(...recentViewsByDay.map((day) => day.count), 1);
 
+  const sortedMyProducts = useMemo(
+    () =>
+      [...myProducts].sort(
+        (a, b) => new Date(b.created_at || 0).getTime() - new Date(a.created_at || 0).getTime(),
+      ),
+    [myProducts],
+  );
+
+  const messageCountsByProduct = useMemo(() => {
+    return messages.reduce<Record<number, number>>((acc, message) => {
+      if (typeof message.product_id === 'number') {
+        acc[message.product_id] = (acc[message.product_id] || 0) + 1;
+      }
+      return acc;
+    }, {});
+  }, [messages]);
+
+  const refreshProduct = async (productId: number) => {
+    try {
+      const response = await fetch(`/api/products/${productId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'bump', seller_id: user?.id }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Не успеа обновувањето.');
+      }
+
+      const now = new Date().toISOString();
+      setMyProducts((prev) =>
+        prev
+          .map((product) =>
+            product.id === productId ? { ...product, created_at: now, status: 'active' } : product,
+          )
+          .sort((a, b) => new Date(b.created_at || 0).getTime() - new Date(a.created_at || 0).getTime()),
+      );
+    } catch (error) {
+      console.error(error);
+      window.alert('Не успеа обновувањето на огласот.');
+    }
+  };
+
+  const deleteProduct = async (productId: number) => {
+    const confirmed = window.confirm('Сигурен ли си дека сакаш да го избришеш огласот?');
+    if (!confirmed) return;
+
+    try {
+      const response = await fetch(`/api/products/${productId}?seller_id=${user?.id}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        throw new Error('Не успеа бришењето.');
+      }
+
+      setMyProducts((prev) => prev.filter((product) => product.id !== productId));
+    } catch (error) {
+      console.error(error);
+      window.alert('Не успеа бришењето на огласот.');
+    }
+  };
+
+  const editProduct = (productId: number) => {
+    router.push(`/sell?edit=${productId}`);
+  };
+
+  const promoteProduct = (productId: number) => {
+    router.push(`/sell?promote=${productId}`);
+  };
+
   const tabs: Array<{ id: TabKey; label: string }> = [
     { id: 'ads', label: 'Мои огласи' },
     { id: 'saved', label: 'Зачувани' },
@@ -417,7 +771,7 @@ export default function ProfilePage() {
                   </span>
                 </div>
 
-                <div className="grid grid-cols-3 gap-1.25 sm:gap-1.5">
+                <div className="grid grid-cols-3 gap-[5px] sm:gap-1.5">
                   <StatCard label="Активни огласи" value={activeAds} icon={PenSquare} accent="text-sky-400" />
                   <StatCard label="Продадени" value={soldAds} icon={Heart} accent="text-pink-400" />
                   <StatCard label="Оценка" value={`${Number(user.rating || 5).toFixed(1)}/5`} icon={Star} accent="text-amber-400" />
@@ -462,17 +816,29 @@ export default function ProfilePage() {
                   }
                 />
               ) : (
-                <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-                  {myProducts.slice(0, 9).map((product) => (
-                    <MiniAdCard
+                <div className="space-y-3">
+                  {sortedMyProducts.slice(0, 9).map((product) => (
+                    <OwnerAdCard
                       key={product.id}
+                      productId={product.id}
                       href={`/products/${product.id}`}
                       title={product.title}
                       meta={`${product.location || 'Македонија'} · ${formatDate(product.created_at)}`}
                       price={`${product.price.toLocaleString()} ${product.currency || '€'}`}
                       image={product.images?.[0] || product.image_url}
+                      images={product.images}
+                      description={product.description}
+                      createdAt={product.created_at}
+                      views={product.views}
+                      messageCount={messageCountsByProduct[product.id] || 0}
                       note={product.status === 'active' ? 'Активен' : product.status === 'pending' ? 'Во преглед' : product.status === 'rejected' ? 'Одбиен' : product.status || 'Оглас'}
                       status={product.status}
+                      sellerName={user.name}
+                      negotiable={product.negotiable}
+                      onRefresh={() => refreshProduct(product.id)}
+                      onEdit={() => editProduct(product.id)}
+                      onDelete={() => deleteProduct(product.id)}
+                      onPromote={() => promoteProduct(product.id)}
                     />
                   ))}
                 </div>
