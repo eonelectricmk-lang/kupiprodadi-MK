@@ -348,7 +348,7 @@ export default function ProfilePage() {
   const tabs: Array<{ id: TabKey; label: string }> = [
     { id: 'ads', label: 'Мои огласи' },
     { id: 'saved', label: 'Зачувани' },
-    { id: 'settings', label: 'Поставки' },
+    { id: 'settings', label: 'Уреди профил' },
   ];
 
   if (loading || !user) {
