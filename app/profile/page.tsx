@@ -370,14 +370,14 @@ export default function ProfilePage() {
       <Container className="py-3 md:py-4">
         <div className="mx-auto max-w-6xl space-y-3">
           <section className="overflow-hidden rounded-[18px] border border-[#1d2c43] bg-gradient-to-br from-[#081223] via-[#0b1423] to-[#07101c] shadow-xl shadow-black/20">
-            <div className="grid gap-2 p-2.5 sm:p-3 lg:grid-cols-[minmax(0,1fr)_minmax(300px,0.95fr)] lg:items-start">
+            <div className="grid gap-2 p-2.5 sm:p-3 lg:grid-cols-[minmax(0,1.1fr)_minmax(300px,0.9fr)] lg:items-start">
               <div className="min-w-0">
-                <div className="flex min-w-0 gap-2.5">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[#223653] bg-[#0b1727] sm:h-12 sm:w-12">
-                    <UserCircle2 className="h-6 w-6 text-slate-300 sm:h-7 sm:w-7" />
+                <div className="flex min-w-0 gap-3.5">
+                  <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full border border-[#223653] bg-[#0b1727] sm:h-16 sm:w-16">
+                    <UserCircle2 className="h-8 w-8 text-slate-300 sm:h-9 sm:w-9" />
                   </div>
 
-                  <div className="min-w-0 flex-1">
+                  <div className="min-w-0 flex-1 pl-1 sm:pl-1.5">
                     <div className="flex flex-wrap items-center gap-2">
                       <h1 className="truncate text-[18px] font-black tracking-tight sm:text-[25px]">{user.name}</h1>
                       <span className="inline-flex items-center gap-1.5 rounded-full border border-sky-500/30 bg-sky-500/10 px-2.5 py-0.5 text-[11px] font-semibold text-sky-300">
@@ -389,12 +389,13 @@ export default function ProfilePage() {
                       </span>
                     </div>
 
-                    <div className="mt-1 flex flex-wrap items-center gap-1.5">
-                      <span className="text-[11px] text-slate-500 sm:text-xs">Профил со доверба и брз пристап до твоите огласи.</span>
+                    <div className="mt-0.5 flex flex-wrap items-center gap-1.5">
+                      <span className="text-[11px] leading-none text-slate-500 sm:text-xs">Профил со доверба и брз пристап до твоите огласи.</span>
                     </div>
 
-                    <p className="mt-1 max-w-lg text-[12px] leading-5 text-slate-400 sm:text-[13px] sm:leading-6">
-                      Управувај со огласите, следи ги зачуваните ставки и провери ги основните податоци на едно место.
+                    <p className="mt-0.5 max-w-lg text-[12px] leading-[1.1] text-slate-400 sm:text-[13px] sm:leading-[1.25]">
+                      Управувај со огласите, следи ги зачуваните ставки и
+                      <span className="block">провери ги основните податоци на едно место.</span>
                     </p>
                   </div>
                 </div>
