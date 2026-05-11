@@ -21,6 +21,7 @@ import {
 } from 'lucide-react';
 import { CATEGORIES } from '@/lib/categories';
 import { normalizeCategorySlug } from '@/lib/category-aliases';
+import { loadFavoriteIds, subscribeToFavoriteUpdates, toggleFavorite } from '@/lib/client-favorites';
 
 interface ProductDetails {
   id: number;
@@ -172,6 +173,24 @@ export default function ProductDetailsClient({ id }: { id: string }) {
     }
   }, [ad, images]);
 
+  useEffect(() => {
+    if (!ad || typeof window === 'undefined') return;
+
+    const storedUser = JSON.parse(window.localStorage.getItem('user') || '{}');
+    const userId = Number(storedUser?.id || 0);
+    if (!userId) return;
+
+    loadFavoriteIds(userId).then((ids) => {
+      setIsSaved(ids.includes(ad.id));
+    });
+
+    return subscribeToFavoriteUpdates((productId, saved) => {
+      if (productId === ad.id) {
+        setIsSaved(saved);
+      }
+    });
+  }, [ad]);
+
   const categoryTrail = useMemo(() => {
     if (!ad) return null;
 
@@ -218,6 +237,25 @@ export default function ProductDetailsClient({ id }: { id: string }) {
   const onReport = () => {
     setReported(true);
     setTimeout(() => setReported(false), 2000);
+  };
+
+  const onToggleFavorite = async () => {
+    if (!ad || typeof window === 'undefined') return;
+
+    const storedUser = JSON.parse(window.localStorage.getItem('user') || '{}');
+    const userId = Number(storedUser?.id || 0);
+
+    if (!userId) {
+      window.location.href = '/auth';
+      return;
+    }
+
+    try {
+      const saved = await toggleFavorite(userId, ad.id);
+      setIsSaved(saved);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const onSendMessage = async (event: React.FormEvent) => {
@@ -472,7 +510,7 @@ export default function ProductDetailsClient({ id }: { id: string }) {
             <div className="mt-4 grid grid-cols-2 gap-2">
               <button
                 type="button"
-                onClick={() => setIsSaved((current) => !current)}
+                onClick={onToggleFavorite}
                 className={`inline-flex h-11 items-center justify-center gap-2 rounded-lg border text-sm font-semibold transition ${
                   isSaved
                     ? 'border-red-500/40 bg-red-500/10 text-red-200'

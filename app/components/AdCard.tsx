@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { Heart, MapPin, ShieldCheck } from 'lucide-react';
+import { loadFavoriteIds, subscribeToFavoriteUpdates, toggleFavorite } from '@/lib/client-favorites';
 
 interface AdCardItem {
   id: number;
@@ -72,10 +73,53 @@ export function AdCard({
   const resolvedVerified = card.isVerified ?? card.verified ?? false;
   const postedLabel = card.postedAt || 'Денес 22:43';
   const [imageSrc, setImageSrc] = useState(resolvedImage);
+  const [isSaved, setIsSaved] = useState(false);
+  const [togglingFavorite, setTogglingFavorite] = useState(false);
 
   useEffect(() => {
     setImageSrc(resolvedImage);
   }, [resolvedImage]);
+
+  useEffect(() => {
+    const storedUser = typeof window !== 'undefined' ? JSON.parse(window.localStorage.getItem('user') || '{}') : {};
+    const userId = Number(storedUser?.id || 0);
+    if (!userId || !card.id) return;
+
+    loadFavoriteIds(userId).then((ids) => {
+      setIsSaved(ids.includes(card.id));
+    });
+
+    return subscribeToFavoriteUpdates((productId, saved) => {
+      if (productId === card.id) {
+        setIsSaved(saved);
+      }
+    });
+  }, [card.id]);
+
+  const onToggleFavorite = async (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    event.stopPropagation();
+
+    const storedUser = typeof window !== 'undefined' ? JSON.parse(window.localStorage.getItem('user') || '{}') : {};
+    const userId = Number(storedUser?.id || 0);
+
+    if (!userId) {
+      window.location.href = '/auth';
+      return;
+    }
+
+    if (!card.id || togglingFavorite) return;
+
+    try {
+      setTogglingFavorite(true);
+      const saved = await toggleFavorite(userId, card.id);
+      setIsSaved(saved);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setTogglingFavorite(false);
+    }
+  };
 
   if (layout === 'list') {
     return (
@@ -98,8 +142,17 @@ export function AdCard({
           <div className="min-w-0 flex-1">
             <div className="flex items-start justify-between gap-2">
               <h3 className="line-clamp-2 text-base font-semibold leading-[1.2] text-white">{card.title}</h3>
-              <button className="shrink-0 rounded-full bg-black/35 p-1.5 text-gray-100 hover:bg-black/50" aria-label="Зачувај оглас">
-                <Heart className="h-4 w-4" />
+              <button
+                type="button"
+                onClick={onToggleFavorite}
+                className={`shrink-0 rounded-full p-1.5 transition ${
+                  isSaved
+                    ? 'bg-red-500/20 text-red-300 hover:bg-red-500/30'
+                    : 'bg-black/35 text-gray-100 hover:bg-black/50'
+                }`}
+                aria-label={isSaved ? 'Отстрани од зачувани' : 'Зачувај оглас'}
+              >
+                <Heart className={`h-4 w-4 ${isSaved ? 'fill-current' : ''}`} />
               </button>
             </div>
 
@@ -146,8 +199,17 @@ export function AdCard({
             {card.badge}
           </span>
         )}
-        <button className="absolute right-3 top-3 rounded-full bg-black/35 p-1.5 text-gray-100 hover:bg-black/50">
-          <Heart className="h-4 w-4" />
+        <button
+          type="button"
+          onClick={onToggleFavorite}
+          className={`absolute right-3 top-3 rounded-full p-1.5 transition ${
+            isSaved
+              ? 'bg-red-500/20 text-red-300 hover:bg-red-500/30'
+              : 'bg-black/35 text-gray-100 hover:bg-black/50'
+          }`}
+          aria-label={isSaved ? 'Отстрани од зачувани' : 'Зачувај оглас'}
+        >
+          <Heart className={`h-4 w-4 ${isSaved ? 'fill-current' : ''}`} />
         </button>
       </div>
 

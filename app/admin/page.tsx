@@ -54,7 +54,7 @@ type BannerRow = {
 const TABS = [
   { id: 'products', label: 'Огласи' },
   { id: 'categories', label: 'Категории' },
-  { id: 'banners', label: 'Банери' },
+  { id: 'banners', label: 'Рекламирање' },
 ] as const;
 
 const CATEGORY_ICON_OPTIONS = [
@@ -478,7 +478,7 @@ export default function AdminPage() {
           <div className="mb-6 flex items-center justify-between gap-4">
             <div>
               <h1 className="text-3xl font-bold">Admin Panel</h1>
-              <p className="mt-2 text-sm text-slate-400">Од тука ќе одобруваш огласи и ќе управуваш со категории и банери.</p>
+              <p className="mt-2 text-sm text-slate-400">Од тука ќе одобруваш огласи, ќе управуваш со категории и ќе поставуваш промотивни позиции за поголема видливост.</p>
             </div>
             {me?.authenticated && (
               <Button onClick={logout} className="admin-dark-button bg-slate-700 hover:bg-slate-600 text-white">
@@ -771,15 +771,28 @@ export default function AdminPage() {
               {activeTab === 'banners' && (
                 <section className="grid gap-5 lg:grid-cols-[420px_1fr]">
                   <div className="space-y-5">
+                    <div className="rounded-xl border border-[#1d2c43] bg-[#081223] p-5">
+                      <h2 className="text-lg font-bold">Топ позиционирање и рекламирање</h2>
+                      <p className="mt-2 text-sm leading-6 text-slate-400">
+                        Овој дел е наменет за промотивни банери што добиваат приоритетен простор на почетната страница и служат за поголема видливост на бренд, категорија, понуда или специјална кампања.
+                      </p>
+                      <ul className="mt-4 space-y-2 text-sm text-slate-300">
+                        <li>• Топ прикажување на почетна страница</li>
+                        <li>• Поголема изложеност пред сите посетители</li>
+                        <li>• Идеално за истакнати понуди, промоции и рекламни кампањи</li>
+                        <li>• Редоследот одредува кој банер добива прв приоритет</li>
+                      </ul>
+                    </div>
+
                     <form onSubmit={submitBanner} className="rounded-xl border border-[#1d2c43] bg-[#081223] p-5 space-y-4">
                       <div>
-                        <h2 className="text-lg font-bold">{editingBannerId ? 'Уреди банер' : 'Нов главен банер'}</h2>
-                        <p className="mt-1 text-sm text-slate-400">Препорачана димензија: 1600 x 400 px, JPG или PNG. Банерите се image-only, без посебен текст од системот.</p>
-                        <p className="mt-1 text-xs text-slate-500">Правило: минимум 1 активен банер, максимум 10 активни банери.</p>
+                        <h2 className="text-lg font-bold">{editingBannerId ? 'Уреди промотивен банер' : 'Нов промотивен банер'}</h2>
+                        <p className="mt-1 text-sm text-slate-400">Препорачана димензија: 1600 x 400 px, JPG или PNG. Овие банери се користат за истакнување, рекламирање и приоритетно позиционирање на почетната страница.</p>
+                        <p className="mt-1 text-xs text-slate-500">Правило: минимум 1 активен банер, максимум 10 активни банери. Помал редослед значи повисок приоритет.</p>
                       </div>
 
                       <div className="space-y-2">
-                        <label className="block text-sm font-semibold text-slate-200">Upload слика *</label>
+                        <label className="block text-sm font-semibold text-slate-200">Промотивна слика *</label>
                         <input
                           type="file"
                           accept="image/png,image/jpeg,image/webp"
@@ -799,11 +812,11 @@ export default function AdminPage() {
                         </div>
                       )}
 
-                      <Input placeholder="Линк кога ќе се кликне, на пр. /products?category=motorni-vozila (опционално)" value={bannerForm.link_url} onChange={(e) => setBannerForm((prev) => ({ ...prev, link_url: e.target.value }))} />
+                      <Input placeholder="Линк при клик, на пр. /products?category=motorni-vozila или /sell (опционално)" value={bannerForm.link_url} onChange={(e) => setBannerForm((prev) => ({ ...prev, link_url: e.target.value }))} />
                       <div className="space-y-2">
-                        <label className="block text-sm font-semibold text-slate-200">Редослед на банер</label>
+                        <label className="block text-sm font-semibold text-slate-200">Приоритетен редослед</label>
                         <Input placeholder="на пр. 0 = прв, 1 = втор, 2 = трет" value={bannerForm.sort_order} onChange={(e) => setBannerForm((prev) => ({ ...prev, sort_order: e.target.value }))} />
-                        <p className="text-xs text-slate-400">Колку е помал бројот, толку порано ќе се прикаже банерот на почетна.</p>
+                        <p className="text-xs text-slate-400">Колку е помал бројот, толку порано и поприоритетно ќе се прикаже банерот на почетна.</p>
                       </div>
 
                       <label className="flex items-center gap-3 rounded-lg border border-[#223653] bg-[#0b1727] px-4 py-3 text-sm text-slate-200">
@@ -812,12 +825,12 @@ export default function AdminPage() {
                           checked={bannerForm.is_active}
                           onChange={(e) => setBannerForm((prev) => ({ ...prev, is_active: e.target.checked }))}
                         />
-                        Банерот да биде активен и видлив на почетна
+                        Банерот да биде активен и видлив како промотивна позиција на почетна
                       </label>
 
                       <div className="flex gap-2">
                         <Button disabled={busy} className="admin-dark-button bg-red-600 hover:bg-red-700 text-white">
-                          {editingBannerId ? 'Зачувај измени' : 'Додај банер'}
+                          {editingBannerId ? 'Зачувај измени' : 'Додај промотивен банер'}
                         </Button>
                         {editingBannerId && (
                           <Button type="button" onClick={resetBannerForm} className="admin-dark-button bg-slate-700 hover:bg-slate-600 text-white">
@@ -829,7 +842,7 @@ export default function AdminPage() {
                   </div>
 
                   <div className="rounded-xl border border-[#1d2c43] bg-[#081223] p-5">
-                    <h2 className="mb-4 text-lg font-bold">Постоечки банери</h2>
+                    <h2 className="mb-4 text-lg font-bold">Активни и достапни промотивни позиции</h2>
                     <div className="space-y-4">
                       {banners.map((banner) => (
                         <div key={banner.id} className="rounded-lg border border-[#223653] bg-[#0b1727] p-4">
@@ -840,8 +853,8 @@ export default function AdminPage() {
                             <div className="flex-1">
                               <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
                                 <div>
-                                  <h3 className="text-lg font-semibold">Главен банер #{banner.id}</h3>
-                                  <p className="mt-2 text-xs text-slate-500">Редослед: {banner.sort_order} · {banner.is_active ? 'Активен' : 'Скриен'}</p>
+                                  <h3 className="text-lg font-semibold">Промотивен банер #{banner.id}</h3>
+                                  <p className="mt-2 text-xs text-slate-500">Приоритет: {banner.sort_order} · {banner.is_active ? 'Активен и видлив' : 'Скриен'}</p>
                                   {banner.link_url && <p className="mt-1 text-xs text-slate-500">Линк: {banner.link_url}</p>}
                                 </div>
                                 <div className="flex flex-wrap gap-2">
@@ -857,7 +870,7 @@ export default function AdminPage() {
                         </div>
                       ))}
 
-                      {banners.length === 0 && <p className="text-sm text-slate-400">Сè уште нема банери.</p>}
+                      {banners.length === 0 && <p className="text-sm text-slate-400">Сè уште нема додадени промотивни банери.</p>}
                     </div>
                   </div>
                 </section>

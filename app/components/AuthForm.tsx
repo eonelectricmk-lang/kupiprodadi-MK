@@ -2,12 +2,14 @@
 
 import { useState } from 'react';
 import { Button, Input } from './ui';
+import { useTheme } from '@/app/context/ThemeContext';
 
 type AuthType = 'login' | 'register';
 
 export default function AuthForm({ type }: { type: AuthType }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const { dark } = useTheme();
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -61,7 +63,7 @@ export default function AuthForm({ type }: { type: AuthType }) {
       )}
 
       <div className="space-y-1.5">
-        <label className="block text-sm font-semibold text-white">Е-пошта</label>
+        <label className={`block text-sm font-semibold ${dark ? 'text-white' : 'text-slate-900'}`}>Е-пошта</label>
         <Input
           type="email"
           name="email"
@@ -69,12 +71,16 @@ export default function AuthForm({ type }: { type: AuthType }) {
           value={formData.email}
           onChange={handleChange}
           required
-          className="!border-[#223653] !bg-[#081223] !text-white placeholder:!text-slate-500 focus:!border-[#2d4f7d] focus:!ring-[#2d4f7d]/30"
+          className={
+            dark
+              ? '!border-[#223653] !bg-[#081223] !text-white placeholder:!text-slate-500 focus:!border-[#2d4f7d] focus:!ring-[#2d4f7d]/30'
+              : '!border-slate-300 !bg-white !text-slate-900 placeholder:!text-slate-400 focus:!border-slate-400 focus:!ring-slate-200'
+          }
         />
       </div>
 
       <div className="space-y-1.5">
-        <label className="block text-sm font-semibold text-white">Лозинка</label>
+        <label className={`block text-sm font-semibold ${dark ? 'text-white' : 'text-slate-900'}`}>Лозинка</label>
         <Input
           type="password"
           name="password"
@@ -82,14 +88,18 @@ export default function AuthForm({ type }: { type: AuthType }) {
           value={formData.password}
           onChange={handleChange}
           required
-          className="!border-[#223653] !bg-[#081223] !text-white placeholder:!text-slate-500 focus:!border-[#2d4f7d] focus:!ring-[#2d4f7d]/30"
+          className={
+            dark
+              ? '!border-[#223653] !bg-[#081223] !text-white placeholder:!text-slate-500 focus:!border-[#2d4f7d] focus:!ring-[#2d4f7d]/30'
+              : '!border-slate-300 !bg-white !text-slate-900 placeholder:!text-slate-400 focus:!border-slate-400 focus:!ring-slate-200'
+          }
         />
       </div>
 
       {type === 'register' && (
         <>
           <div className="space-y-1.5">
-            <label className="block text-sm font-semibold text-white">Име</label>
+            <label className={`block text-sm font-semibold ${dark ? 'text-white' : 'text-slate-900'}`}>Име</label>
             <Input
               type="text"
               name="name"
@@ -97,19 +107,27 @@ export default function AuthForm({ type }: { type: AuthType }) {
               value={formData.name}
               onChange={handleChange}
               required
-              className="!border-[#223653] !bg-[#081223] !text-white placeholder:!text-slate-500 focus:!border-[#2d4f7d] focus:!ring-[#2d4f7d]/30"
+              className={
+                dark
+                  ? '!border-[#223653] !bg-[#081223] !text-white placeholder:!text-slate-500 focus:!border-[#2d4f7d] focus:!ring-[#2d4f7d]/30'
+                  : '!border-slate-300 !bg-white !text-slate-900 placeholder:!text-slate-400 focus:!border-slate-400 focus:!ring-slate-200'
+              }
             />
           </div>
 
           <div className="space-y-1.5">
-            <label className="block text-sm font-semibold text-white">Телефон</label>
+            <label className={`block text-sm font-semibold ${dark ? 'text-white' : 'text-slate-900'}`}>Телефон</label>
             <Input
               type="tel"
               name="phone"
               placeholder="08x xxx xxx"
               value={formData.phone}
               onChange={handleChange}
-              className="!border-[#223653] !bg-[#081223] !text-white placeholder:!text-slate-500 focus:!border-[#2d4f7d] focus:!ring-[#2d4f7d]/30"
+              className={
+                dark
+                  ? '!border-[#223653] !bg-[#081223] !text-white placeholder:!text-slate-500 focus:!border-[#2d4f7d] focus:!ring-[#2d4f7d]/30'
+                  : '!border-slate-300 !bg-white !text-slate-900 placeholder:!text-slate-400 focus:!border-slate-400 focus:!ring-slate-200'
+              }
             />
           </div>
         </>
