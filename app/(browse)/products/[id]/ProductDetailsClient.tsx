@@ -146,6 +146,32 @@ export default function ProductDetailsClient({ id }: { id: string }) {
     return Array.from(new Set(merged)).slice(0, 8).concat(merged.length === 0 ? [FALLBACK_IMAGE] : []);
   }, [ad]);
 
+  useEffect(() => {
+    if (!ad || typeof window === 'undefined') return;
+
+    const recentViewsKey = 'recently_viewed_ads';
+    const nextItem = {
+      id: ad.id,
+      title: ad.title,
+      price: ad.price,
+      currency: ad.currency || '€',
+      location: ad.location || ad.city || 'Македонија',
+      image_url: images[0] || ad.image_url || null,
+      viewedAt: new Date().toISOString(),
+    };
+
+    try {
+      const raw = window.localStorage.getItem(recentViewsKey);
+      const parsed = raw ? JSON.parse(raw) : [];
+      const list = Array.isArray(parsed) ? parsed.filter((item) => item && item.id !== ad.id) : [];
+      list.unshift(nextItem);
+      window.localStorage.setItem(recentViewsKey, JSON.stringify(list.slice(0, 12)));
+      window.dispatchEvent(new Event('storage'));
+    } catch {
+      // Ignore storage issues; the page should still work normally.
+    }
+  }, [ad, images]);
+
   const categoryTrail = useMemo(() => {
     if (!ad) return null;
 

@@ -175,10 +175,10 @@ export function Header() {
             <button onClick={() => setDark(!dark)} className={`hidden transition sm:inline-flex ${h.icon}`} title={dark ? 'Светла тема' : 'Темна тема'}>
               {dark ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
             </button>
-            <Link href="/favorites">
+            <Link href="/profile#saved">
               <button className={`transition ${h.icon}`}><Heart className="h-5 w-5" /></button>
             </Link>
-            <Link href="/messages">
+            <Link href="/profile#messages">
               <div className="relative">
                 <button className={`transition ${h.icon}`}><Bell className="h-5 w-5" /></button>
                 <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center font-bold">3</span>

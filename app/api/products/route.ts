@@ -9,6 +9,7 @@ export async function GET(request: NextRequest) {
     const category = normalizeCategorySlug(searchParams.get('category'));
     const search = searchParams.get('search');
     const location = searchParams.get('location');
+    const sellerId = searchParams.get('seller_id');
     const subcategory = normalizeCategorySlug(searchParams.get('subcategory') || searchParams.get('sub'));
     const condition = searchParams.get('condition');
     const city = searchParams.get('city');
@@ -23,6 +24,10 @@ export async function GET(request: NextRequest) {
     if (category) {
       filters.push('p.category = ?');
       values.push(category);
+    }
+    if (sellerId) {
+      filters.push('p.seller_id = ?');
+      values.push(Number(sellerId));
     }
     if (search) {
       const trimmedSearch = search.trim();
