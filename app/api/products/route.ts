@@ -10,6 +10,7 @@ export async function GET(request: NextRequest) {
     const search = searchParams.get('search');
     const location = searchParams.get('location');
     const sellerId = searchParams.get('seller_id');
+    const includeAll = searchParams.get('all') === '1';
     const subcategory = normalizeCategorySlug(searchParams.get('subcategory') || searchParams.get('sub'));
     const condition = searchParams.get('condition');
     const city = searchParams.get('city');
@@ -18,7 +19,7 @@ export async function GET(request: NextRequest) {
     const limit = Math.min(Math.max(parseInt(searchParams.get('limit') || '20', 10) || 20, 1), 100);
     const offset = Math.max(parseInt(searchParams.get('offset') || '0', 10) || 0, 0);
 
-    const filters: string[] = ["p.status = 'active'"];
+    const filters: string[] = includeAll ? [] : ["p.status = 'active'"];
     const values: Array<string | number> = [];
 
     if (category) {
@@ -67,7 +68,7 @@ export async function GET(request: NextRequest) {
       values.push(Number(maxPrice));
     }
 
-    const whereClause = filters.join(' AND ');
+    const whereClause = filters.length > 0 ? filters.join(' AND ') : '1=1';
 
     const products = db.prepare(`
       SELECT 

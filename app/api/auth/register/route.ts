@@ -27,11 +27,24 @@ export async function POST(request: NextRequest) {
       'INSERT INTO users (email, password, name, phone) VALUES (?, ?, ?, ?)'
     );
     const result = stmt.run(email, hashedPassword, name, phone || null);
+    const createdUser = db.prepare(`
+      SELECT id, email, name, phone, location, rating, created_at
+      FROM users
+      WHERE id = ?
+    `).get(result.lastInsertRowid) as any;
 
     return NextResponse.json(
       { 
         message: 'Успешна регистрација',
-        user: { id: result.lastInsertRowid, email, name }
+        user: {
+          id: createdUser?.id ?? result.lastInsertRowid,
+          email: createdUser?.email ?? email,
+          name: createdUser?.name ?? name,
+          phone: createdUser?.phone || phone || null,
+          location: createdUser?.location || null,
+          rating: createdUser?.rating ?? 5,
+          created_at: createdUser?.created_at || null,
+        }
       },
       { status: 201 }
     );

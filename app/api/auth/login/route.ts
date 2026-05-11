@@ -14,7 +14,11 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const user = db.prepare('SELECT id, email, password, name FROM users WHERE email = ?').get(email);
+    const user = db.prepare(`
+      SELECT id, email, password, name, phone, location, rating, created_at
+      FROM users
+      WHERE email = ?
+    `).get(email);
     if (!user) {
       return NextResponse.json(
         { error: 'Корисникот не постои' },
@@ -32,7 +36,15 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(
       {
         message: 'Успешно логирање',
-        user: { id: user.id, email: user.email, name: user.name }
+        user: {
+          id: user.id,
+          email: user.email,
+          name: user.name,
+          phone: user.phone || null,
+          location: user.location || null,
+          rating: user.rating ?? 5,
+          created_at: user.created_at || null,
+        }
       },
       { status: 200 }
     );
