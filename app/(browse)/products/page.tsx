@@ -24,8 +24,8 @@ interface Product {
   created_at?: string;
 }
 
-const PER_PAGE_OPTIONS = [12, 30, 50, 70, 100] as const;
-const DEFAULT_PER_PAGE = 12;
+const PER_PAGE_OPTIONS = [30, 50, 70, 100] as const;
+const DEFAULT_PER_PAGE = 30;
 
 function getPageNumbers(current: number, total: number): (number | '...')[] {
   if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1);
