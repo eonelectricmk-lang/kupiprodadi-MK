@@ -17,7 +17,19 @@ function initializeDb() {
   
   try {
     const Database = require('better-sqlite3');
-    const dbPath = path.join(process.cwd(), 'kupiprodadi.db');
+    const isVercel = process.env.VERCEL === '1';
+    let dbPath: string;
+    if (isVercel) {
+      const fs = require('fs');
+      const srcPath = path.join(process.cwd(), 'kupiprodadi.db');
+      const tmpPath = '/tmp/kupiprodadi.db';
+      if (!fs.existsSync(tmpPath)) {
+        fs.copyFileSync(srcPath, tmpPath);
+      }
+      dbPath = tmpPath;
+    } else {
+      dbPath = path.join(process.cwd(), 'kupiprodadi.db');
+    }
     db = new Database(dbPath);
 
     // Initialize database tables
