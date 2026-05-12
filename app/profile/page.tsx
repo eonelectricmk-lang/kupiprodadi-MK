@@ -1074,8 +1074,8 @@ export default function ProfilePage() {
               ) : (
                 <div className="space-y-2.5">
                   {messages.filter((m) => {
-                    if (messageFilter === 'received') return m.receiver_id === user?.id;
-                    if (messageFilter === 'sent') return m.sender_id === user?.id;
+                    if (messageFilter === 'received') return m.receiver_id === user?.id && m.sender_id !== user?.id;
+                    if (messageFilter === 'sent') return m.sender_id === user?.id && m.receiver_id !== user?.id;
                     return true;
                   }).map((message) => (
                     <div
