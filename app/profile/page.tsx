@@ -1065,7 +1065,7 @@ export default function ProfilePage() {
                         <div className="min-w-0">
                           <div className="flex items-center gap-2">
                             <p className="truncate text-sm font-semibold text-white">
-                              {message.sender_id === user.id ? message.receiver_name : message.sender_name}
+                              {message.sender_id === user?.id ? 'До: ' + (message.receiver_name || 'непознат') : 'Од: ' + (message.sender_name || 'непознат')}
                             </p>
                             {!message.read && <span className="h-2 w-2 rounded-full bg-red-500" />}
                           </div>
@@ -1073,7 +1073,7 @@ export default function ProfilePage() {
                         </div>
                         <span className="shrink-0 text-[11px] text-slate-500">{formatDate(message.created_at)}</span>
                       </div>
-                      <p className="mt-2 line-clamp-2 text-sm leading-6 text-slate-300">{message.content}</p>
+                      <p className="mt-2 text-sm leading-6 text-slate-300">{message.content}</p>
                     </div>
                   ))}
                 </div>
