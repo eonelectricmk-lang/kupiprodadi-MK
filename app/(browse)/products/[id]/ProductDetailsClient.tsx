@@ -85,8 +85,6 @@ export default function ProductDetailsClient({ id }: { id: string }) {
   const [isSaved, setIsSaved] = useState(false);
   const [copiedLink, setCopiedLink] = useState(false);
   const [reported, setReported] = useState(false);
-  const [contactName, setContactName] = useState('');
-  const [contactPhone, setContactPhone] = useState('');
   const [contactMessage, setContactMessage] = useState('');
   const [contactStatus, setContactStatus] = useState<string | null>(null);
   const [sendingMessage, setSendingMessage] = useState(false);
@@ -150,8 +148,6 @@ export default function ProductDetailsClient({ id }: { id: string }) {
       const u = JSON.parse(stored);
       if (!u?.id) return;
       setLoggedInUser(u);
-      setContactName(u.name || '');
-      setContactPhone(u.phone || '');
     } catch {}
   }, []);
 
@@ -276,27 +272,23 @@ export default function ProductDetailsClient({ id }: { id: string }) {
     event.preventDefault();
     if (!ad) return;
 
+    if (!loggedInUser) {
+      window.location.href = '/auth';
+      return;
+    }
+
     setSendingMessage(true);
     setContactStatus(null);
 
     try {
-      const buyerId = loggedInUser?.id || (ad.seller_id === 1 ? 2 : 1);
-      const content = [
-        contactMessage.trim(),
-        loggedInUser ? '' : `Име: ${contactName.trim()}`,
-        loggedInUser ? '' : `Телефон: ${contactPhone.trim()}`,
-      ]
-        .filter(Boolean)
-        .join('\n');
-
       const response = await fetch('/api/messages', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          sender_id: buyerId,
+          sender_id: loggedInUser.id,
           receiver_id: ad.seller_id,
           product_id: ad.id,
-          content,
+          content: contactMessage.trim(),
         }),
       });
 
@@ -306,8 +298,6 @@ export default function ProductDetailsClient({ id }: { id: string }) {
       }
 
       setContactStatus('Пораката е испратена до продавачот.');
-      setContactName('');
-      setContactPhone('');
       setContactMessage('');
     } catch (messageError) {
       setContactStatus(messageError instanceof Error ? messageError.message : 'Грешка при праќање порака.');
@@ -490,29 +480,9 @@ export default function ProductDetailsClient({ id }: { id: string }) {
                 <MessageCircle className="h-4 w-4" /> Контактирај продавач
               </h2>
               <div className="mt-3 grid gap-3">
-                <input
-                  value={contactName}
-                  onChange={(event) => setContactName(event.target.value)}
-                  placeholder="Твоето име"
-                  readOnly={!!loggedInUser}
-                  className={`h-10 rounded-lg border px-3 text-sm outline-none ${
-                    loggedInUser
-                      ? 'border-[#3a5a7a] bg-[#15283e] text-slate-300'
-                      : 'border-[#2a3f60] bg-[#0f1a2b] text-white placeholder:text-slate-500'
-                  } focus:border-red-500`}
-                />
-                <input
-                  value={contactPhone}
-                  onChange={(event) => setContactPhone(event.target.value)}
-                  placeholder="Телефон за контакт"
-                  type="tel"
-                  readOnly={!!loggedInUser}
-                  className={`h-10 rounded-lg border px-3 text-sm outline-none ${
-                    loggedInUser
-                      ? 'border-[#3a5a7a] bg-[#15283e] text-slate-300'
-                      : 'border-[#2a3f60] bg-[#0f1a2b] text-white placeholder:text-slate-500'
-                  } focus:border-red-500`}
-                />
+                <div className="rounded-lg border border-[#2a3f60] bg-[#0f1a2b] px-3 py-2 text-sm text-slate-400">
+                  {loggedInUser ? `Порака од: ${loggedInUser.name}` : 'Мора да се најавите за да испратите порака'}
+                </div>
                 <textarea
                   required
                   minLength={5}
@@ -528,7 +498,7 @@ export default function ProductDetailsClient({ id }: { id: string }) {
                 )}
                 <button
                   type="submit"
-                  disabled={sendingMessage}
+                  disabled={sendingMessage || !loggedInUser}
                   className="inline-flex h-11 items-center justify-center gap-2 rounded-lg bg-red-600 px-4 text-sm font-semibold text-white transition hover:bg-red-500 disabled:cursor-not-allowed disabled:opacity-70"
                 >
                   <Send className="h-4 w-4" /> {sendingMessage ? 'Испраќање...' : 'Испрати порака'}
