@@ -1065,7 +1065,7 @@ export default function ProfilePage() {
                         <div className="min-w-0">
                           <div className="flex items-center gap-2">
                             <p className="truncate text-sm font-semibold text-white">
-                              {message.sender_id === user?.id ? 'До: ' + (message.receiver_name || 'непознат') : 'Од: ' + (message.sender_name || 'непознат')}
+                              {message.sender_id === user?.id ? 'до ' + (message.receiver_name || 'непознат') : 'од ' + (message.sender_name || 'непознат')}
                             </p>
                             {!message.read && <span className="h-2 w-2 rounded-full bg-red-500" />}
                           </div>
