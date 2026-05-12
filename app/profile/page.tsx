@@ -569,6 +569,7 @@ export default function ProfilePage() {
   const [myProducts, setMyProducts] = useState<Product[]>([]);
   const [favorites, setFavorites] = useState<Product[]>([]);
   const [messages, setMessages] = useState<Message[]>([]);
+  const [messageFilter, setMessageFilter] = useState<'all' | 'received' | 'sent'>('all');
   const [sellingOrders, setSellingOrders] = useState<SellingOrder[]>([]);
   const [recentViews, setRecentViews] = useState<RecentView[]>([]);
   const [activeTab, setActiveTab] = useState<TabKey>('ads');
@@ -1049,6 +1050,22 @@ export default function ProfilePage() {
                 <span className="shrink-0 text-sm text-slate-400">{messages.length} разговори</span>
               </div>
 
+              <div className="flex gap-2">
+                {(['all', 'received', 'sent'] as const).map((f) => (
+                  <button
+                    key={f}
+                    onClick={() => setMessageFilter(f)}
+                    className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition ${
+                      messageFilter === f
+                        ? 'bg-red-600 text-white'
+                        : 'border border-[#223653] bg-[#0b1727] text-slate-300 hover:bg-[#14243a]'
+                    }`}
+                  >
+                    {f === 'all' ? 'Сите' : f === 'received' ? 'Примени' : 'Пратени'}
+                  </button>
+                ))}
+              </div>
+
               {messages.length === 0 ? (
                 <EmptyState
                   title="Немаш пораки"
@@ -1056,7 +1073,11 @@ export default function ProfilePage() {
                 />
               ) : (
                 <div className="space-y-2.5">
-                  {messages.map((message) => (
+                  {messages.filter((m) => {
+                    if (messageFilter === 'received') return m.receiver_id === user?.id;
+                    if (messageFilter === 'sent') return m.sender_id === user?.id;
+                    return true;
+                  }).map((message) => (
                     <div
                       key={message.id}
                       className="rounded-[16px] border border-[#1d2c43] bg-[#0b1423] px-4 py-3 transition hover:border-[#2d4f7d] hover:bg-[#10203a]"
