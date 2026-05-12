@@ -5,6 +5,7 @@ import { hashPassword, verifyPassword } from '@/lib/auth';
 
 const SESSION_COOKIE = 'kp_admin_session';
 const SESSION_DURATION_MS = 1000 * 60 * 60 * 24 * 14;
+const SESSION_SECRET = process.env.SESSION_SECRET || 'kupiprodadi-session-secret-2024';
 
 type AdminUser = {
   id: number;
@@ -13,18 +14,39 @@ type AdminUser = {
   role: string;
 };
 
+function signCookie(userId: number, expires: number): string {
+  const payload = `${userId}:${expires}`;
+  const hmac = crypto.createHmac('sha256', SESSION_SECRET).update(payload).digest('hex');
+  return `${payload}:${hmac}`;
+}
+
+function verifyCookie(value: string): number | null {
+  const parts = value.split(':');
+  if (parts.length !== 3) return null;
+  const [userIdStr, expiresStr, sig] = parts;
+  const userId = Number(userIdStr);
+  const expires = Number(expiresStr);
+  if (!userId || !expires || Date.now() > expires) return null;
+  const expected = signCookie(userId, expires);
+  if (expected !== value) return null;
+  return userId;
+}
+
 export async function getAdminFromSession(): Promise<AdminUser | null> {
   const cookieStore = await cookies();
-  const token = cookieStore.get(SESSION_COOKIE)?.value;
-  if (!token) return null;
+  const value = cookieStore.get(SESSION_COOKIE)?.value;
+  if (!value) return null;
+
+  const userId = verifyCookie(value);
+  if (!userId) {
+    cookieStore.delete(SESSION_COOKIE);
+    return null;
+  }
 
   const db = getDb();
   const row = db.prepare(`
-    SELECT u.id, u.email, u.name, u.role
-    FROM admin_sessions s
-    JOIN users u ON u.id = s.user_id
-    WHERE s.token = ? AND s.expires_at > CURRENT_TIMESTAMP AND u.role = 'admin'
-  `).get(token) as AdminUser | undefined;
+    SELECT id, email, name, role FROM users WHERE id = ? AND role = 'admin'
+  `).get(userId) as AdminUser | undefined;
 
   return row || null;
 }
@@ -44,29 +66,21 @@ export function hasAnyAdmin(): boolean {
 }
 
 export async function createAdminSession(userId: number) {
-  const db = getDb();
-  const token = crypto.randomBytes(32).toString('hex');
-  const expiresAt = new Date(Date.now() + SESSION_DURATION_MS).toISOString();
-
-  db.prepare(`INSERT INTO admin_sessions (token, user_id, expires_at) VALUES (?, ?, ?)`).run(token, userId, expiresAt);
+  const expires = Date.now() + SESSION_DURATION_MS;
+  const value = signCookie(userId, expires);
 
   const cookieStore = await cookies();
-  cookieStore.set(SESSION_COOKIE, token, {
+  cookieStore.set(SESSION_COOKIE, value, {
     httpOnly: true,
     sameSite: 'lax',
     secure: false,
     path: '/',
-    expires: new Date(Date.now() + SESSION_DURATION_MS),
+    expires: new Date(expires),
   });
 }
 
 export async function clearAdminSession() {
   const cookieStore = await cookies();
-  const token = cookieStore.get(SESSION_COOKIE)?.value;
-  if (token) {
-    const db = getDb();
-    db.prepare(`DELETE FROM admin_sessions WHERE token = ?`).run(token);
-  }
   cookieStore.delete(SESSION_COOKIE);
 }
 
