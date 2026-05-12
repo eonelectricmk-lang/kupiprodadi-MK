@@ -89,6 +89,7 @@ export default function ProductDetailsClient({ id }: { id: string }) {
   const [contactMessage, setContactMessage] = useState('');
   const [contactStatus, setContactStatus] = useState<string | null>(null);
   const [sendingMessage, setSendingMessage] = useState(false);
+  const [loggedInUser, setLoggedInUser] = useState<{ id: number; name: string; phone?: string; email?: string } | null>(null);
   const [categories, setCategories] = useState<CategoryOption[]>(CATEGORIES as CategoryOption[]);
 
   useEffect(() => {
@@ -139,6 +140,18 @@ export default function ProductDetailsClient({ id }: { id: string }) {
         }
       })
       .catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem('user');
+      if (!stored) return;
+      const u = JSON.parse(stored);
+      if (!u?.id) return;
+      setLoggedInUser(u);
+      setContactName(u.name || '');
+      setContactPhone(u.phone || '');
+    } catch {}
   }, []);
 
   const images = useMemo(() => {
@@ -266,11 +279,11 @@ export default function ProductDetailsClient({ id }: { id: string }) {
     setContactStatus(null);
 
     try {
-      const demoBuyerId = ad.seller_id === 1 ? 2 : 1;
+      const buyerId = loggedInUser?.id || (ad.seller_id === 1 ? 2 : 1);
       const content = [
         contactMessage.trim(),
-        contactName.trim() ? `Име: ${contactName.trim()}` : '',
-        contactPhone.trim() ? `Телефон: ${contactPhone.trim()}` : '',
+        loggedInUser ? '' : `Име: ${contactName.trim()}`,
+        loggedInUser ? '' : `Телефон: ${contactPhone.trim()}`,
       ]
         .filter(Boolean)
         .join('\n');
@@ -279,7 +292,7 @@ export default function ProductDetailsClient({ id }: { id: string }) {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          sender_id: demoBuyerId,
+          sender_id: buyerId,
           receiver_id: ad.seller_id,
           product_id: ad.id,
           content,
@@ -475,14 +488,24 @@ export default function ProductDetailsClient({ id }: { id: string }) {
                   value={contactName}
                   onChange={(event) => setContactName(event.target.value)}
                   placeholder="Твоето име"
-                  className="h-10 rounded-lg border border-[#2a3f60] bg-[#0f1a2b] px-3 text-sm text-white outline-none placeholder:text-slate-500 focus:border-red-500"
+                  readOnly={!!loggedInUser}
+                  className={`h-10 rounded-lg border px-3 text-sm outline-none ${
+                    loggedInUser
+                      ? 'border-[#3a5a7a] bg-[#15283e] text-slate-300'
+                      : 'border-[#2a3f60] bg-[#0f1a2b] text-white placeholder:text-slate-500'
+                  } focus:border-red-500`}
                 />
                 <input
                   value={contactPhone}
                   onChange={(event) => setContactPhone(event.target.value)}
                   placeholder="Телефон за контакт"
                   type="tel"
-                  className="h-10 rounded-lg border border-[#2a3f60] bg-[#0f1a2b] px-3 text-sm text-white outline-none placeholder:text-slate-500 focus:border-red-500"
+                  readOnly={!!loggedInUser}
+                  className={`h-10 rounded-lg border px-3 text-sm outline-none ${
+                    loggedInUser
+                      ? 'border-[#3a5a7a] bg-[#15283e] text-slate-300'
+                      : 'border-[#2a3f60] bg-[#0f1a2b] text-white placeholder:text-slate-500'
+                  } focus:border-red-500`}
                 />
                 <textarea
                   required
