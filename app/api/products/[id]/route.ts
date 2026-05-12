@@ -37,7 +37,8 @@ export async function GET(
         u.name as seller_name,
         u.phone as seller_phone,
         u.email as seller_email,
-        u.rating as seller_rating
+        u.rating as seller_rating,
+        u.avatar_url as seller_avatar_url
       FROM products p
       JOIN users u ON p.seller_id = u.id
       WHERE p.id = ? ${includeAll ? '' : "AND p.status = 'active'"}

@@ -51,6 +51,7 @@ interface ProductDetails {
   seller_phone?: string;
   seller_email?: string;
   seller_rating?: number;
+  seller_avatar_url?: string | null;
 }
 
 type CategoryOption = {
@@ -343,6 +344,7 @@ export default function ProductDetailsClient({ id }: { id: string }) {
   const sellerName = ad.contact_name || ad.seller_name || 'Продавач';
   const sellerRating = Number(ad.seller_rating || 0);
   const sellerEmail = ad.contact_email || ad.seller_email || '';
+  const sellerAvatarUrl = ad.seller_avatar_url || null;
   const categoryLink = categoryTrail?.category ? `/categories/${categoryTrail.category.slug}` : null;
   const subcategoryLink = categoryTrail?.subcategory ? `/categories/${categoryTrail.subcategory.slug}` : null;
 
@@ -444,8 +446,12 @@ export default function ProductDetailsClient({ id }: { id: string }) {
                 <p className="text-sm font-semibold text-white">ID: KP-{ad.id.toString().padStart(6, '0')}</p>
               </div>
               <div className="mt-3 flex items-start gap-3">
-                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#172945] text-slate-200">
-                  <UserCircle2 className="h-9 w-9" />
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#172945] text-slate-200">
+                  {sellerAvatarUrl ? (
+                    <img src={sellerAvatarUrl} alt="" className="h-full w-full rounded-full object-cover" />
+                  ) : (
+                    <UserCircle2 className="h-9 w-9" />
+                  )}
                 </div>
                 <div className="min-w-0 flex-1">
                   <div className="flex items-start justify-between gap-3">
