@@ -193,7 +193,7 @@ function ProductsPageContent() {
               aria-label="Огласи по страна"
             >
               {PER_PAGE_OPTIONS.map((n) => (
-                <option key={n} value={n}>по {n}</option>
+                <option key={n} value={n}>Прикажи по {n}</option>
               ))}
             </select>
             <div className="inline-flex items-center gap-1 rounded-lg border border-[#1f3250] bg-[#0f1a2b] p-1">
