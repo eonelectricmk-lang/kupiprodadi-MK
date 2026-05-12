@@ -155,6 +155,7 @@ export default function AdminPage() {
   const [auditLoading, setAuditLoading] = useState(false);
   const [selectedUserIds, setSelectedUserIds] = useState<number[]>([]);
   const [adminMessageText, setAdminMessageText] = useState('');
+  const [categorySort, setCategorySort] = useState<'name_asc' | 'name_desc' | 'newest'>('newest');
   const [message, setMessage] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [login, setLogin] = useState({ email: '', password: '' });
@@ -1327,9 +1328,24 @@ export default function AdminPage() {
                   </div>
 
                   <div className="rounded-xl border border-[#1d2c43] bg-[#081223] p-5">
-                    <h2 className="mb-4 text-lg font-bold">Постоечки категории</h2>
+                    <div className="mb-4 flex items-center justify-between gap-4">
+                      <h2 className="text-lg font-bold">Постоечки категории</h2>
+                      <select
+                        value={categorySort}
+                        onChange={(e) => setCategorySort(e.target.value as 'name_asc' | 'name_desc' | 'newest')}
+                        className="rounded-lg border border-[#223653] bg-[#0b1727] px-3 py-1.5 text-sm text-white"
+                      >
+                        <option value="newest">Најнови</option>
+                        <option value="name_asc">Име (А-Ш)</option>
+                        <option value="name_desc">Име (Ш-А)</option>
+                      </select>
+                    </div>
                     <div className="space-y-4">
-                      {categories.map((category) => (
+                      {[...categories].sort((a, b) => {
+                        if (categorySort === 'name_asc') return a.name.localeCompare(b.name, 'mk');
+                        if (categorySort === 'name_desc') return b.name.localeCompare(a.name, 'mk');
+                        return b.id - a.id;
+                      }).map((category) => (
                         <div key={category.id} className="rounded-lg border border-[#223653] bg-[#0b1727] p-4">
                           <div className="flex items-center justify-between gap-3">
                             <div>
