@@ -98,21 +98,26 @@ export function Header() {
   }, []);
 
   useEffect(() => {
-    try {
-      const stored = localStorage.getItem('user');
-      if (!stored) return;
-      const user = JSON.parse(stored);
-      if (!user?.id) return;
-      fetch(`/api/messages?user_id=${user.id}`)
-        .then((res) => res.json())
-        .then((msgs) => {
-          if (Array.isArray(msgs)) {
-            const unread = msgs.filter((m: any) => Number(m.read) === 0 && Number(m.receiver_id) === user.id);
-            setUnreadCount(unread.length);
-          }
-        })
-        .catch(() => {});
-    } catch {}
+    const fetchUnread = () => {
+      try {
+        const stored = localStorage.getItem('user');
+        if (!stored) return;
+        const user = JSON.parse(stored);
+        if (!user?.id) return;
+        fetch(`/api/messages?user_id=${user.id}`)
+          .then((res) => res.json())
+          .then((msgs) => {
+            if (Array.isArray(msgs)) {
+              const unread = msgs.filter((m: any) => Number(m.read) === 0 && Number(m.receiver_id) === user.id);
+              setUnreadCount(unread.length);
+            }
+          })
+          .catch(() => {});
+      } catch {}
+    };
+    fetchUnread();
+    window.addEventListener('focus', fetchUnread);
+    return () => window.removeEventListener('focus', fetchUnread);
   }, []);
 
   useEffect(() => {

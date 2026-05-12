@@ -75,3 +75,20 @@ export async function POST(request: NextRequest) {
     );
   }
 }
+
+export async function PATCH(request: NextRequest) {
+  try {
+    const db = getDb();
+    const { receiver_id } = await request.json();
+    if (!receiver_id) {
+      return NextResponse.json({ error: 'Receiver ID е задолжителен' }, { status: 400 });
+    }
+    const result = db.prepare(`
+      UPDATE messages SET read = 1 WHERE receiver_id = ? AND read = 0
+    `).run(receiver_id);
+    return NextResponse.json({ updated: result.changes }, { status: 200 });
+  } catch (error) {
+    console.error('Error marking messages as read:', error);
+    return NextResponse.json({ error: 'Грешка при означување прочитано' }, { status: 500 });
+  }
+}

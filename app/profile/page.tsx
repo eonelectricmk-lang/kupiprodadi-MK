@@ -632,6 +632,15 @@ export default function ProfilePage() {
     };
   }, []);
 
+  useEffect(() => {
+    if (activeTab !== 'messages' || !user?.id) return;
+    fetch('/api/messages', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ receiver_id: user.id }),
+    }).catch(() => {});
+  }, [activeTab, user?.id]);
+
   const unreadMessages = useMemo(
     () => messages.filter((message) => !message.read && message.receiver_id === user?.id).length,
     [messages, user?.id],
