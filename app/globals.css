@@ -113,8 +113,7 @@ html.light [class*="bg-[#1a2d49]"] {
   background-color: #ffffff !important;
 }
 
-html.light [class*="bg-[#10131f]"],
-html.light [class*="bg-black/20"] {
+html.light [class*="bg-[#10131f]"] {
   background-color: #ffffff !important;
 }
 
