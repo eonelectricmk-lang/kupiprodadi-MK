@@ -830,7 +830,7 @@ export default function AdminPage() {
 
                   <div className="space-y-3">
                     {products.slice(0, adminPerPage).map((product) => (
-                      <div key={product.id} className="rounded-lg border border-[#1d2c43] bg-[#0b1727] p-4">
+                      <div key={product.id} className="rounded-lg border-2 border-[#2d4a6a] bg-[#0b1727] p-4">
                         <div className="flex flex-col gap-4">
                           <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
                             <div>
@@ -1039,7 +1039,7 @@ export default function AdminPage() {
                       </div>
 
                       {users.slice(0, adminPerPage).map((user) => (
-                        <div key={user.id} className="rounded-xl border border-[#223653] bg-[#0b1727] p-4">
+                        <div key={user.id} className="rounded-xl border-2 border-[#2d4a6a] bg-[#0b1727] p-4">
                           <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
                             <div className="grid flex-1 gap-3 md:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)_auto]">
                               <div>
