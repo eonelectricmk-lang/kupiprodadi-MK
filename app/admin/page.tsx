@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import Header from '@/app/components/Header';
 import { Button, Container, Input } from '@/app/components/ui';
+import { useTheme } from '@/app/context/ThemeContext';
 import { slugify } from '@/lib/slugify';
 
 type AdminMe = {
@@ -72,6 +73,19 @@ type AdminComposeTarget = {
   is_active: number;
 };
 
+type AdminUserMessage = {
+  id: number;
+  sender_id: number;
+  receiver_id: number;
+  product_id: number | null;
+  content: string;
+  read: number;
+  created_at: string;
+  sender_name: string | null;
+  receiver_name: string | null;
+  product_title: string | null;
+};
+
 type HomepageTrustItem = {
   icon: 'shield-check' | 'badge-check' | 'zap' | 'users';
   color: string;
@@ -90,7 +104,7 @@ const TABS = [
   { id: 'users', label: 'Корисници' },
   { id: 'categories', label: 'Категории' },
   { id: 'homepage', label: 'Уредување банери' },
-  { id: 'banners', label: 'Рекламирање' },
+  { id: 'banners', label: 'Голем банер' },
 ] as const;
 
 const CATEGORY_ICON_OPTIONS = [
@@ -122,6 +136,7 @@ const CATEGORY_ICON_OPTIONS = [
 ] as const;
 
 export default function AdminPage() {
+  const { dark } = useTheme();
   const [me, setMe] = useState<AdminMe | null>(null);
   const [activeTab, setActiveTab] = useState<(typeof TABS)[number]['id']>('products');
   const [statusFilter, setStatusFilter] = useState('pending');
@@ -134,6 +149,9 @@ export default function AdminPage() {
   const [userStatusFilter, setUserStatusFilter] = useState<'all' | 'active' | 'inactive'>('all');
   const [userCounts, setUserCounts] = useState({ total: 0, active: 0, inactive: 0 });
   const [composeUser, setComposeUser] = useState<AdminComposeTarget | null>(null);
+  const [auditUser, setAuditUser] = useState<AdminComposeTarget | null>(null);
+  const [auditMessages, setAuditMessages] = useState<AdminUserMessage[]>([]);
+  const [auditLoading, setAuditLoading] = useState(false);
   const [selectedUserIds, setSelectedUserIds] = useState<number[]>([]);
   const [adminMessageText, setAdminMessageText] = useState('');
   const [message, setMessage] = useState<string | null>(null);
@@ -357,6 +375,24 @@ export default function AdminPage() {
       setMessage(error instanceof Error ? error.message : 'Грешка при испраќање порака.');
     } finally {
       setBusy(false);
+    }
+  };
+
+  const openUserMessages = async (user: AdminComposeTarget) => {
+    setComposeUser(null);
+    setAuditUser(user);
+    setAuditMessages([]);
+    setAuditLoading(true);
+    try {
+      const response = await fetch(`/api/admin/users/${user.id}/messages`, { cache: 'no-store' });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data?.error || 'Не успеав да ги вчитам пораките.');
+      setAuditMessages(Array.isArray(data?.messages) ? data.messages : []);
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : 'Не успеав да ги вчитам пораките.');
+      setAuditUser(null);
+    } finally {
+      setAuditLoading(false);
     }
   };
 
@@ -672,12 +708,12 @@ export default function AdminPage() {
   return (
     <>
       <Header />
-      <main className="min-h-screen bg-[#050b17] py-8 text-white">
+      <main className="min-h-screen bg-[#050b17] py-2.5 text-white md:py-3">
         <Container>
-          <div className="mb-6 flex items-center justify-between gap-4">
+          <div className="mb-3 flex items-center justify-between gap-3">
             <div>
-              <h1 className="text-3xl font-bold">Admin Panel</h1>
-              <p className="mt-2 text-sm text-slate-400">Од тука ќе одобруваш огласи, ќе управуваш со категории и ќе поставуваш промотивни позиции за поголема видливост.</p>
+              <h1 className="text-[2.1rem] font-bold leading-none">Admin Panel</h1>
+              <p className="mt-0.5 text-sm leading-snug text-slate-400">Од тука ќе одобруваш огласи, ќе управуваш со категории и ќе поставуваш промотивни позиции за поголема видливост.</p>
             </div>
             {me?.authenticated && (
               <Button onClick={logout} className="admin-dark-button bg-slate-700 hover:bg-slate-600 text-white">
@@ -687,7 +723,11 @@ export default function AdminPage() {
           </div>
 
           {message && (
-            <div className="mb-5 rounded-lg border border-blue-500/30 bg-blue-500/10 px-4 py-3 text-sm text-blue-100">
+            <div className={`mb-3 rounded-lg border px-4 py-2.5 text-sm ${
+              dark
+                ? 'border-blue-500/30 bg-blue-500/10 text-blue-100'
+                : 'border-blue-400/50 bg-blue-50 text-blue-900'
+            }`}>
               {message}
             </div>
           )}
@@ -731,13 +771,13 @@ export default function AdminPage() {
           )}
 
           {me?.authenticated && (
-            <div className="space-y-5">
-              <div className="flex gap-2">
+            <div className="space-y-3">
+              <div className="flex flex-wrap gap-2">
                 {TABS.map((tab) => (
                   <button
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id)}
-                    className={`admin-dark-button rounded-lg px-4 py-2 text-sm font-semibold ${activeTab === tab.id ? 'bg-red-600 text-white' : 'bg-[#0c1628] text-slate-300'}`}
+                    className={`admin-dark-button rounded-lg px-4 py-1.5 text-sm font-semibold ${activeTab === tab.id ? 'bg-red-600 text-white' : 'bg-[#0c1628] text-slate-300'}`}
                   >
                     {tab.label}
                   </button>
@@ -845,7 +885,11 @@ export default function AdminPage() {
                             placeholder="Име, email, телефон или ID"
                             value={userSearch}
                             onChange={(e) => setUserSearch(e.target.value)}
-                            className="admin-dark-input bg-[#0b1727] text-white placeholder:text-slate-500"
+                            className={`admin-dark-input h-10 !py-2 ${
+                              dark
+                                ? '!bg-[#0b1727] !border-[#223653] !text-white placeholder:!text-slate-500'
+                                : '!bg-white !border-[#4b5d78] !text-slate-900 placeholder:!text-slate-500'
+                            }`}
                           />
                         </div>
                         <div>
@@ -988,10 +1032,16 @@ export default function AdminPage() {
                                   <span
                                     className={`rounded-full px-2.5 py-1 text-xs font-semibold ${
                                       user.role === 'admin'
-                                        ? 'border border-amber-500/40 bg-amber-500/10 text-amber-300'
+                                        ? dark
+                                          ? 'border border-amber-500/40 bg-amber-500/10 text-amber-300'
+                                          : 'border border-amber-400/80 bg-amber-50 text-amber-900'
                                         : user.is_active
-                                          ? 'border border-emerald-500/40 bg-emerald-500/10 text-emerald-300'
-                                          : 'border border-rose-500/40 bg-rose-500/10 text-rose-300'
+                                          ? dark
+                                            ? 'border border-emerald-500/40 bg-emerald-500/10 text-emerald-300'
+                                            : 'border border-emerald-400/80 bg-emerald-50 text-emerald-900'
+                                          : dark
+                                            ? 'border border-rose-500/40 bg-rose-500/10 text-rose-300'
+                                            : 'border border-rose-400/80 bg-rose-50 text-rose-900'
                                     }`}
                                   >
                                     {user.role === 'admin' ? 'Admin' : user.is_active ? 'Активен' : 'Деактивиран'}
@@ -1023,10 +1073,12 @@ export default function AdminPage() {
                               </div>
                             </div>
 
-                            <div className="flex flex-wrap gap-2">
+                            <div className="-mt-1 grid shrink-0 grid-cols-2 gap-2 self-start">
                               <Button
                                 type="button"
                                 onClick={() => {
+                                  setAuditUser(null);
+                                  setAuditMessages([]);
                                   setComposeUser({
                                     id: user.id,
                                     name: user.name,
@@ -1035,7 +1087,7 @@ export default function AdminPage() {
                                   });
                                   setAdminMessageText('');
                                 }}
-                                className="admin-dark-button bg-cyan-700 hover:bg-cyan-600 text-white"
+                                className="admin-dark-button bg-cyan-700 px-3 py-2 hover:bg-cyan-600 text-white"
                               >
                                 Прати порака
                               </Button>
@@ -1043,7 +1095,7 @@ export default function AdminPage() {
                                 type="button"
                                 disabled={busy || user.role === 'admin'}
                                 onClick={() => toggleUserActive(user)}
-                                className={`admin-dark-button text-white ${
+                                className={`admin-dark-button px-3 py-2 text-white ${
                                   user.role === 'admin'
                                     ? 'cursor-not-allowed bg-slate-700 opacity-60'
                                     : user.is_active
@@ -1053,8 +1105,82 @@ export default function AdminPage() {
                               >
                                 {user.role === 'admin' ? 'Admin профил' : user.is_active ? 'Деактивирај' : 'Активирај'}
                               </Button>
+                              <Button
+                                type="button"
+                                onClick={() =>
+                                  openUserMessages({
+                                    id: user.id,
+                                    name: user.name,
+                                    email: user.email,
+                                    is_active: user.is_active,
+                                  })
+                                }
+                                className="admin-dark-button col-start-2 bg-indigo-700 px-3 py-2 hover:bg-indigo-600 text-white"
+                              >
+                                Пораки
+                              </Button>
                             </div>
                           </div>
+
+                          {auditUser?.id === user.id && (
+                            <div className="mt-4 rounded-xl border border-indigo-500/30 bg-indigo-500/10 p-4">
+                              <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
+                                <div>
+                                  <h3 className="text-lg font-bold text-white">Пораки од и до корисник</h3>
+                                  <p className="mt-1 text-sm text-slate-300">
+                                    {auditUser.name} · {auditUser.email} · ID #{auditUser.id}
+                                  </p>
+                                </div>
+                                <Button
+                                  type="button"
+                                  onClick={() => {
+                                    setAuditUser(null);
+                                    setAuditMessages([]);
+                                  }}
+                                  className="admin-dark-button bg-slate-700 hover:bg-slate-600 text-white"
+                                >
+                                  Затвори
+                                </Button>
+                              </div>
+
+                              <div className="mt-4 space-y-3">
+                                {auditLoading ? (
+                                  <div className="rounded-xl border border-[#223653] bg-[#0b1727] px-5 py-8 text-center text-sm text-slate-300">
+                                    Се вчитуваат пораките...
+                                  </div>
+                                ) : auditMessages.length === 0 ? (
+                                  <div className="rounded-xl border border-dashed border-[#223653] bg-[#0b1727] px-5 py-8 text-center text-sm text-slate-400">
+                                    Овој корисник сè уште нема пораки за преглед.
+                                  </div>
+                                ) : (
+                                  auditMessages.map((item) => {
+                                    const isOutgoing = item.sender_id === auditUser.id;
+                                    return (
+                                      <div key={item.id} className="rounded-xl border border-[#223653] bg-[#0b1727] px-4 py-3">
+                                        <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+                                          <div>
+                                            <p className="text-sm font-semibold text-white">
+                                              {isOutgoing ? 'Пратена порака' : 'Примена порака'}
+                                              <span className="ml-2 text-xs font-medium text-slate-400">
+                                                {isOutgoing
+                                                  ? `до ${item.receiver_name || 'непознат корисник'}`
+                                                  : `од ${item.sender_name || 'непознат корисник'}`}
+                                              </span>
+                                            </p>
+                                            {item.product_title && (
+                                              <p className="mt-1 text-xs text-cyan-300">Оглас: {item.product_title}</p>
+                                            )}
+                                          </div>
+                                          <p className="text-xs text-slate-400">{new Date(item.created_at).toLocaleString('mk-MK')}</p>
+                                        </div>
+                                        <p className="mt-3 whitespace-pre-wrap text-sm leading-6 text-slate-200">{item.content}</p>
+                                      </div>
+                                    );
+                                  })
+                                )}
+                              </div>
+                            </div>
+                          )}
                         </div>
                       ))}
 
@@ -1209,7 +1335,7 @@ export default function AdminPage() {
                                 <button
                                   type="button"
                                   onClick={() => startEditSubcategory(category, subcategory)}
-                                  className="font-semibold text-cyan-300 hover:text-cyan-200"
+                                  className={`font-semibold ${dark ? 'text-cyan-300 hover:text-cyan-200' : 'text-blue-800 hover:text-blue-900'}`}
                                 >
                                   Уреди
                                 </button>
@@ -1374,7 +1500,7 @@ export default function AdminPage() {
                 <section className="grid gap-5 lg:grid-cols-[420px_1fr]">
                   <div className="space-y-5">
                     <div className="rounded-xl border border-[#1d2c43] bg-[#081223] p-5">
-                      <h2 className="text-lg font-bold">Топ позиционирање и рекламирање</h2>
+                      <h2 className="text-lg font-bold">Голем банер</h2>
                       <p className="mt-2 text-sm leading-6 text-slate-400">
                         Овој дел е наменет за промотивни банери што добиваат приоритетен простор на почетната страница и служат за поголема видливост на бренд, категорија, понуда или специјална кампања.
                       </p>

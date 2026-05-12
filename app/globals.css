@@ -241,6 +241,16 @@ html.light .seller-rating-text * {
   color: #ca8a04 !important;
 }
 
+html.dark .admin-dark-input {
+  background: #0b1727 !important;
+  border-color: #223653 !important;
+  color: #ffffff !important;
+}
+
+html.dark .admin-dark-input::placeholder {
+  color: #64748b !important;
+}
+
 /* Final light-theme overrides for intentionally dark cards/panels. Keep at the end so
    broad light selectors above do not wash out text inside these components. */
 html.light .force-dark-card {
