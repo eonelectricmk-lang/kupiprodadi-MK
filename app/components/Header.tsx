@@ -32,6 +32,7 @@ export function Header() {
   const [showCategories, setShowCategories] = useState(false);
   const [categoryMenuTop, setCategoryMenuTop] = useState(0);
   const [search, setSearch] = useState('');
+  const [unreadCount, setUnreadCount] = useState(0);
 
   const h = dark ? {
     header: 'bg-[#07101c]/95 border-[#172334]',
@@ -94,6 +95,24 @@ export function Header() {
         }
       })
       .catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem('user');
+      if (!stored) return;
+      const user = JSON.parse(stored);
+      if (!user?.id) return;
+      fetch(`/api/messages?user_id=${user.id}`)
+        .then((res) => res.json())
+        .then((msgs) => {
+          if (Array.isArray(msgs)) {
+            const unread = msgs.filter((m: any) => Number(m.read) === 0 && Number(m.receiver_id) === user.id);
+            setUnreadCount(unread.length);
+          }
+        })
+        .catch(() => {});
+    } catch {}
   }, []);
 
   useEffect(() => {
@@ -202,7 +221,7 @@ export function Header() {
             <Link href="/profile?tab=messages">
               <div className="relative">
                 <button className={`transition ${h.icon}`}><Bell className="h-5 w-5" /></button>
-                <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center font-bold">3</span>
+                {unreadCount > 0 && <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs rounded-full min-w-[16px] h-4 flex items-center justify-center font-bold px-1">{unreadCount}</span>}
               </div>
             </Link>
             <Link href="/auth">
