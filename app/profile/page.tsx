@@ -26,6 +26,7 @@ import {
 import { Header } from '@/app/components/Header';
 import { Card, Container } from '@/app/components/ui';
 import { useRouter } from 'next/navigation';
+import { useTheme } from '@/app/context/ThemeContext';
 
 type Product = {
   id: number;
@@ -123,13 +124,14 @@ function EmptyState({
   description: string;
   action?: ReactNode;
 }) {
+  const { dark } = useTheme();
   return (
-    <Card className="!rounded-[16px] border-[#1d2c43] bg-[#0b1423] p-4 text-center sm:p-5">
-      <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-xl border border-[#223653] bg-[#081223] text-slate-400">
+    <Card className={`!rounded-[16px] p-4 text-center sm:p-5 ${dark ? 'force-dark-card border-[#1d2c43] bg-[#0b1423]' : 'border-slate-200 bg-white shadow-sm'}`}>
+      <div className={`mx-auto flex h-10 w-10 items-center justify-center rounded-xl border text-slate-400 ${dark ? 'force-dark-subtle border-[#223653] bg-[#081223]' : 'border-slate-200 bg-slate-50 text-slate-500'}`}>
         <AlertCircle className="h-4 w-4" />
       </div>
-      <h3 className="mt-3 text-base font-semibold text-white sm:text-lg">{title}</h3>
-      <p className="mt-2 text-sm leading-6 text-slate-400">{description}</p>
+      <h3 className={`mt-3 text-base font-semibold sm:text-lg ${dark ? 'text-white' : 'text-slate-900'}`}>{title}</h3>
+      <p className={`mt-2 text-sm leading-6 ${dark ? 'text-slate-400' : 'text-slate-600'}`}>{description}</p>
       {action && <div className="mt-4">{action}</div>}
     </Card>
   );
@@ -152,6 +154,7 @@ function MiniAdCard({
   note?: string;
   status?: string;
 }) {
+  const { dark } = useTheme();
   const statusStyles: Record<string, string> = {
     active: 'border-emerald-500/30 bg-emerald-500/10 text-emerald-300',
     pending: 'border-amber-500/30 bg-amber-500/10 text-amber-300',
@@ -167,7 +170,17 @@ function MiniAdCard({
   };
 
   const resolvedStatus = status || null;
-  const statusClass = resolvedStatus ? statusStyles[resolvedStatus] || statusStyles.active : '';
+  const lightStatusStyles: Record<string, string> = {
+    active: 'border-emerald-600 bg-emerald-100 text-emerald-800',
+    pending: 'border-amber-500 bg-amber-50 text-amber-700',
+    rejected: 'border-rose-500 bg-rose-50 text-rose-700',
+    sold: 'border-slate-500 bg-slate-100 text-slate-700',
+  };
+  const statusClass = resolvedStatus
+    ? dark
+      ? statusStyles[resolvedStatus] || statusStyles.active
+      : lightStatusStyles[resolvedStatus] || lightStatusStyles.active
+    : '';
   const statusLabel = resolvedStatus ? statusLabels[resolvedStatus] || statusLabels.active : '';
 
   return (
@@ -261,6 +274,7 @@ function OwnerAdCard({
   onDelete: () => void;
   onPromote: () => void;
 }) {
+  const { dark } = useTheme();
   const statusStyles: Record<string, string> = {
     active: 'border-emerald-500/30 bg-emerald-500/10 text-emerald-300',
     pending: 'border-amber-500/30 bg-amber-500/10 text-amber-300',
@@ -285,11 +299,17 @@ function OwnerAdCard({
   const promoClicks = 0;
 
   return (
-    <div className="w-full overflow-hidden rounded-[18px] border border-[#1d2c43] bg-[linear-gradient(135deg,#081120_0%,#0c182b_56%,#091423_100%)] shadow-[0_12px_24px_rgba(0,0,0,0.2)]">
+    <div
+      className={`w-full overflow-hidden rounded-[18px] border shadow-[0_12px_24px_rgba(0,0,0,0.2)] ${
+        dark
+          ? 'force-dark-card force-dark-gradient border-[#1d2c43] bg-[linear-gradient(135deg,#081120_0%,#0c182b_56%,#091423_100%)]'
+          : 'border-slate-500 bg-white shadow-slate-300/40'
+      }`}
+    >
       <div className="grid gap-0 xl:grid-cols-[268px_minmax(0,1fr)_286px]">
-        <div className="border-b border-[#223653] p-3.5 xl:border-b-0 xl:border-r">
+        <div className={`border-b p-3.5 xl:border-b-0 xl:border-r ${dark ? 'border-[#223653]' : 'border-slate-400'}`}>
           <Link href={href} className="group block">
-            <div className="relative h-[186px] overflow-hidden rounded-[14px] border border-[#223653] bg-[#0b1727] sm:h-[196px] xl:h-[208px]">
+            <div className={`relative h-[186px] overflow-hidden rounded-[14px] border sm:h-[196px] xl:h-[208px] ${dark ? 'force-dark-pill border-[#223653] bg-[#0b1727]' : 'border-slate-400 bg-slate-100'}`}>
               <img
                 src={mainImage}
                 alt={title}
@@ -315,15 +335,21 @@ function OwnerAdCard({
                     className={`h-11 overflow-hidden rounded-[10px] border ${
                       thumb
                         ? index === 0
-                          ? 'border-sky-500/60 bg-[#0b1727]'
-                          : 'border-[#223653] bg-[#0b1727]'
-                        : 'border-dashed border-[#30435f] bg-[#081223]'
+                          ? dark
+                            ? 'force-dark-pill border-sky-500/60 bg-[#0b1727]'
+                            : 'border-sky-400 bg-white'
+                          : dark
+                            ? 'force-dark-pill border-[#223653] bg-[#0b1727]'
+                            : 'border-slate-400 bg-white'
+                        : dark
+                          ? 'force-dark-subtle border-dashed border-[#30435f] bg-[#081223]'
+                          : 'border-dashed border-slate-500 bg-slate-50'
                     }`}
                   >
                     {thumb ? (
                       <img src={thumb} alt={`${title} ${index + 1}`} className="h-full w-full object-cover" />
                     ) : (
-                      <div className="flex h-full w-full items-center justify-center text-[28px] leading-none text-slate-500">+</div>
+                      <div className={`flex h-full w-full items-center justify-center text-[28px] leading-none ${dark ? 'text-slate-500' : 'text-slate-400'}`}>+</div>
                     )}
                   </div>
                 );
@@ -332,48 +358,48 @@ function OwnerAdCard({
           </div>
         </div>
 
-        <div className="min-w-0 p-3.5 pb-2 xl:border-r xl:border-[#223653] xl:p-4 xl:pb-2.5">
+        <div className={`min-w-0 p-3.5 pb-2 xl:border-r xl:p-4 xl:pb-2.5 ${dark ? 'xl:border-[#223653]' : 'xl:border-slate-400'}`}>
           <div className="flex h-full flex-col gap-0">
             <div className="flex flex-wrap items-start justify-between gap-2.5">
               <div className="flex min-w-0 flex-wrap items-center gap-2">
-                <span className="inline-flex items-center rounded-[8px] border border-[#28415f] bg-[#0d1b2f] px-3 py-1 text-[12px] font-medium text-slate-200">
+                <span className={`inline-flex items-center rounded-[8px] border px-3 py-1 text-[12px] font-medium ${dark ? 'force-dark-pill border-[#28415f] bg-[#0d1b2f] !text-slate-200' : 'border-slate-400 bg-slate-50 text-slate-900'}`}>
                   {sellerName || 'Продавач'}
                 </span>
                 <Link href={href} className="min-w-0">
-                  <p className="line-clamp-2 text-[22px] font-black tracking-[-0.03em] text-white transition hover:text-sky-300">
+                  <p className={`line-clamp-2 text-[22px] font-black tracking-[-0.03em] transition ${dark ? '!text-white hover:!text-sky-300' : 'text-slate-900 hover:text-sky-600'}`}>
                     {title}
                   </p>
                 </Link>
               </div>
               {typeof productId === 'number' && (
-                <span className="inline-flex shrink-0 items-center rounded-[8px] border border-[#223653] bg-[#081223] px-3 py-1 text-[11px] font-semibold text-slate-400">
+                <span className={`inline-flex shrink-0 items-center rounded-[8px] border px-3 py-1 text-[11px] font-semibold ${dark ? 'force-dark-subtle border-[#223653] bg-[#081223] !text-slate-300' : 'border-slate-400 bg-slate-50 text-slate-800'}`}>
                   ID: KP-{String(productId).padStart(5, '0')}
                 </span>
               )}
             </div>
 
-            <div className="mt-3 flex flex-wrap items-center gap-3 text-[12px] text-slate-400">
+            <div className={`mt-3 flex flex-wrap items-center gap-3 text-[12px] ${dark ? '!text-slate-300' : 'text-slate-500'}`}>
               <span className="inline-flex items-center gap-2">
-                <MapPin className="h-4 w-4 text-slate-500" />
+                <MapPin className={`h-4 w-4 ${dark ? '!text-slate-400' : 'text-slate-400'}`} />
                 {location || meta}
               </span>
-              <span className="text-slate-600">•</span>
+              <span className={dark ? '!text-slate-500' : 'text-slate-300'}>•</span>
               <span className="inline-flex items-center gap-2">
-                <CalendarDays className="h-4 w-4 text-slate-500" />
+                <CalendarDays className={`h-4 w-4 ${dark ? '!text-slate-400' : 'text-slate-400'}`} />
                 {formatDate(createdAt)}
               </span>
             </div>
 
-            <p className="mt-3 line-clamp-2 max-w-3xl text-[13px] leading-5 text-slate-300">
+            <p className={`mt-3 line-clamp-2 max-w-3xl text-[13px] leading-5 ${dark ? '!text-slate-300' : 'text-slate-700'}`}>
               {description || 'Нема внесен опис за овој оглас.'}
             </p>
 
-            <div className="mt-auto -translate-y-1 border-t border-[#223653] pt-1.5">
+            <div className={`mt-auto -translate-y-1 border-t pt-1.5 ${dark ? 'border-[#223653]' : 'border-slate-400'}`}>
               <div className="flex items-center gap-2 overflow-x-auto xl:overflow-visible">
                 <button
                   type="button"
                   onClick={onEdit}
-                  className="inline-flex shrink-0 items-center justify-center gap-1.5 rounded-[10px] border border-[#2b3f5f] bg-[#0b1727] px-2.5 py-1.5 text-[11px] font-semibold text-slate-100 transition hover:bg-[#122038] hover:text-white"
+                  className={`inline-flex shrink-0 items-center justify-center gap-1.5 rounded-[10px] border px-2.5 py-1.5 text-[11px] font-semibold transition ${dark ? 'force-dark-pill border-[#2b3f5f] bg-[#0b1727] text-slate-100 hover:bg-[#122038] hover:text-white' : 'border-slate-500 bg-white text-slate-900 hover:bg-slate-50 hover:text-black'}`}
                 >
                   <PencilLine className="h-3.5 w-3.5" />
                   Измени
@@ -381,7 +407,7 @@ function OwnerAdCard({
                 <button
                   type="button"
                   onClick={onRefresh}
-                  className="inline-flex shrink-0 items-center justify-center gap-1.5 rounded-[10px] border border-sky-500/35 bg-sky-500/10 px-2.5 py-1.5 text-[11px] font-semibold text-sky-300 transition hover:bg-sky-500/15"
+                  className={`inline-flex shrink-0 items-center justify-center gap-1.5 rounded-[10px] border px-2.5 py-1.5 text-[11px] font-semibold transition ${dark ? 'border-sky-500/35 bg-sky-500/10 text-sky-300 hover:bg-sky-500/15' : 'border-sky-400 bg-sky-50 text-sky-700 hover:bg-sky-100'}`}
                 >
                   <RefreshCw className="h-3.5 w-3.5" />
                   Обнови
@@ -389,7 +415,7 @@ function OwnerAdCard({
                 <button
                   type="button"
                   onClick={onPromote}
-                  className="inline-flex shrink-0 items-center justify-center gap-1.5 rounded-[10px] border border-amber-500/35 bg-amber-500/10 px-2.5 py-1.5 text-[11px] font-semibold text-amber-300 transition hover:bg-amber-500/15"
+                  className={`inline-flex shrink-0 items-center justify-center gap-1.5 rounded-[10px] border px-2.5 py-1.5 text-[11px] font-semibold transition ${dark ? 'border-amber-500/35 bg-amber-500/10 text-amber-300 hover:bg-amber-500/15' : 'border-amber-400 bg-amber-50 text-amber-700 hover:bg-amber-100'}`}
                 >
                   <Sparkles className="h-3.5 w-3.5" />
                   Промовирај
@@ -397,7 +423,7 @@ function OwnerAdCard({
                 <button
                   type="button"
                   onClick={onDelete}
-                  className="inline-flex shrink-0 items-center justify-center gap-1.5 rounded-[10px] border border-rose-500/35 bg-rose-500/10 px-2.5 py-1.5 text-[11px] font-semibold text-rose-300 transition hover:bg-rose-500/15"
+                  className={`inline-flex shrink-0 items-center justify-center gap-1.5 rounded-[10px] border px-2.5 py-1.5 text-[11px] font-semibold transition ${dark ? 'border-rose-500/35 bg-rose-500/10 text-rose-300 hover:bg-rose-500/15' : 'border-rose-400 bg-rose-50 text-rose-700 hover:bg-rose-100'}`}
                 >
                   <Trash2 className="h-3.5 w-3.5" />
                   Избриши
@@ -408,51 +434,63 @@ function OwnerAdCard({
         </div>
 
         <div className="flex flex-col gap-2 p-3.5 pb-2 xl:p-4 xl:pb-2.5">
-          <div className="flex items-start justify-between gap-3 border-b border-[#223653] pb-2">
+          <div className={`flex items-start justify-between gap-3 border-b pb-2 ${dark ? 'border-[#223653]' : 'border-slate-400'}`}>
             <p className="text-[25px] font-black tracking-[-0.03em] text-red-400">{price}</p>
-            <span className={`inline-flex items-center gap-2 rounded-[12px] border px-3 py-1.5 text-[11px] font-semibold ${statusClass || 'border-emerald-500/30 bg-emerald-500/10 text-emerald-300'}`}>
+            <span
+              className={`inline-flex items-center gap-2 rounded-[12px] border px-3 py-1.5 text-[11px] font-semibold ${
+                dark
+                  ? statusClass || 'border-emerald-500/30 bg-emerald-500/10 text-emerald-300'
+                  : resolvedStatus === 'active' || !resolvedStatus
+                    ? 'border-emerald-700 bg-emerald-200 text-emerald-900'
+                    : resolvedStatus === 'pending'
+                      ? 'border-amber-600 bg-amber-100 text-amber-900'
+                      : resolvedStatus === 'rejected'
+                        ? 'border-rose-600 bg-rose-100 text-rose-900'
+                        : 'border-slate-600 bg-slate-200 text-slate-900'
+              }`}
+            >
               <span className="h-2.5 w-2.5 rounded-full bg-current opacity-90" />
               {resolvedStatus ? statusLabel : 'Активен'}
             </span>
           </div>
 
-          <div className="rounded-[16px] border border-[#223653] bg-[#0a1628] p-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.02)]">
-            <p className="text-[15px] font-bold text-white">Статистика за огласот</p>
+          <div className={`rounded-[16px] border p-3 ${dark ? 'force-dark-panel border-[#223653] bg-[#0a1628] shadow-[inset_0_1px_0_rgba(255,255,255,0.02)]' : 'border-slate-400 bg-slate-50'}`}>
+            <p className={`text-[15px] font-bold ${dark ? '!text-white' : 'text-slate-900'}`}>Статистика за огласот</p>
 
             <div className="mt-2.5 space-y-1.5">
               <div className="flex items-center justify-between gap-3">
-                <span className="inline-flex items-center gap-2 text-[13px] text-slate-400">
-                  <Eye className="h-4 w-4 text-slate-500" />
+                <span className={`inline-flex items-center gap-2 text-[13px] ${dark ? '!text-slate-300' : 'text-slate-600'}`}>
+                  <Eye className={`h-4 w-4 ${dark ? '!text-slate-400' : 'text-slate-400'}`} />
                   Прегледи
                 </span>
-                <span className="text-[14px] font-bold text-white">{Number((views || 0)).toLocaleString('mk-MK')}</span>
+                <span className={`text-[14px] font-bold ${dark ? '!text-white' : 'text-slate-900'}`}>{Number((views || 0)).toLocaleString('mk-MK')}</span>
               </div>
               <div className="flex items-center justify-between gap-3">
-                <span className="inline-flex items-center gap-2 text-[13px] text-slate-400">
-                  <MessageSquare className="h-4 w-4 text-slate-500" />
+                <span className={`inline-flex items-center gap-2 text-[13px] ${dark ? '!text-slate-300' : 'text-slate-600'}`}>
+                  <MessageSquare className={`h-4 w-4 ${dark ? '!text-slate-400' : 'text-slate-400'}`} />
                   Пораки
                 </span>
-                <span className="text-[14px] font-bold text-white">{Number((messageCount || 0)).toLocaleString('mk-MK')}</span>
+                <span className={`text-[14px] font-bold ${dark ? '!text-white' : 'text-slate-900'}`}>{Number((messageCount || 0)).toLocaleString('mk-MK')}</span>
               </div>
               <div className="flex items-center justify-between gap-3">
-                <span className="inline-flex items-center gap-2 text-[13px] text-slate-400">
-                  <Heart className="h-4 w-4 text-slate-500" />
+                <span className={`inline-flex items-center gap-2 text-[13px] ${dark ? '!text-slate-300' : 'text-slate-600'}`}>
+                  <Heart className={`h-4 w-4 ${dark ? '!text-slate-400' : 'text-slate-400'}`} />
                   Зачувувања
                 </span>
-                <span className="text-[14px] font-bold text-white">{savedCount}</span>
+                <span className={`text-[14px] font-bold ${dark ? '!text-white' : 'text-slate-900'}`}>{savedCount}</span>
               </div>
               <div className="flex items-center justify-between gap-3">
-                <span className="inline-flex items-center gap-2 text-[13px] text-slate-400">
-                  <ArrowRight className="h-4 w-4 text-slate-500" />
+                <span className={`inline-flex items-center gap-2 text-[13px] ${dark ? '!text-slate-300' : 'text-slate-600'}`}>
+                  <ArrowRight className={`h-4 w-4 ${dark ? '!text-slate-400' : 'text-slate-400'}`} />
                   Промо кликови
                 </span>
-                <span className="text-[14px] font-bold text-white">{promoClicks}</span>
+                <span className={`text-[14px] font-bold ${dark ? '!text-white' : 'text-slate-900'}`}>{promoClicks}</span>
               </div>
             </div>
 
             <button
               type="button"
-              className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-[12px] border border-sky-500/35 bg-sky-500/10 px-4 py-2 text-[12px] font-semibold text-sky-300 transition hover:bg-sky-500/15"
+              className={`mt-3 inline-flex w-full items-center justify-center gap-2 rounded-[12px] border px-4 py-2 text-[12px] font-semibold transition ${dark ? 'border-sky-500/35 bg-sky-500/10 text-sky-300 hover:bg-sky-500/15' : 'border-sky-400 bg-white text-sky-700 hover:bg-sky-50'}`}
             >
               <Inbox className="h-4 w-4" />
               Детална статистика
@@ -485,13 +523,14 @@ function StatCard({
   icon: ElementType;
   accent: string;
 }) {
+  const { dark } = useTheme();
   return (
-    <div className="rounded-[14px] border border-[#223653] bg-[#081223] px-3 py-2.5 sm:px-3.5">
+    <div className={`rounded-[14px] border px-3 py-2.5 sm:px-3.5 ${dark ? 'force-dark-subtle border-[#223653] bg-[#081223]' : 'border-slate-200 bg-white shadow-sm'}`}>
       <div className="flex items-center justify-between gap-2">
-        <span className="text-[11px] text-slate-500 sm:text-xs">{label}</span>
+        <span className={`text-[11px] sm:text-xs ${dark ? 'text-slate-500' : 'text-slate-500'}`}>{label}</span>
         <Icon className={`h-3.5 w-3.5 ${accent}`} />
       </div>
-      <p className="mt-0.5 text-[18px] font-black leading-none text-white sm:text-[22px]">{value}</p>
+      <p className={`mt-0.5 text-[18px] font-black leading-none sm:text-[22px] ${dark ? 'text-white' : 'text-slate-900'}`}>{value}</p>
     </div>
   );
 }
@@ -505,6 +544,7 @@ function TabButton({
   children: ReactNode;
   onClick: () => void;
 }) {
+  const { dark } = useTheme();
   return (
     <button
       type="button"
@@ -512,7 +552,9 @@ function TabButton({
       className={`shrink-0 rounded-lg px-3.5 py-1.5 text-sm font-semibold transition sm:px-4 ${
         active
           ? 'bg-red-600 text-white shadow-lg shadow-red-600/20'
-          : 'border border-[#223653] bg-[#081223] text-slate-300 hover:bg-[#122038] hover:text-white'
+          : dark
+            ? 'border border-[#223653] bg-[#081223] text-slate-300 hover:bg-[#122038] hover:text-white'
+            : 'border border-slate-300 bg-white text-slate-600 hover:bg-slate-50 hover:text-slate-900'
       }`}
     >
       {children}
@@ -522,6 +564,7 @@ function TabButton({
 
 export default function ProfilePage() {
   const router = useRouter();
+  const { dark } = useTheme();
   const [user, setUser] = useState<any>(null);
   const [myProducts, setMyProducts] = useState<Product[]>([]);
   const [favorites, setFavorites] = useState<Product[]>([]);
@@ -721,10 +764,10 @@ export default function ProfilePage() {
 
   if (loading || !user) {
     return (
-      <div className="min-h-screen bg-[#040914] text-white">
+      <div className={dark ? 'min-h-screen bg-[#040914] text-white' : 'min-h-screen bg-slate-100 text-slate-900'}>
         <Header />
         <Container className="py-12">
-          <div className="rounded-3xl border border-[#1d2c43] bg-[#0b1423] py-16 text-center text-slate-400">
+          <div className={`rounded-3xl border py-16 text-center ${dark ? 'border-[#1d2c43] bg-[#0b1423] text-slate-400' : 'border-slate-200 bg-white text-slate-600 shadow-sm'}`}>
             Вчитување профил...
           </div>
         </Container>
@@ -733,11 +776,11 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#040914] text-white">
+    <div className={dark ? 'min-h-screen bg-[#040914] text-white' : 'min-h-screen bg-slate-100 text-slate-900'}>
       <Header />
       <Container className="py-3 md:py-4">
         <div className="mx-auto max-w-6xl space-y-3">
-          <section className="overflow-hidden rounded-[18px] border border-[#1d2c43] bg-gradient-to-br from-[#081223] via-[#0b1423] to-[#07101c] shadow-xl shadow-black/20">
+          <section className={`force-dark-card overflow-hidden rounded-[18px] border shadow-xl ${dark ? 'border-[#1d2c43] bg-gradient-to-br from-[#081223] via-[#0b1423] to-[#07101c] shadow-black/20' : 'force-dark-gradient border-[#1d2c43] bg-gradient-to-br from-[#081223] via-[#0b1423] to-[#07101c] shadow-slate-300/20'}`}>
             <div className="grid gap-2 p-2.5 sm:p-3 lg:grid-cols-[minmax(0,1.1fr)_minmax(300px,0.9fr)] lg:items-start">
               <div className="min-w-0">
                 <div className="flex min-w-0 gap-3.5">
@@ -747,7 +790,7 @@ export default function ProfilePage() {
 
                   <div className="min-w-0 flex-1 pl-1 sm:pl-1.5">
                     <div className="flex flex-wrap items-center gap-2">
-                      <h1 className="truncate text-[18px] font-black tracking-tight sm:text-[25px]">{user.name}</h1>
+                      <h1 className="force-dark-heading truncate text-[18px] font-black tracking-tight !text-white sm:text-[25px]">{user.name}</h1>
                       <span className="inline-flex items-center gap-1.5 rounded-full border border-sky-500/30 bg-sky-500/10 px-2.5 py-0.5 text-[11px] font-semibold text-sky-300">
                         <PenSquare className="h-3.5 w-3.5" />
                         Активни огласи {activeAds}
@@ -758,10 +801,10 @@ export default function ProfilePage() {
                     </div>
 
                     <div className="mt-0.5 flex flex-wrap items-center gap-1.5">
-                      <span className="text-[11px] leading-none text-slate-500 sm:text-xs">Профил со доверба и брз пристап до твоите огласи.</span>
+                      <span className="text-[11px] leading-none !text-slate-300 sm:text-xs">Профил со доверба и брз пристап до твоите огласи.</span>
                     </div>
 
-                    <p className="mt-0.5 max-w-lg text-[12px] leading-[1.1] text-slate-400 sm:text-[13px] sm:leading-[1.25]">
+                    <p className="mt-0.5 max-w-lg text-[12px] leading-[1.1] !text-slate-300 sm:text-[13px] sm:leading-[1.25]">
                       Управувај со огласите, следи ги зачуваните ставки и
                       <span className="block">провери ги основните податоци на едно место.</span>
                     </p>
@@ -771,15 +814,15 @@ export default function ProfilePage() {
 
               <div className="space-y-1 lg:justify-self-end">
                 <div className="flex flex-wrap items-center gap-1.5 lg:justify-end">
-                  <span className="inline-flex items-center gap-1.5 rounded-full border border-[#223653] bg-[#081223] px-2.5 py-1 text-[11px] text-slate-300 sm:text-xs">
+                  <span className="force-dark-subtle inline-flex items-center gap-1.5 rounded-full border border-[#223653] bg-[#081223] px-2.5 py-1 text-[11px] !text-slate-200 sm:text-xs">
                     <Sparkles className="h-3.5 w-3.5 text-emerald-400" />
                     {locationLabel}
                   </span>
-                  <span className="inline-flex items-center gap-1.5 rounded-full border border-[#223653] bg-[#081223] px-2.5 py-1 text-[11px] text-slate-300 sm:text-xs">
+                  <span className="force-dark-subtle inline-flex items-center gap-1.5 rounded-full border border-[#223653] bg-[#081223] px-2.5 py-1 text-[11px] !text-slate-200 sm:text-xs">
                     <Clock3 className="h-3.5 w-3.5 text-sky-400" />
                     Член од {joinedLabel}
                   </span>
-                  <span className="inline-flex items-center gap-1.5 rounded-full border border-[#223653] bg-[#081223] px-2.5 py-1 text-[11px] text-slate-300 sm:text-xs">
+                  <span className="force-dark-subtle inline-flex items-center gap-1.5 rounded-full border border-[#223653] bg-[#081223] px-2.5 py-1 text-[11px] !text-slate-200 sm:text-xs">
                     <BadgeCheck className="h-3.5 w-3.5 text-emerald-400" />
                     Активен профил
                   </span>
@@ -794,7 +837,7 @@ export default function ProfilePage() {
             </div>
           </section>
 
-          <div className="flex gap-1.5 overflow-x-auto rounded-[14px] border border-[#1d2c43] bg-[#0b1423] p-[5px]">
+          <div className={`flex gap-1.5 overflow-x-auto rounded-[14px] border p-[5px] ${dark ? 'border-[#1d2c43] bg-[#0b1423]' : 'border-slate-300 bg-white shadow-sm'}`}>
             {tabs.map((tab) => (
               <TabButton key={tab.id} active={activeTab === tab.id} onClick={() => changeTab(tab.id)}>
                 {tab.label}
@@ -807,13 +850,17 @@ export default function ProfilePage() {
               <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                 <div className="min-w-0">
                   <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
-                    <h2 className="text-[17px] font-bold sm:text-xl">Мои огласи</h2>
-                    <p className="text-[13px] text-slate-400 sm:text-sm">Компактна листа со активни, во преглед и архивирани огласи.</p>
+                    <h2 className={`text-[17px] font-bold sm:text-xl ${dark ? 'text-white' : 'text-slate-900'}`}>Мои огласи</h2>
+                    <p className={`text-[13px] sm:text-sm ${dark ? 'text-slate-400' : 'text-slate-600'}`}>Компактна листа со активни, во преглед и архивирани огласи.</p>
                   </div>
                 </div>
                 <Link
                   href="/sell"
-                  className="inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-[#223653] bg-[#081223] px-3 py-1.5 text-[11px] font-semibold text-slate-300 transition hover:bg-[#122038] hover:text-white sm:text-xs"
+                  className={`inline-flex shrink-0 items-center gap-1.5 rounded-lg border px-3 py-1.5 text-[11px] font-semibold transition sm:text-xs ${
+                    dark
+                      ? 'border-[#223653] bg-[#081223] text-slate-300 hover:bg-[#122038] hover:text-white'
+                      : 'border-slate-300 bg-white text-slate-700 hover:bg-slate-50 hover:text-slate-900'
+                  }`}
                 >
                   Нов оглас <ArrowRight className="h-3.5 w-3.5" />
                 </Link>

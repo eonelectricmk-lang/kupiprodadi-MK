@@ -1,5 +1,3 @@
-import Footer from '@/app/components/Footer';
-
 export default function BrowseLayout({
   children,
 }: {
@@ -8,7 +6,6 @@ export default function BrowseLayout({
   return (
     <>
       {children}
-      <Footer />
     </>
   );
 }

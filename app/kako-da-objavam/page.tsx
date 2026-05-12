@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import Header from '@/app/components/Header';
-import Footer from '@/app/components/Footer';
 import { Container } from '@/app/components/ui';
 import { Camera, FileText, MapPin, Phone, CheckCircle2 } from 'lucide-react';
 
@@ -110,7 +109,6 @@ export default function KakoDaObjawamPage() {
           </div>
         </Container>
       </main>
-      <Footer />
     </>
   );
 }

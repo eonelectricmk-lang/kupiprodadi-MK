@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Header from '@/app/components/Header';
 import { Container } from '@/app/components/ui';
 import { ChevronDown, Mail, MessageSquare, Phone, Send, ShieldCheck, User } from 'lucide-react';
+import { useTheme } from '@/app/context/ThemeContext';
 
 const SUBJECTS = [
   'Одбери тема',
@@ -16,7 +17,7 @@ const SUBJECTS = [
   'Забелешка за платформата',
   'Плаќање и промоција',
   'Соработка и рекламирање',
-  'Пријави проблем',
+  'Пријави злоупотреба',
   'Друго',
 ];
 
@@ -28,6 +29,7 @@ type StoredUser = {
 };
 
 export default function MessagesPage() {
+  const { dark } = useTheme();
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
   const [error, setError] = useState('');
@@ -55,6 +57,23 @@ export default function MessagesPage() {
         phone: user.phone || prev.phone,
       }));
     } catch {}
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const params = new URLSearchParams(window.location.search);
+    const preset = params.get('subject');
+    if (!preset) return;
+
+    const mappedSubject =
+      preset === 'abuse'
+        ? 'Пријави злоупотреба'
+        : SUBJECTS.find((subject) => subject.toLowerCase() === preset.toLowerCase());
+
+    if (mappedSubject) {
+      setForm((prev) => ({ ...prev, subject: mappedSubject }));
+    }
   }, []);
 
   const helperLinks = useMemo(
@@ -126,24 +145,30 @@ export default function MessagesPage() {
   return (
     <>
       <Header />
-      <main className="min-h-screen bg-[#050b17] py-12 text-white">
+      <main className={dark ? 'min-h-screen bg-[#050b17] py-12 text-white' : 'min-h-screen bg-slate-100 py-12 text-slate-900'}>
         <Container>
           <div className="mx-auto grid max-w-5xl gap-6 lg:grid-cols-[0.92fr_1.08fr]">
-            <section className="rounded-[28px] border border-[#1d2c43] bg-gradient-to-br from-[#081223] via-[#0b1423] to-[#07101c] p-6 shadow-2xl shadow-black/20 sm:p-8">
-              <div className="inline-flex items-center gap-2 rounded-full border border-[#223653] bg-[#0b1727] px-3 py-1 text-xs font-semibold text-slate-300">
+            <section
+              className={`force-light-hero rounded-[28px] border p-6 shadow-2xl sm:p-8 ${
+                dark
+                  ? 'border-[#1d2c43] bg-gradient-to-br from-[#081223] via-[#0b1423] to-[#07101c] shadow-black/20'
+                  : 'border-slate-200 bg-gradient-to-br from-[#0b1321] via-[#0f1b2b] to-[#081223] shadow-slate-300/40'
+              }`}
+            >
+              <div className={`inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold ${dark ? 'border border-[#223653] bg-[#0b1727] text-slate-300' : 'border border-slate-200 bg-white text-slate-800'}`}>
                 <ShieldCheck className="h-4 w-4 text-emerald-400" />
                 Контактирај го админот
               </div>
 
-              <h1 className="mt-4 text-3xl font-black tracking-tight sm:text-4xl">Тука сме да помогнеме.</h1>
+              <h1 className="mt-4 text-3xl font-black tracking-tight text-white sm:text-4xl">Тука сме да помогнеме.</h1>
               <p className="mt-3 text-sm leading-7 text-slate-300 sm:text-base">
                 Ако имаш прашање, забелешка, сугестија, предлог за нова категорија, интерес за соработка или технички проблем, прати ни порака и ќе ти одговориме што е можно побрзо.
               </p>
 
-              <div className="mt-6 space-y-3 rounded-2xl border border-[#1f3047] bg-[#0b1727] p-5">
-                <p className="text-sm font-semibold text-white">Најчести причини за контакт</p>
-                <ul className="space-y-2 text-sm leading-6 text-slate-400">
-                  <li>• Пријава на сомнителен оглас или корисник</li>
+              <div className={`mt-6 space-y-3 rounded-2xl border p-5 ${dark ? 'border-[#1f3047] bg-[#0b1727]' : 'border-slate-200 bg-white/95 text-slate-900 shadow-sm'}`}>
+                <p className={`text-sm font-semibold ${dark ? 'text-white' : 'text-slate-900'}`}>Најчести причини за контакт</p>
+                <ul className={`space-y-2 text-sm leading-6 ${dark ? 'text-slate-400' : 'text-slate-700'}`}>
+                  <li>• Пријава на сомнителен оглас, профил или злоупотреба</li>
                   <li>• Технички проблем при објава или најава</li>
                   <li>• Прашање за промоција, банер или истакнат оглас</li>
                   <li>• Предлог за нова категорија или подобрување</li>
@@ -152,14 +177,18 @@ export default function MessagesPage() {
                 </ul>
               </div>
 
-              <div className="mt-6 rounded-2xl border border-[#1f3047] bg-black/20 p-4">
-                <p className="text-sm font-semibold text-white">Корисни линкови</p>
+              <div className={`mt-6 rounded-2xl border p-4 ${dark ? 'border-[#1f3047] bg-black/20' : 'border-slate-200 bg-white/95 text-slate-900 shadow-sm'}`}>
+                <p className={`text-sm font-semibold ${dark ? 'text-white' : 'text-slate-900'}`}>Корисни линкови</p>
                 <div className="mt-3 flex flex-wrap gap-2">
                   {helperLinks.map((link) => (
                     <Link
                       key={link.href}
                       href={link.href}
-                      className="rounded-full border border-[#223653] bg-[#0b1727] px-3 py-1.5 text-xs font-medium text-slate-300 transition hover:text-white"
+                      className={`rounded-full border px-3 py-1.5 text-xs font-medium transition ${
+                        dark
+                          ? 'border-[#223653] bg-[#0b1727] text-slate-300 hover:text-white'
+                          : 'border-slate-300 bg-white text-slate-700 hover:text-slate-900'
+                      }`}
                     >
                       {link.label}
                     </Link>
@@ -168,10 +197,16 @@ export default function MessagesPage() {
               </div>
             </section>
 
-            <section className="overflow-hidden rounded-[28px] border border-[#1d2c43] bg-[#0b1423] shadow-2xl shadow-black/20">
-              <div className="border-b border-[#1d2c43] bg-[#08101c] px-5 py-4 sm:px-8">
-                <h2 className="text-2xl font-black tracking-tight sm:text-3xl">Испрати порака</h2>
-                <p className="mt-2 text-sm leading-6 text-slate-400">
+            <section
+              className={`overflow-hidden rounded-[28px] border shadow-2xl ${
+                dark
+                  ? 'border-[#1d2c43] bg-[#0b1423] shadow-black/20'
+                  : 'border-slate-200 bg-white shadow-slate-300/40'
+              }`}
+            >
+              <div className={`force-light-hero border-b px-5 py-4 sm:px-8 ${dark ? 'border-[#1d2c43] bg-[#08101c]' : 'border-slate-200 bg-[#0b1321]'}`}>
+                <h2 className="text-2xl font-black tracking-tight text-white sm:text-3xl">Испрати порака</h2>
+                <p className={`mt-2 text-sm leading-6 ${dark ? 'text-slate-400' : 'text-slate-300'}`}>
                   Формата оди директно до администрацијата. Може да ни пишеш за огласи, категории, соработка, технички проблеми, сугестии и сè што е поврзано со KupiProdadi.
                 </p>
               </div>
@@ -185,13 +220,13 @@ export default function MessagesPage() {
                 ) : (
                   <form onSubmit={handleSubmit} className="space-y-4">
                     {error && (
-                      <div className="rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-200">
+                      <div className={`rounded-xl border px-4 py-3 text-sm ${dark ? 'border-red-500/30 bg-red-500/10 text-red-200' : 'border-red-200 bg-red-50 text-red-700'}`}>
                         {error}
                       </div>
                     )}
 
                     <div className="space-y-1.5">
-                      <label className="block text-sm font-semibold text-white">Име</label>
+                      <label className={`block text-sm font-semibold ${dark ? 'text-white' : 'text-slate-900'}`}>Име</label>
                       <div className="relative">
                         <User className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
                         <input
@@ -201,14 +236,18 @@ export default function MessagesPage() {
                           value={form.name}
                           onChange={handleChange}
                           placeholder="Твоето име"
-                          className="w-full rounded-xl border border-[#223653] bg-[#081223] py-3 pl-11 pr-4 text-white placeholder:text-slate-500 outline-none transition focus:border-[#2d4f7d] focus:ring-2 focus:ring-[#2d4f7d]/30"
+                          className={`w-full rounded-xl py-3 pl-11 pr-4 outline-none transition focus:ring-2 ${
+                            dark
+                              ? 'border border-[#223653] bg-[#081223] text-white placeholder:text-slate-500 focus:border-[#2d4f7d] focus:ring-[#2d4f7d]/30'
+                              : 'border border-slate-300 bg-white text-slate-900 placeholder:text-slate-400 focus:border-slate-400 focus:ring-slate-200'
+                          }`}
                         />
                       </div>
                     </div>
 
                     <div className="grid gap-4 sm:grid-cols-2">
                       <div className="space-y-1.5">
-                        <label className="block text-sm font-semibold text-white">Е-пошта</label>
+                        <label className={`block text-sm font-semibold ${dark ? 'text-white' : 'text-slate-900'}`}>Е-пошта</label>
                         <div className="relative">
                           <Mail className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
                           <input
@@ -218,13 +257,17 @@ export default function MessagesPage() {
                             value={form.email}
                             onChange={handleChange}
                             placeholder="ime@primer.mk"
-                            className="w-full rounded-xl border border-[#223653] bg-[#081223] py-3 pl-11 pr-4 text-white placeholder:text-slate-500 outline-none transition focus:border-[#2d4f7d] focus:ring-2 focus:ring-[#2d4f7d]/30"
+                            className={`w-full rounded-xl py-3 pl-11 pr-4 outline-none transition focus:ring-2 ${
+                              dark
+                                ? 'border border-[#223653] bg-[#081223] text-white placeholder:text-slate-500 focus:border-[#2d4f7d] focus:ring-[#2d4f7d]/30'
+                                : 'border border-slate-300 bg-white text-slate-900 placeholder:text-slate-400 focus:border-slate-400 focus:ring-slate-200'
+                            }`}
                           />
                         </div>
                       </div>
 
                       <div className="space-y-1.5">
-                        <label className="block text-sm font-semibold text-white">Телефон</label>
+                        <label className={`block text-sm font-semibold ${dark ? 'text-white' : 'text-slate-900'}`}>Телефон</label>
                         <div className="relative">
                           <Phone className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
                           <input
@@ -233,21 +276,29 @@ export default function MessagesPage() {
                             value={form.phone}
                             onChange={handleChange}
                             placeholder="+389 7x xxx xxx"
-                            className="w-full rounded-xl border border-[#223653] bg-[#081223] py-3 pl-11 pr-4 text-white placeholder:text-slate-500 outline-none transition focus:border-[#2d4f7d] focus:ring-2 focus:ring-[#2d4f7d]/30"
+                            className={`w-full rounded-xl py-3 pl-11 pr-4 outline-none transition focus:ring-2 ${
+                              dark
+                                ? 'border border-[#223653] bg-[#081223] text-white placeholder:text-slate-500 focus:border-[#2d4f7d] focus:ring-[#2d4f7d]/30'
+                                : 'border border-slate-300 bg-white text-slate-900 placeholder:text-slate-400 focus:border-slate-400 focus:ring-slate-200'
+                            }`}
                           />
                         </div>
                       </div>
                     </div>
 
                     <div className="space-y-1.5">
-                      <label className="block text-sm font-semibold text-white">Тема</label>
+                      <label className={`block text-sm font-semibold ${dark ? 'text-white' : 'text-slate-900'}`}>Тема</label>
                       <div className="relative">
                         <ChevronDown className="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
                         <select
                           name="subject"
                           value={form.subject}
                           onChange={handleChange}
-                          className="w-full appearance-none rounded-xl border border-[#223653] bg-[#081223] px-4 py-3 text-white outline-none transition focus:border-[#2d4f7d] focus:ring-2 focus:ring-[#2d4f7d]/30"
+                          className={`w-full appearance-none rounded-xl px-4 py-3 outline-none transition focus:ring-2 ${
+                            dark
+                              ? 'border border-[#223653] bg-[#081223] text-white focus:border-[#2d4f7d] focus:ring-[#2d4f7d]/30'
+                              : 'border border-slate-300 bg-white text-slate-900 focus:border-slate-400 focus:ring-slate-200'
+                          }`}
                         >
                           {SUBJECTS.map((subject) => (
                             <option key={subject} value={subject} disabled={subject === SUBJECTS[0]}>
@@ -259,7 +310,7 @@ export default function MessagesPage() {
                     </div>
 
                     <div className="space-y-1.5">
-                      <label className="block text-sm font-semibold text-white">Порака</label>
+                      <label className={`block text-sm font-semibold ${dark ? 'text-white' : 'text-slate-900'}`}>Порака</label>
                       <div className="relative">
                         <MessageSquare className="absolute left-4 top-4 h-4 w-4 text-slate-500" />
                         <textarea
@@ -269,14 +320,18 @@ export default function MessagesPage() {
                           value={form.message}
                           onChange={handleChange}
                           placeholder="Опиши го проблемот или прашањето што е можно појасно..."
-                          className="w-full resize-none rounded-xl border border-[#223653] bg-[#081223] py-3 pl-11 pr-4 text-white placeholder:text-slate-500 outline-none transition focus:border-[#2d4f7d] focus:ring-2 focus:ring-[#2d4f7d]/30"
+                          className={`w-full resize-none rounded-xl py-3 pl-11 pr-4 outline-none transition focus:ring-2 ${
+                            dark
+                              ? 'border border-[#223653] bg-[#081223] text-white placeholder:text-slate-500 focus:border-[#2d4f7d] focus:ring-[#2d4f7d]/30'
+                              : 'border border-slate-300 bg-white text-slate-900 placeholder:text-slate-400 focus:border-slate-400 focus:ring-slate-200'
+                          }`}
                         />
                       </div>
                     </div>
 
                     <div className="space-y-1.5">
-                      <label className="block text-sm font-semibold text-white">
-                        Безбедносна проверка: <span className="font-bold text-emerald-300">{a} + {b} = ?</span>
+                      <label className={`block text-sm font-semibold ${dark ? 'text-white' : 'text-slate-900'}`}>
+                        Безбедносна проверка: <span className={`font-bold ${dark ? 'text-emerald-300' : 'text-emerald-500'}`}>{a} + {b} = ?</span>
                       </label>
                       <input
                         type="number"
@@ -284,7 +339,11 @@ export default function MessagesPage() {
                         onChange={(e) => setCaptcha(e.target.value)}
                         required
                         placeholder="Внеси го резултатот"
-                        className="w-40 rounded-xl border border-[#223653] bg-[#081223] px-4 py-3 text-white placeholder:text-slate-500 outline-none transition focus:border-[#2d4f7d] focus:ring-2 focus:ring-[#2d4f7d]/30"
+                        className={`w-40 rounded-xl px-4 py-3 outline-none transition focus:ring-2 ${
+                          dark
+                            ? 'border border-[#223653] bg-[#081223] text-white placeholder:text-slate-500 focus:border-[#2d4f7d] focus:ring-[#2d4f7d]/30'
+                            : 'border border-slate-300 bg-white text-slate-900 placeholder:text-slate-400 focus:border-slate-400 focus:ring-slate-200'
+                        }`}
                       />
                     </div>
 

@@ -127,7 +127,7 @@ export default function Footer() {
               <li><Link href="/pravila" className="hover:text-white transition">Правила за огласување</Link></li>
               <li><Link href="/bezbedan-pazar" className="hover:text-white transition">Тргувај безбедно</Link></li>
               <li><Link href="/messages" className="hover:text-white transition">Контактирајте не</Link></li>
-              <li><Link href="/messages" className="hover:text-white transition">Пријави проблем</Link></li>
+              <li><Link href="/messages?subject=abuse" className="hover:text-white transition">Пријави злоупотреба</Link></li>
             </ul>
           </div>
 
@@ -139,7 +139,7 @@ export default function Footer() {
               <li><Link href="/privacy" className="hover:text-white transition">Политика за приватност</Link></li>
               <li><Link href="/privacy#kolacinja" className="hover:text-white transition">Политика за колачиња</Link></li>
               <li><Link href="/admin" className="hover:text-white transition">Банери и рекламирање</Link></li>
-              <li><Link href="/sell" className="hover:text-white transition">Придобивки за продавачи</Link></li>
+              <li><Link href="/pridobivki-za-prodavaci" className="hover:text-white transition">Придобивки за продавачи</Link></li>
             </ul>
           </div>
 
@@ -149,7 +149,7 @@ export default function Footer() {
             <ul className="space-y-2 text-sm">
               {categories.slice(0, 5).map((category) => (
                 <li key={category.slug}>
-                  <Link href={`/categories/${category.slug}`} className="hover:text-white transition">
+                  <Link href={`/products?category=${category.slug}`} className="hover:text-white transition">
                     {category.name}
                   </Link>
                 </li>

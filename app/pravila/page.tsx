@@ -108,7 +108,7 @@ export default function PravilaPage() {
               </div>
             </div>
 
-            <div className="mt-8 rounded-2xl border border-[#3a1d27] bg-[#10131f] p-7">
+            <div className="mt-8 rounded-2xl border border-[#3a1d27] bg-[#081223] p-7">
               <div className="flex items-start gap-3">
                 <Ban className="mt-1 h-6 w-6 flex-shrink-0 text-red-400" />
                 <div>

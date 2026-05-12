@@ -1,12 +1,14 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { Button, Input } from './ui';
 import { useTheme } from '@/app/context/ThemeContext';
 
 type AuthType = 'login' | 'register';
 
 export default function AuthForm({ type }: { type: AuthType }) {
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const { dark } = useTheme();
@@ -46,7 +48,7 @@ export default function AuthForm({ type }: { type: AuthType }) {
       }
 
       localStorage.setItem('user', JSON.stringify(data.user));
-      window.location.href = '/profile';
+      router.push('/profile');
     } catch {
       setError('Грешка при конекција.');
     } finally {

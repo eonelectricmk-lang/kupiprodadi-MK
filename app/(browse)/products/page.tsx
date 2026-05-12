@@ -1,6 +1,6 @@
 'use client';
 
-import React, { Suspense, useEffect, useState } from 'react';
+import React, { Suspense, useEffect, useMemo, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import AdCard from '@/app/components/AdCard';
@@ -49,6 +49,8 @@ function ProductsPageContent() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalProducts, setTotalProducts] = useState(0);
+  const [cardsPerRow, setCardsPerRow] = useState<6 | 4 | 2>(4);
+  const [sortBy, setSortBy] = useState<'newest' | 'oldest' | 'price-asc' | 'price-desc' | 'title-asc'>('newest');
 
   const category = searchParams.get('category');
   const search = searchParams.get('search');
@@ -56,6 +58,34 @@ function ProductsPageContent() {
   const page = searchParams.get('page');
   const sub = searchParams.get('sub');
   const trail = searchParams.get('trail');
+
+  const sortedProducts = useMemo(() => {
+    const next = [...products];
+
+    switch (sortBy) {
+      case 'oldest':
+        return next.sort((a, b) => a.id - b.id);
+      case 'price-asc':
+        return next.sort((a, b) => a.price - b.price);
+      case 'price-desc':
+        return next.sort((a, b) => b.price - a.price);
+      case 'title-asc':
+        return next.sort((a, b) => a.title.localeCompare(b.title, 'mk'));
+      case 'newest':
+      default:
+        return next.sort((a, b) => b.id - a.id);
+    }
+  }, [products, sortBy]);
+
+  const adsGridClassName = useMemo(() => {
+    if (cardsPerRow === 6) {
+      return 'grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6';
+    }
+    if (cardsPerRow === 2) {
+      return 'grid grid-cols-1 gap-3 sm:grid-cols-2';
+    }
+    return 'grid grid-cols-2 gap-3 lg:grid-cols-3 xl:grid-cols-4';
+  }, [cardsPerRow]);
 
   useEffect(() => {
     const pageNumber = Math.max(parseInt(page || '1', 10) || 1, 1);
@@ -125,14 +155,70 @@ function ProductsPageContent() {
   };
 
   return (
-    <Container className="py-8 text-white">
-      <div className="mb-5 flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
+    <Container className="pb-8 pt-3 text-white">
+      <div className="mb-3 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <h1 className="text-2xl font-bold">Огласи</h1>
           <p className="mt-1 text-sm text-slate-400">
             {loading ? 'Вчитување...' : `${totalProducts.toLocaleString('mk-MK')} активни огласи`}
           </p>
         </div>
+
+        {!loading && !error && products.length > 0 && (
+          <div className="ml-auto flex flex-wrap items-center gap-2">
+            <div className="inline-flex items-center gap-1 rounded-lg border border-[#1f3250] bg-[#0f1a2b] p-1">
+            <button
+              type="button"
+              aria-label="Прикажи 6 во ред"
+              onClick={() => setCardsPerRow(6)}
+              className={`rounded p-1 transition ${cardsPerRow === 6 ? 'bg-[#162945] text-white' : 'text-slate-400 hover:text-slate-200'}`}
+            >
+              <span className="grid grid-cols-3 gap-0.5">
+                {Array.from({ length: 6 }, (_, i) => (
+                  <span key={`products-v6-${i}`} className="h-1.5 w-1.5 rounded-[2px] bg-current" />
+                ))}
+              </span>
+            </button>
+            <button
+              type="button"
+              aria-label="Прикажи 4 во ред"
+              onClick={() => setCardsPerRow(4)}
+              className={`rounded p-1 transition ${cardsPerRow === 4 ? 'bg-[#162945] text-white' : 'text-slate-400 hover:text-slate-200'}`}
+            >
+              <span className="grid grid-cols-2 gap-0.5">
+                {Array.from({ length: 4 }, (_, i) => (
+                  <span key={`products-v4-${i}`} className="h-1.5 w-1.5 rounded-[2px] bg-current" />
+                ))}
+              </span>
+            </button>
+            <button
+              type="button"
+              aria-label="Прикажи 2 во ред"
+              onClick={() => setCardsPerRow(2)}
+              className={`rounded p-1 transition ${cardsPerRow === 2 ? 'bg-[#162945] text-white' : 'text-slate-400 hover:text-slate-200'}`}
+            >
+              <span className="grid grid-cols-1 gap-0.5">
+                {Array.from({ length: 2 }, (_, i) => (
+                  <span key={`products-v2-${i}`} className="h-1.5 w-3 rounded-[2px] bg-current" />
+                ))}
+              </span>
+            </button>
+            </div>
+
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value as 'newest' | 'oldest' | 'price-asc' | 'price-desc' | 'title-asc')}
+              className="h-9 rounded-lg border border-[#1f3250] bg-[#0f1a2b] px-2.5 text-sm text-slate-200 outline-none transition focus:border-[#2d4f7d]"
+              aria-label="Сортирај огласи"
+            >
+              <option value="newest">Најновите први</option>
+              <option value="oldest">Најстарите први</option>
+              <option value="price-asc">Најниска цена</option>
+              <option value="price-desc">Највисока цена</option>
+              <option value="title-asc">По име (А-Ш)</option>
+            </select>
+          </div>
+        )}
       </div>
 
       {loading ? (
@@ -152,8 +238,8 @@ function ProductsPageContent() {
         </div>
       ) : (
         <>
-          <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
-            {products.map((product) => {
+          <div className={adsGridClassName}>
+            {sortedProducts.map((product) => {
               const primaryImage = product.images?.[0] || product.image_url || undefined;
               const hrefCategory = normalizeCategorySlug(category || product.category);
 
@@ -172,6 +258,7 @@ function ProductsPageContent() {
                       isVerified: Number(product.seller_rating || 0) >= 4.7,
                       badge: product.condition === 'Ново' ? 'НОВО' : null,
                     }}
+                    layout={cardsPerRow === 2 ? 'list' : 'grid'}
                   />
                 </Link>
               );

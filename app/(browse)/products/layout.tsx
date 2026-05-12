@@ -21,7 +21,7 @@ function BrowseLayoutContent({
       <Header />
       <div className="browse-shell min-h-screen bg-[#050b17]">
         {shouldUseInlineSidebar && (
-          <div className="mx-auto max-w-6xl px-4 pt-4">
+          <div className="mx-auto max-w-6xl px-4 pt-2">
             <Sidebar variant="inline" />
           </div>
         )}

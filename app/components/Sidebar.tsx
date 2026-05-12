@@ -117,7 +117,7 @@ export default function Sidebar({ activeCategory, variant = 'side' }: SidebarPro
   }, []);
 
   return (
-    <aside className={isInline ? 'w-full rounded-xl border border-[#1d2c43] bg-[#081223] p-3' : 'h-full w-48 border-r border-[#1d2c43] bg-[#081223] p-3'}>
+    <aside className={isInline ? 'w-full rounded-xl border border-[#1d2c43] bg-[#081223] p-3 pb-2' : 'h-full w-48 border-r border-[#1d2c43] bg-[#081223] p-3'}>
       <h2 className="mb-3 px-1 text-xs font-bold uppercase tracking-[0.14em] text-slate-400">
         {isFocusedView ? 'Категорија' : 'Категории'}
       </h2>
