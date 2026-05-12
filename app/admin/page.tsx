@@ -141,6 +141,7 @@ export default function AdminPage() {
   const [activeTab, setActiveTab] = useState<(typeof TABS)[number]['id']>('products');
   const [statusFilter, setStatusFilter] = useState('pending');
   const [productSort, setProductSort] = useState<'newest' | 'oldest' | 'price_asc' | 'price_desc' | 'title_asc'>('newest');
+  const [adminPerPage, setAdminPerPage] = useState(30);
   const [products, setProducts] = useState<ProductRow[]>([]);
   const [categories, setCategories] = useState<CategoryNode[]>([]);
   const [banners, setBanners] = useState<BannerRow[]>([]);
@@ -718,9 +719,21 @@ export default function AdminPage() {
               <p className="mt-0.5 text-sm leading-snug text-slate-400">Од тука ќе одобруваш огласи, ќе управуваш со категории и ќе поставуваш промотивни позиции за поголема видливост.</p>
             </div>
             {me?.authenticated && (
-              <Button onClick={logout} className="admin-dark-button bg-slate-700 hover:bg-slate-600 text-white">
-                Одјава
-              </Button>
+              <div className="flex items-center gap-2">
+                <select
+                  value={adminPerPage}
+                  onChange={(e) => setAdminPerPage(Number(e.target.value))}
+                  className="rounded-lg border border-[#223653] bg-[#0b1727] px-3 py-2 text-sm text-white"
+                >
+                  <option value={30}>по 30</option>
+                  <option value={50}>по 50</option>
+                  <option value={70}>по 70</option>
+                  <option value={100}>по 100</option>
+                </select>
+                <Button onClick={logout} className="admin-dark-button bg-slate-700 hover:bg-slate-600 text-white">
+                  Одјава
+                </Button>
+              </div>
             )}
           </div>
 
@@ -815,7 +828,7 @@ export default function AdminPage() {
                   </div>
 
                   <div className="space-y-3">
-                    {products.map((product) => (
+                    {products.slice(0, adminPerPage).map((product) => (
                       <div key={product.id} className="rounded-lg border border-[#1d2c43] bg-[#0b1727] p-4">
                         <div className="flex flex-col gap-4">
                           <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
@@ -1024,7 +1037,7 @@ export default function AdminPage() {
                         </div>
                       </div>
 
-                      {users.map((user) => (
+                      {users.slice(0, adminPerPage).map((user) => (
                         <div key={user.id} className="rounded-xl border border-[#223653] bg-[#0b1727] p-4">
                           <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
                             <div className="grid flex-1 gap-3 md:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)_auto]">
@@ -1345,7 +1358,7 @@ export default function AdminPage() {
                         if (categorySort === 'name_asc') return a.name.localeCompare(b.name, 'mk');
                         if (categorySort === 'name_desc') return b.name.localeCompare(a.name, 'mk');
                         return b.id - a.id;
-                      }).map((category) => (
+                      }).slice(0, adminPerPage).map((category) => (
                         <div key={category.id} className="rounded-lg border border-[#223653] bg-[#0b1727] p-4">
                           <div className="flex items-center justify-between gap-3">
                             <div>
