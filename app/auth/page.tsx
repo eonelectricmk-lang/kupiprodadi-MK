@@ -22,49 +22,49 @@ export default function AuthPage() {
               className={`rounded-[28px] border p-6 shadow-2xl sm:p-8 ${
                 dark
                   ? 'border-[#1d2c43] bg-gradient-to-br from-[#081223] via-[#0b1423] to-[#07101c] shadow-black/20'
-                  : 'border-slate-200 bg-white shadow-slate-300/40'
+                  : 'border-slate-500 bg-white shadow-slate-300/40'
               }`}
             >
-              <div className={`inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold ${dark ? 'border border-[#223653] bg-[#0b1727] text-slate-300' : 'border border-slate-200 bg-white text-slate-800'}`}>
+              <div className={`inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold ${dark ? 'border border-[#223653] bg-[#0b1727] text-slate-300' : 'border border-slate-300 bg-white text-slate-900'}`}>
                 <Sparkles className="h-4 w-4 text-emerald-400" />
                 Зошто да имаш сметка?
               </div>
 
-              <div id="hero-text">
-                <h1 className={`mt-4 text-3xl font-black tracking-tight sm:text-4xl ${dark ? 'text-white' : 'text-slate-900'}`}>
+              <div id="hero-text" className={dark ? '' : '!text-slate-950'}>
+                <h1 className={`mt-4 text-3xl font-black tracking-tight sm:text-4xl ${dark ? 'text-white' : '!text-slate-950'}`}>
                   Купи и Продади побрзо.
                 </h1>
-                <p className={`mt-3 max-w-xl text-sm leading-6 sm:text-base ${dark ? 'text-slate-300' : 'text-slate-600'}`}>
+                <p className={`mt-3 max-w-xl text-sm leading-6 sm:text-base ${dark ? 'text-slate-300' : '!text-slate-800'}`}>
                   Со сметка на kupiprodadi ги зачувуваш омилените огласи, им праќаш пораки на продавачите и ги следиш твоите објави на едно место.
                 </p>
               </div>
 
               <div className="mt-6 grid gap-3 sm:grid-cols-3">
-                <div className={`rounded-2xl border p-4 ${dark ? 'border-[#1f3047] bg-[#0b1727]' : 'border-slate-200 bg-white text-slate-900 shadow-sm'}`}>
+                <div className={`rounded-2xl border p-4 ${dark ? 'border-[#1f3047] bg-[#0b1727]' : 'border-slate-400 bg-white text-slate-900 shadow-sm'}`}>
                   <Heart className="h-5 w-5 text-pink-400" />
                   <p className={`mt-2 text-sm font-semibold ${dark ? 'text-white' : 'text-slate-900'}`}>Фаворити</p>
                   <p className={`mt-1 text-xs ${dark ? 'text-slate-400' : 'text-slate-600'}`}>Зачувај огласи за подоцна.</p>
                 </div>
-                <div className={`rounded-2xl border p-4 ${dark ? 'border-[#1f3047] bg-[#0b1727]' : 'border-slate-200 bg-white text-slate-900 shadow-sm'}`}>
+                <div className={`rounded-2xl border p-4 ${dark ? 'border-[#1f3047] bg-[#0b1727]' : 'border-slate-400 bg-white text-slate-900 shadow-sm'}`}>
                   <MessageSquare className="h-5 w-5 text-sky-400" />
                   <p className={`mt-2 text-sm font-semibold ${dark ? 'text-white' : 'text-slate-900'}`}>Пораки</p>
                   <p className={`mt-1 text-xs ${dark ? 'text-slate-400' : 'text-slate-600'}`}>Побрза комуникација со продавачи.</p>
                 </div>
-                <div className={`rounded-2xl border p-4 ${dark ? 'border-[#1f3047] bg-[#0b1727]' : 'border-slate-200 bg-white text-slate-900 shadow-sm'}`}>
+                <div className={`rounded-2xl border p-4 ${dark ? 'border-[#1f3047] bg-[#0b1727]' : 'border-slate-400 bg-white text-slate-900 shadow-sm'}`}>
                   <BadgeCheck className="h-5 w-5 text-emerald-400" />
                   <p className={`mt-2 text-sm font-semibold ${dark ? 'text-white' : 'text-slate-900'}`}>Профил</p>
                   <p className={`mt-1 text-xs ${dark ? 'text-slate-400' : 'text-slate-600'}`}>Повеќе доверба и подобра продажба.</p>
                 </div>
               </div>
 
-              <div className={`mt-6 rounded-2xl border p-4 text-sm ${dark ? 'border-[#1f3047] bg-black/20 text-slate-300' : 'border-slate-200 bg-slate-50 text-slate-700 shadow-sm'}`}>
+              <div className={`mt-6 rounded-2xl border p-4 text-sm ${dark ? 'border-[#1f3047] bg-black/20 text-slate-300' : 'border-slate-400 bg-slate-50 text-slate-900 shadow-sm'}`}>
                 <p>Една сметка, побрз пристап и поуредно искуство додека пребаруваш низ огласи.</p>
               </div>
             </section>
 
-            <section className={`overflow-hidden rounded-[28px] border shadow-2xl lg:mt-2 ${dark ? 'border-[#1d2c43] bg-[#0b1423] shadow-black/20' : 'border-slate-200 bg-white shadow-slate-300/40'}`}>
-              <div className={`border-b px-5 py-4 sm:px-8 ${dark ? 'border-[#1d2c43] bg-[#08101c]' : 'border-slate-200 bg-white'}`}>
-                <div className={`inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold ${dark ? 'border border-[#223653] bg-[#0b1727] text-slate-300' : 'border border-slate-200 bg-white text-slate-800'}`}>
+            <section className={`overflow-hidden rounded-[28px] border shadow-2xl lg:mt-2 ${dark ? 'border-[#1d2c43] bg-[#0b1423] shadow-black/20' : 'border-slate-500 bg-white shadow-slate-300/40'}`}>
+              <div className={`border-b px-5 py-4 sm:px-8 ${dark ? 'border-[#1d2c43] bg-[#08101c]' : 'border-slate-500 bg-white'}`}>
+                <div className={`inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold ${dark ? 'border border-[#223653] bg-[#0b1727] text-slate-300' : 'border border-slate-300 bg-white text-slate-900'}`}>
                   <ShieldCheck className="h-4 w-4 text-emerald-400" />
                   Брз и безбеден пристап
                 </div>
@@ -80,7 +80,7 @@ export default function AuthPage() {
                 <div className="grid gap-3">
                   <button
                     type="button"
-                    className="inline-flex items-center justify-center gap-3 rounded-2xl border border-[#223653] bg-white px-4 py-3 text-sm font-semibold text-slate-900 transition hover:bg-slate-50"
+                    className="inline-flex items-center justify-center gap-3 rounded-2xl border border-slate-500 bg-white px-4 py-3 text-sm font-semibold text-slate-900 transition hover:bg-slate-50"
                   >
                     <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#ea4335] text-[11px] font-black leading-none text-white">
                       G
@@ -89,7 +89,7 @@ export default function AuthPage() {
                   </button>
                   <button
                     type="button"
-                    className="inline-flex items-center justify-center gap-3 rounded-2xl border border-[#223653] bg-white px-4 py-3 text-sm font-semibold text-slate-900 transition hover:bg-slate-50"
+                    className="inline-flex items-center justify-center gap-3 rounded-2xl border border-slate-500 bg-white px-4 py-3 text-sm font-semibold text-slate-900 transition hover:bg-slate-50"
                   >
                     <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#1877F2] text-[12px] font-black leading-none text-white">
                       f
@@ -98,7 +98,7 @@ export default function AuthPage() {
                   </button>
                   <button
                     type="button"
-                    className="inline-flex items-center justify-center gap-3 rounded-2xl border border-[#223653] bg-white px-4 py-3 text-sm font-semibold text-slate-900 transition hover:bg-slate-50"
+                    className="inline-flex items-center justify-center gap-3 rounded-2xl border border-slate-500 bg-white px-4 py-3 text-sm font-semibold text-slate-900 transition hover:bg-slate-50"
                   >
                     <Apple className="h-5 w-5 text-slate-900" />
                     Продолжи со Apple
@@ -111,7 +111,7 @@ export default function AuthPage() {
                   <div className="h-px flex-1 bg-[#223653]" />
                 </div>
 
-                <div className={`mb-4 grid grid-cols-2 rounded-2xl border p-1 ${dark ? 'border-[#1d2c43] bg-[#081223]' : 'border-slate-300 bg-slate-50'}`}>
+                <div className={`mb-4 grid grid-cols-2 rounded-2xl border p-1 ${dark ? 'border-[#1d2c43] bg-[#081223]' : 'border-slate-400 bg-slate-50'}`}>
                   <button
                     type="button"
                     onClick={() => setIsLogin(true)}

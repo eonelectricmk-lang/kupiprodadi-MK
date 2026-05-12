@@ -193,6 +193,7 @@ function initializeDb() {
     });
 
     addColumnIfMissing(db, 'users', 'role', "TEXT DEFAULT 'user'");
+    addColumnIfMissing(db, 'users', 'is_active', 'BOOLEAN DEFAULT 1');
     seedDefaultCategories(db);
     migrateCategorySlugs(db);
     seedDefaultBanners(db);

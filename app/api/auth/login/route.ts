@@ -15,7 +15,7 @@ export async function POST(request: NextRequest) {
     }
 
     const user = db.prepare(`
-      SELECT id, email, password, name, phone, location, rating, created_at
+      SELECT id, email, password, name, phone, location, rating, created_at, COALESCE(is_active, 1) AS is_active
       FROM users
       WHERE email = ?
     `).get(email);
@@ -23,6 +23,13 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         { error: 'Корисникот не постои' },
         { status: 401 }
+      );
+    }
+
+    if (!user.is_active) {
+      return NextResponse.json(
+        { error: 'Овој профил е деактивиран. Контактирајте го админот за повеќе информации.' },
+        { status: 403 }
       );
     }
 

@@ -51,8 +51,30 @@ type BannerRow = {
   created_at: string;
 };
 
+type UserRow = {
+  id: number;
+  name: string;
+  email: string;
+  phone: string | null;
+  location: string | null;
+  role: string;
+  rating: number;
+  reviews_count: number;
+  created_at: string;
+  is_active: number;
+  ads_count: number;
+};
+
+type AdminComposeTarget = {
+  id: number;
+  name: string;
+  email: string;
+  is_active: number;
+};
+
 const TABS = [
   { id: 'products', label: 'Огласи' },
+  { id: 'users', label: 'Корисници' },
   { id: 'categories', label: 'Категории' },
   { id: 'banners', label: 'Рекламирање' },
 ] as const;
@@ -92,6 +114,14 @@ export default function AdminPage() {
   const [products, setProducts] = useState<ProductRow[]>([]);
   const [categories, setCategories] = useState<CategoryNode[]>([]);
   const [banners, setBanners] = useState<BannerRow[]>([]);
+  const [users, setUsers] = useState<UserRow[]>([]);
+  const [userSearch, setUserSearch] = useState('');
+  const [userSort, setUserSort] = useState<'newest' | 'oldest' | 'rating_high' | 'rating_low' | 'ads_high' | 'ads_low'>('newest');
+  const [userStatusFilter, setUserStatusFilter] = useState<'all' | 'active' | 'inactive'>('all');
+  const [userCounts, setUserCounts] = useState({ total: 0, active: 0, inactive: 0 });
+  const [composeUser, setComposeUser] = useState<AdminComposeTarget | null>(null);
+  const [selectedUserIds, setSelectedUserIds] = useState<number[]>([]);
+  const [adminMessageText, setAdminMessageText] = useState('');
   const [message, setMessage] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [login, setLogin] = useState({ email: '', password: '' });
@@ -135,6 +165,26 @@ export default function AdminPage() {
     setBanners(Array.isArray(data?.banners) ? data.banners : []);
   };
 
+  const refreshUsers = async (
+    nextSearch = userSearch,
+    nextSort = userSort,
+    nextStatus = userStatusFilter
+  ) => {
+    const params = new URLSearchParams({
+      sort: nextSort,
+      status: nextStatus,
+    });
+    if (nextSearch.trim()) params.set('search', nextSearch.trim());
+    const response = await fetch(`/api/admin/users?${params.toString()}`, { cache: 'no-store' });
+    const data = await response.json();
+    setUsers(Array.isArray(data?.users) ? data.users : []);
+    setUserCounts({
+      total: Number(data?.counts?.total || 0),
+      active: Number(data?.counts?.active || 0),
+      inactive: Number(data?.counts?.inactive || 0),
+    });
+  };
+
   useEffect(() => {
     refreshMe().catch(() => setMe({ authenticated: false, setupRequired: false }));
   }, []);
@@ -142,6 +192,7 @@ export default function AdminPage() {
   useEffect(() => {
     if (!me?.authenticated) return;
     refreshProducts().catch(() => {});
+    refreshUsers().catch(() => {});
     refreshCategories().catch(() => {});
     refreshBanners().catch(() => {});
   }, [me?.authenticated]);
@@ -150,6 +201,11 @@ export default function AdminPage() {
     if (!me?.authenticated || activeTab !== 'products') return;
     refreshProducts(statusFilter).catch(() => {});
   }, [statusFilter, activeTab, me?.authenticated]);
+
+  useEffect(() => {
+    if (!me?.authenticated || activeTab !== 'users') return;
+    refreshUsers(userSearch, userSort, userStatusFilter).catch(() => {});
+  }, [userSearch, userSort, userStatusFilter, activeTab, me?.authenticated]);
 
   const submitSetup = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -219,6 +275,72 @@ export default function AdminPage() {
     } finally {
       setBusy(false);
     }
+  };
+
+  const toggleUserActive = async (user: UserRow) => {
+    setBusy(true);
+    setMessage(null);
+    try {
+      const response = await fetch(`/api/admin/users/${user.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ is_active: !Boolean(user.is_active) }),
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data?.error || 'Не успеа менување статус на корисник');
+      await refreshUsers(userSearch, userSort, userStatusFilter);
+      setMessage(user.is_active ? 'Корисникот е деактивиран.' : 'Корисникот е повторно активиран.');
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : 'Грешка при менување статус на корисник.');
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const sendAdminMessage = async (event: React.FormEvent) => {
+    event.preventDefault();
+    const targetIds = composeUser ? [composeUser.id] : selectedUserIds;
+    if (!targetIds.length) return;
+    setBusy(true);
+    setMessage(null);
+    try {
+      const response = await fetch('/api/admin/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          receiver_ids: targetIds,
+          content: adminMessageText,
+        }),
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data?.error || 'Не успеа испраќање порака');
+      setAdminMessageText('');
+      setComposeUser(null);
+      setSelectedUserIds([]);
+      setMessage(targetIds.length === 1 ? 'Пораката е испратена до корисникот.' : `Пораката е испратена до ${targetIds.length} корисници.`);
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : 'Грешка при испраќање порака.');
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const toggleUserSelection = (userId: number) => {
+    setSelectedUserIds((prev) => (prev.includes(userId) ? prev.filter((id) => id !== userId) : [...prev, userId]));
+    setComposeUser(null);
+  };
+
+  const allVisibleUserIds = users.filter((user) => user.role !== 'admin').map((user) => user.id);
+  const allVisibleSelected = allVisibleUserIds.length > 0 && allVisibleUserIds.every((id) => selectedUserIds.includes(id));
+
+  const toggleSelectAllVisibleUsers = () => {
+    setComposeUser(null);
+    setSelectedUserIds((prev) => {
+      if (allVisibleSelected) {
+        return prev.filter((id) => !allVisibleUserIds.includes(id));
+      }
+      return Array.from(new Set([...prev, ...allVisibleUserIds]));
+    });
   };
 
   const submitCategory = async (event: React.FormEvent) => {
@@ -609,6 +731,262 @@ export default function AdminPage() {
                       </div>
                     ))}
                     {products.length === 0 && <p className="text-sm text-slate-400">Нема огласи во овој статус.</p>}
+                  </div>
+                </section>
+              )}
+
+              {activeTab === 'users' && (
+                <section className="space-y-5">
+                  <div className="grid gap-4 md:grid-cols-3">
+                    <div className="rounded-xl border border-[#1d2c43] bg-[#081223] p-5">
+                      <p className="text-sm font-medium text-slate-400">Вкупно корисници</p>
+                      <p className="mt-3 text-3xl font-bold text-white">{userCounts.total}</p>
+                    </div>
+                    <div className="rounded-xl border border-[#1d2c43] bg-[#081223] p-5">
+                      <p className="text-sm font-medium text-slate-400">Активни профили</p>
+                      <p className="mt-3 text-3xl font-bold text-emerald-400">{userCounts.active}</p>
+                    </div>
+                    <div className="rounded-xl border border-[#1d2c43] bg-[#081223] p-5">
+                      <p className="text-sm font-medium text-slate-400">Деактивирани профили</p>
+                      <p className="mt-3 text-3xl font-bold text-rose-400">{userCounts.inactive}</p>
+                    </div>
+                  </div>
+
+                  <div className="rounded-xl border border-[#1d2c43] bg-[#081223] p-5">
+                    <div className="flex flex-col gap-3 xl:flex-row xl:items-end xl:justify-between">
+                      <div>
+                        <h2 className="text-xl font-bold">Корисници</h2>
+                        <p className="mt-2 text-sm text-slate-400">
+                          Пребарувај, сортирај и деактивирај профили ако забележиш злоупотреба или scam однесување.
+                        </p>
+                      </div>
+
+                      <div className="grid gap-3 sm:grid-cols-3 xl:min-w-[760px]">
+                        <div className="sm:col-span-1">
+                          <label className="mb-2 block text-sm font-semibold text-slate-200">Пребарување</label>
+                          <Input
+                            placeholder="Име, email, телефон или ID"
+                            value={userSearch}
+                            onChange={(e) => setUserSearch(e.target.value)}
+                            className="admin-dark-input bg-[#0b1727] text-white placeholder:text-slate-500"
+                          />
+                        </div>
+                        <div>
+                          <label className="mb-2 block text-sm font-semibold text-slate-200">Сортирање</label>
+                          <select
+                            value={userSort}
+                            onChange={(e) => setUserSort(e.target.value as 'newest' | 'oldest' | 'rating_high' | 'rating_low' | 'ads_high' | 'ads_low')}
+                            className="h-11 w-full rounded-lg border border-[#223653] bg-[#0b1727] px-3 text-sm text-white"
+                          >
+                            <option value="newest">Најново регистрирани</option>
+                            <option value="oldest">Најстари профили</option>
+                            <option value="rating_high">Највисок рејтинг</option>
+                            <option value="rating_low">Најнизок рејтинг</option>
+                            <option value="ads_high">Најмногу огласи</option>
+                            <option value="ads_low">Најмалку огласи</option>
+                          </select>
+                        </div>
+                        <div>
+                          <label className="mb-2 block text-sm font-semibold text-slate-200">Статус</label>
+                          <select
+                            value={userStatusFilter}
+                            onChange={(e) => setUserStatusFilter(e.target.value as 'all' | 'active' | 'inactive')}
+                            className="h-11 w-full rounded-lg border border-[#223653] bg-[#0b1727] px-3 text-sm text-white"
+                          >
+                            <option value="all">Сите корисници</option>
+                            <option value="active">Само активни</option>
+                            <option value="inactive">Само деактивирани</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+
+                    {(composeUser || selectedUserIds.length > 0) && (
+                      <form onSubmit={sendAdminMessage} className="mt-5 rounded-xl border border-cyan-500/30 bg-cyan-500/10 p-5">
+                        <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+                          <div>
+                            <h3 className="text-lg font-bold text-white">Прати порака до корисник</h3>
+                            {composeUser ? (
+                              <p className="mt-1 text-sm text-slate-300">
+                                {composeUser.name} · {composeUser.email} · ID #{composeUser.id}
+                              </p>
+                            ) : (
+                              <p className="mt-1 text-sm text-slate-300">
+                                Избрани корисници: {selectedUserIds.length}
+                              </p>
+                            )}
+                            {composeUser && !composeUser.is_active && (
+                              <p className="mt-2 text-xs font-medium text-amber-300">Овој профил е моментално деактивиран, но пораката сепак може да биде испратена.</p>
+                            )}
+                          </div>
+                          <Button
+                            type="button"
+                            onClick={() => {
+                              setComposeUser(null);
+                              setSelectedUserIds([]);
+                              setAdminMessageText('');
+                            }}
+                            className="admin-dark-button bg-slate-700 hover:bg-slate-600 text-white"
+                          >
+                            Затвори
+                          </Button>
+                        </div>
+
+                        <div className="mt-4 space-y-2">
+                          <label className="block text-sm font-semibold text-slate-200">Порака</label>
+                          <textarea
+                            value={adminMessageText}
+                            onChange={(e) => setAdminMessageText(e.target.value)}
+                            placeholder="Напиши предупредување, информација, барање за корекција или порака поврзана со профилот."
+                            rows={5}
+                            className="w-full rounded-lg border border-[#223653] bg-[#0b1727] px-4 py-3 text-sm text-white outline-none transition placeholder:text-slate-500 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20"
+                          />
+                        </div>
+
+                        <div className="mt-4 flex gap-2">
+                          <Button disabled={busy || !adminMessageText.trim()} className="admin-dark-button bg-cyan-600 hover:bg-cyan-500 text-white">
+                            {busy ? 'Се праќа...' : 'Испрати порака'}
+                          </Button>
+                        </div>
+                      </form>
+                    )}
+
+                    <div className="mt-5 space-y-3">
+                      <div className="flex flex-col gap-3 rounded-xl border border-[#223653] bg-[#0b1727] px-4 py-3 lg:flex-row lg:items-center lg:justify-between">
+                        <div className="flex items-center gap-3">
+                          <label className="flex items-center gap-3 text-sm font-semibold text-slate-200">
+                            <input
+                              type="checkbox"
+                              checked={allVisibleSelected}
+                              onChange={toggleSelectAllVisibleUsers}
+                              className="h-4 w-4 rounded border border-[#3a5276] bg-[#081223]"
+                            />
+                            Select all
+                          </label>
+                          <span className="text-sm text-slate-400">
+                            Избрани: {selectedUserIds.length}
+                          </span>
+                        </div>
+                        <div className="flex gap-2">
+                          <Button
+                            type="button"
+                            disabled={!selectedUserIds.length}
+                            onClick={() => setComposeUser(null)}
+                            className="admin-dark-button bg-cyan-700 hover:bg-cyan-600 text-white disabled:cursor-not-allowed disabled:opacity-50"
+                          >
+                            Прати известување
+                          </Button>
+                          {!!selectedUserIds.length && (
+                            <Button
+                              type="button"
+                              onClick={() => setSelectedUserIds([])}
+                              className="admin-dark-button bg-slate-700 hover:bg-slate-600 text-white"
+                            >
+                              Исчисти избор
+                            </Button>
+                          )}
+                        </div>
+                      </div>
+
+                      {users.map((user) => (
+                        <div key={user.id} className="rounded-xl border border-[#223653] bg-[#0b1727] p-4">
+                          <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
+                            <div className="grid flex-1 gap-3 md:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)_auto]">
+                              <div>
+                                <div className="flex flex-wrap items-center gap-2">
+                                  {user.role !== 'admin' && (
+                                    <label className="mr-1 flex items-center">
+                                      <input
+                                        type="checkbox"
+                                        checked={selectedUserIds.includes(user.id)}
+                                        onChange={() => toggleUserSelection(user.id)}
+                                        className="h-4 w-4 rounded border border-[#3a5276] bg-[#081223]"
+                                      />
+                                    </label>
+                                  )}
+                                  <h3 className="text-lg font-semibold text-white">{user.name}</h3>
+                                  <span className="rounded-full border border-[#314867] bg-[#122038] px-2.5 py-1 text-xs font-semibold text-slate-200">
+                                    ID #{user.id}
+                                  </span>
+                                  <span
+                                    className={`rounded-full px-2.5 py-1 text-xs font-semibold ${
+                                      user.role === 'admin'
+                                        ? 'border border-amber-500/40 bg-amber-500/10 text-amber-300'
+                                        : user.is_active
+                                          ? 'border border-emerald-500/40 bg-emerald-500/10 text-emerald-300'
+                                          : 'border border-rose-500/40 bg-rose-500/10 text-rose-300'
+                                    }`}
+                                  >
+                                    {user.role === 'admin' ? 'Admin' : user.is_active ? 'Активен' : 'Деактивиран'}
+                                  </span>
+                                </div>
+                                <p className="mt-2 text-sm text-slate-300">{user.email}</p>
+                                <p className="mt-1 text-sm text-slate-500">
+                                  {user.phone || 'Нема телефон'}{user.location ? ` · ${user.location}` : ''}
+                                </p>
+                              </div>
+
+                              <div className="grid gap-2 text-sm text-slate-300 sm:grid-cols-2">
+                                <div className="rounded-lg border border-[#1d2c43] bg-[#081223] px-3 py-2">
+                                  <p className="text-xs uppercase tracking-wide text-slate-500">Регистрација</p>
+                                  <p className="mt-1 font-medium text-white">{new Date(user.created_at).toLocaleString('mk-MK')}</p>
+                                </div>
+                                <div className="rounded-lg border border-[#1d2c43] bg-[#081223] px-3 py-2">
+                                  <p className="text-xs uppercase tracking-wide text-slate-500">Огласи</p>
+                                  <p className="mt-1 font-medium text-white">{user.ads_count}</p>
+                                </div>
+                              </div>
+
+                              <div className="rounded-lg border border-[#1d2c43] bg-[#081223] px-3 py-2 text-sm">
+                                <p className="text-xs uppercase tracking-wide text-slate-500">Рејтинг</p>
+                                <p className="mt-1 font-medium text-white">
+                                  {(user.rating ?? 5).toFixed(1)} / 5
+                                  <span className="ml-2 text-slate-500">({user.reviews_count || 0} рецензии)</span>
+                                </p>
+                              </div>
+                            </div>
+
+                            <div className="flex flex-wrap gap-2">
+                              <Button
+                                type="button"
+                                onClick={() => {
+                                  setComposeUser({
+                                    id: user.id,
+                                    name: user.name,
+                                    email: user.email,
+                                    is_active: user.is_active,
+                                  });
+                                  setAdminMessageText('');
+                                }}
+                                className="admin-dark-button bg-cyan-700 hover:bg-cyan-600 text-white"
+                              >
+                                Прати порака
+                              </Button>
+                              <Button
+                                type="button"
+                                disabled={busy || user.role === 'admin'}
+                                onClick={() => toggleUserActive(user)}
+                                className={`admin-dark-button text-white ${
+                                  user.role === 'admin'
+                                    ? 'cursor-not-allowed bg-slate-700 opacity-60'
+                                    : user.is_active
+                                      ? 'bg-rose-700 hover:bg-rose-600'
+                                      : 'bg-emerald-700 hover:bg-emerald-600'
+                                }`}
+                              >
+                                {user.role === 'admin' ? 'Admin профил' : user.is_active ? 'Деактивирај' : 'Активирај'}
+                              </Button>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+
+                      {users.length === 0 && (
+                        <div className="rounded-xl border border-dashed border-[#223653] bg-[#0b1727] px-5 py-10 text-center text-sm text-slate-400">
+                          Нема корисници што одговараат на пребарувањето или филтерот.
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </section>
               )}

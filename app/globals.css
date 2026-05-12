@@ -28,7 +28,7 @@ html.light main {
 
 html.light #hero-text [class*="text-"]:not([class*="text-red"]),
 html.light #hero-text h1 {
-  color: #ffffff !important;
+  color: #0f172a !important;
 }
 
 html.light .force-light-hero [class*="text-"]:not([class*="text-red"]):not([class*="text-blue"]):not([class*="text-green"]):not([class*="text-amber"]):not([class*="text-emerald"]):not([class*="text-pink"]):not([class*="text-violet"]):not([class*="text-sky"]):not([class*="text-orange"]),
@@ -37,7 +37,7 @@ html.light .force-light-hero h2,
 html.light .force-light-hero p,
 html.light .force-light-hero li,
 html.light .force-light-hero span {
-  color: #ffffff !important;
+  color: #0f172a !important;
 }
 
 html.light .force-dark-card {
@@ -298,5 +298,5 @@ html.light .force-light-hero h2,
 html.light .force-light-hero p,
 html.light .force-light-hero li,
 html.light .force-light-hero span {
-  color: #ffffff !important;
+  color: #0f172a !important;
 }

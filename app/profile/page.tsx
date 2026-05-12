@@ -303,13 +303,13 @@ function OwnerAdCard({
       className={`w-full overflow-hidden rounded-[18px] border shadow-[0_12px_24px_rgba(0,0,0,0.2)] ${
         dark
           ? 'force-dark-card force-dark-gradient border-[#1d2c43] bg-[linear-gradient(135deg,#081120_0%,#0c182b_56%,#091423_100%)]'
-          : 'border-slate-500 bg-white shadow-slate-300/40'
+          : 'border-slate-600 bg-white shadow-slate-300/40'
       }`}
     >
       <div className="grid gap-0 xl:grid-cols-[268px_minmax(0,1fr)_286px]">
-        <div className={`border-b p-3.5 xl:border-b-0 xl:border-r ${dark ? 'border-[#223653]' : 'border-slate-400'}`}>
+          <div className={`border-b p-3.5 xl:border-b-0 xl:border-r ${dark ? 'border-[#223653]' : 'border-slate-500'}`}>
           <Link href={href} className="group block">
-            <div className={`relative h-[186px] overflow-hidden rounded-[14px] border sm:h-[196px] xl:h-[208px] ${dark ? 'force-dark-pill border-[#223653] bg-[#0b1727]' : 'border-slate-400 bg-slate-100'}`}>
+              <div className={`relative h-[186px] overflow-hidden rounded-[14px] border sm:h-[196px] xl:h-[208px] ${dark ? 'force-dark-pill border-[#223653] bg-[#0b1727]' : 'border-slate-500 bg-slate-100'}`}>
               <img
                 src={mainImage}
                 alt={title}
@@ -337,13 +337,13 @@ function OwnerAdCard({
                         ? index === 0
                           ? dark
                             ? 'force-dark-pill border-sky-500/60 bg-[#0b1727]'
-                            : 'border-sky-400 bg-white'
+                            : 'border-sky-500 bg-white'
                           : dark
                             ? 'force-dark-pill border-[#223653] bg-[#0b1727]'
-                            : 'border-slate-400 bg-white'
+                            : 'border-slate-500 bg-white'
                         : dark
                           ? 'force-dark-subtle border-dashed border-[#30435f] bg-[#081223]'
-                          : 'border-dashed border-slate-500 bg-slate-50'
+                          : 'border-dashed border-slate-600 bg-slate-50'
                     }`}
                   >
                     {thumb ? (
@@ -358,11 +358,11 @@ function OwnerAdCard({
           </div>
         </div>
 
-        <div className={`min-w-0 p-3.5 pb-2 xl:border-r xl:p-4 xl:pb-2.5 ${dark ? 'xl:border-[#223653]' : 'xl:border-slate-400'}`}>
+        <div className={`min-w-0 p-3.5 pb-2 xl:border-r xl:p-4 xl:pb-2.5 ${dark ? 'xl:border-[#223653]' : 'xl:border-slate-500'}`}>
           <div className="flex h-full flex-col gap-0">
             <div className="flex flex-wrap items-start justify-between gap-2.5">
               <div className="flex min-w-0 flex-wrap items-center gap-2">
-                <span className={`inline-flex items-center rounded-[8px] border px-3 py-1 text-[12px] font-medium ${dark ? 'force-dark-pill border-[#28415f] bg-[#0d1b2f] !text-slate-200' : 'border-slate-400 bg-slate-50 text-slate-900'}`}>
+                <span className={`inline-flex items-center rounded-[8px] border px-3 py-1 text-[12px] font-medium ${dark ? 'force-dark-pill border-[#28415f] bg-[#0d1b2f] !text-slate-200' : 'border-slate-500 bg-slate-50 text-slate-900'}`}>
                   {sellerName || 'Продавач'}
                 </span>
                 <Link href={href} className="min-w-0">
@@ -372,7 +372,7 @@ function OwnerAdCard({
                 </Link>
               </div>
               {typeof productId === 'number' && (
-                <span className={`inline-flex shrink-0 items-center rounded-[8px] border px-3 py-1 text-[11px] font-semibold ${dark ? 'force-dark-subtle border-[#223653] bg-[#081223] !text-slate-300' : 'border-slate-400 bg-slate-50 text-slate-800'}`}>
+                <span className={`inline-flex shrink-0 items-center rounded-[8px] border px-3 py-1 text-[11px] font-semibold ${dark ? 'force-dark-subtle border-[#223653] bg-[#081223] !text-slate-300' : 'border-slate-500 bg-slate-50 text-slate-900'}`}>
                   ID: KP-{String(productId).padStart(5, '0')}
                 </span>
               )}
@@ -394,12 +394,12 @@ function OwnerAdCard({
               {description || 'Нема внесен опис за овој оглас.'}
             </p>
 
-            <div className={`mt-auto -translate-y-1 border-t pt-1.5 ${dark ? 'border-[#223653]' : 'border-slate-400'}`}>
+            <div className={`mt-auto -translate-y-1 border-t pt-1.5 ${dark ? 'border-[#223653]' : 'border-slate-500'}`}>
               <div className="flex items-center gap-2 overflow-x-auto xl:overflow-visible">
                 <button
                   type="button"
                   onClick={onEdit}
-                  className={`inline-flex shrink-0 items-center justify-center gap-1.5 rounded-[10px] border px-2.5 py-1.5 text-[11px] font-semibold transition ${dark ? 'force-dark-pill border-[#2b3f5f] bg-[#0b1727] text-slate-100 hover:bg-[#122038] hover:text-white' : 'border-slate-500 bg-white text-slate-900 hover:bg-slate-50 hover:text-black'}`}
+                  className={`inline-flex shrink-0 items-center justify-center gap-1.5 rounded-[10px] border px-2.5 py-1.5 text-[11px] font-semibold transition ${dark ? 'force-dark-pill border-[#2b3f5f] bg-[#0b1727] text-slate-100 hover:bg-[#122038] hover:text-white' : 'border-slate-600 bg-white text-slate-900 hover:bg-slate-50 hover:text-black'}`}
                 >
                   <PencilLine className="h-3.5 w-3.5" />
                   Измени
@@ -407,7 +407,7 @@ function OwnerAdCard({
                 <button
                   type="button"
                   onClick={onRefresh}
-                  className={`inline-flex shrink-0 items-center justify-center gap-1.5 rounded-[10px] border px-2.5 py-1.5 text-[11px] font-semibold transition ${dark ? 'border-sky-500/35 bg-sky-500/10 text-sky-300 hover:bg-sky-500/15' : 'border-sky-400 bg-sky-50 text-sky-700 hover:bg-sky-100'}`}
+                  className={`inline-flex shrink-0 items-center justify-center gap-1.5 rounded-[10px] border px-2.5 py-1.5 text-[11px] font-semibold transition ${dark ? 'border-sky-500/35 bg-sky-500/10 text-sky-300 hover:bg-sky-500/15' : 'border-sky-600 bg-sky-100 text-sky-900 hover:bg-sky-200'}`}
                 >
                   <RefreshCw className="h-3.5 w-3.5" />
                   Обнови
@@ -415,7 +415,7 @@ function OwnerAdCard({
                 <button
                   type="button"
                   onClick={onPromote}
-                  className={`inline-flex shrink-0 items-center justify-center gap-1.5 rounded-[10px] border px-2.5 py-1.5 text-[11px] font-semibold transition ${dark ? 'border-amber-500/35 bg-amber-500/10 text-amber-300 hover:bg-amber-500/15' : 'border-amber-400 bg-amber-50 text-amber-700 hover:bg-amber-100'}`}
+                  className={`inline-flex shrink-0 items-center justify-center gap-1.5 rounded-[10px] border px-2.5 py-1.5 text-[11px] font-semibold transition ${dark ? 'border-amber-500/35 bg-amber-500/10 text-amber-300 hover:bg-amber-500/15' : 'border-amber-600 bg-amber-100 text-amber-900 hover:bg-amber-200'}`}
                 >
                   <Sparkles className="h-3.5 w-3.5" />
                   Промовирај
@@ -423,7 +423,7 @@ function OwnerAdCard({
                 <button
                   type="button"
                   onClick={onDelete}
-                  className={`inline-flex shrink-0 items-center justify-center gap-1.5 rounded-[10px] border px-2.5 py-1.5 text-[11px] font-semibold transition ${dark ? 'border-rose-500/35 bg-rose-500/10 text-rose-300 hover:bg-rose-500/15' : 'border-rose-400 bg-rose-50 text-rose-700 hover:bg-rose-100'}`}
+                  className={`inline-flex shrink-0 items-center justify-center gap-1.5 rounded-[10px] border px-2.5 py-1.5 text-[11px] font-semibold transition ${dark ? 'border-rose-500/35 bg-rose-500/10 text-rose-300 hover:bg-rose-500/15' : 'border-rose-600 bg-rose-100 text-rose-900 hover:bg-rose-200'}`}
                 >
                   <Trash2 className="h-3.5 w-3.5" />
                   Избриши
@@ -434,19 +434,19 @@ function OwnerAdCard({
         </div>
 
         <div className="flex flex-col gap-2 p-3.5 pb-2 xl:p-4 xl:pb-2.5">
-          <div className={`flex items-start justify-between gap-3 border-b pb-2 ${dark ? 'border-[#223653]' : 'border-slate-400'}`}>
+          <div className={`flex items-start justify-between gap-3 border-b pb-2 ${dark ? 'border-[#223653]' : 'border-slate-500'}`}>
             <p className="text-[25px] font-black tracking-[-0.03em] text-red-400">{price}</p>
             <span
               className={`inline-flex items-center gap-2 rounded-[12px] border px-3 py-1.5 text-[11px] font-semibold ${
                 dark
                   ? statusClass || 'border-emerald-500/30 bg-emerald-500/10 text-emerald-300'
                   : resolvedStatus === 'active' || !resolvedStatus
-                    ? 'border-emerald-700 bg-emerald-200 text-emerald-900'
+                    ? 'border-emerald-800 bg-emerald-300 text-emerald-950'
                     : resolvedStatus === 'pending'
-                      ? 'border-amber-600 bg-amber-100 text-amber-900'
+                      ? 'border-amber-700 bg-amber-200 text-amber-950'
                       : resolvedStatus === 'rejected'
-                        ? 'border-rose-600 bg-rose-100 text-rose-900'
-                        : 'border-slate-600 bg-slate-200 text-slate-900'
+                        ? 'border-rose-700 bg-rose-200 text-rose-950'
+                        : 'border-slate-700 bg-slate-300 text-slate-950'
               }`}
             >
               <span className="h-2.5 w-2.5 rounded-full bg-current opacity-90" />
@@ -454,7 +454,7 @@ function OwnerAdCard({
             </span>
           </div>
 
-          <div className={`rounded-[16px] border p-3 ${dark ? 'force-dark-panel border-[#223653] bg-[#0a1628] shadow-[inset_0_1px_0_rgba(255,255,255,0.02)]' : 'border-slate-400 bg-slate-50'}`}>
+          <div className={`rounded-[16px] border p-3 ${dark ? 'force-dark-panel border-[#223653] bg-[#0a1628] shadow-[inset_0_1px_0_rgba(255,255,255,0.02)]' : 'border-slate-500 bg-slate-50'}`}>
             <p className={`text-[15px] font-bold ${dark ? '!text-white' : 'text-slate-900'}`}>Статистика за огласот</p>
 
             <div className="mt-2.5 space-y-1.5">
@@ -490,7 +490,7 @@ function OwnerAdCard({
 
             <button
               type="button"
-              className={`mt-3 inline-flex w-full items-center justify-center gap-2 rounded-[12px] border px-4 py-2 text-[12px] font-semibold transition ${dark ? 'border-sky-500/35 bg-sky-500/10 text-sky-300 hover:bg-sky-500/15' : 'border-sky-400 bg-white text-sky-700 hover:bg-sky-50'}`}
+              className={`mt-3 inline-flex w-full items-center justify-center gap-2 rounded-[12px] border px-4 py-2 text-[12px] font-semibold transition ${dark ? 'border-sky-500/35 bg-sky-500/10 text-sky-300 hover:bg-sky-500/15' : 'border-sky-600 bg-white text-sky-800 hover:bg-sky-50'}`}
             >
               <Inbox className="h-4 w-4" />
               Детална статистика
@@ -525,7 +525,7 @@ function StatCard({
 }) {
   const { dark } = useTheme();
   return (
-    <div className={`rounded-[14px] border px-3 py-2.5 sm:px-3.5 ${dark ? 'force-dark-subtle border-[#223653] bg-[#081223]' : 'border-slate-200 bg-white shadow-sm'}`}>
+      <div className={`rounded-[14px] border px-3 py-2.5 sm:px-3.5 ${dark ? 'force-dark-subtle border-[#223653] bg-[#081223]' : 'border-slate-500 bg-white shadow-sm'}`}>
       <div className="flex items-center justify-between gap-2">
         <span className={`text-[11px] sm:text-xs ${dark ? 'text-slate-500' : 'text-slate-500'}`}>{label}</span>
         <Icon className={`h-3.5 w-3.5 ${accent}`} />
@@ -551,10 +551,10 @@ function TabButton({
       onClick={onClick}
       className={`shrink-0 rounded-lg px-3.5 py-1.5 text-sm font-semibold transition sm:px-4 ${
         active
-          ? 'bg-red-600 text-white shadow-lg shadow-red-600/20'
+          ? 'border border-red-700 bg-red-600 text-white shadow-lg shadow-red-600/20'
           : dark
             ? 'border border-[#223653] bg-[#081223] text-slate-300 hover:bg-[#122038] hover:text-white'
-            : 'border border-slate-300 bg-white text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+            : 'border border-slate-500 bg-white text-slate-700 shadow-sm hover:bg-slate-50 hover:text-slate-950'
       }`}
     >
       {children}
@@ -780,31 +780,31 @@ export default function ProfilePage() {
       <Header />
       <Container className="py-3 md:py-4">
         <div className="mx-auto max-w-6xl space-y-3">
-          <section className={`force-dark-card overflow-hidden rounded-[18px] border shadow-xl ${dark ? 'border-[#1d2c43] bg-gradient-to-br from-[#081223] via-[#0b1423] to-[#07101c] shadow-black/20' : 'force-dark-gradient border-[#1d2c43] bg-gradient-to-br from-[#081223] via-[#0b1423] to-[#07101c] shadow-slate-300/20'}`}>
+          <section className={`overflow-hidden rounded-[18px] border shadow-xl ${dark ? 'force-dark-card border-[#1d2c43] bg-gradient-to-br from-[#081223] via-[#0b1423] to-[#07101c] shadow-black/20' : 'border-slate-600 bg-white shadow-slate-300/40'}`}>
             <div className="grid gap-2 p-2.5 sm:p-3 lg:grid-cols-[minmax(0,1.1fr)_minmax(300px,0.9fr)] lg:items-start">
               <div className="min-w-0">
                 <div className="flex min-w-0 gap-3.5">
-                  <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full border border-[#223653] bg-[#0b1727] sm:h-16 sm:w-16">
-                    <UserCircle2 className="h-8 w-8 text-slate-300 sm:h-9 sm:w-9" />
+                  <div className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-full border sm:h-16 sm:w-16 ${dark ? 'border-[#223653] bg-[#0b1727]' : 'border-slate-500 bg-white shadow-sm'}`}>
+                    <UserCircle2 className={`h-8 w-8 sm:h-9 sm:w-9 ${dark ? 'text-slate-300' : 'text-slate-900'}`} />
                   </div>
 
                   <div className="min-w-0 flex-1 pl-1 sm:pl-1.5">
                     <div className="flex flex-wrap items-center gap-2">
-                      <h1 className="force-dark-heading truncate text-[18px] font-black tracking-tight !text-white sm:text-[25px]">{user.name}</h1>
-                      <span className="inline-flex items-center gap-1.5 rounded-full border border-sky-500/30 bg-sky-500/10 px-2.5 py-0.5 text-[11px] font-semibold text-sky-300">
+                      <h1 className={`truncate text-[18px] font-black tracking-tight sm:text-[25px] ${dark ? '!text-white' : 'text-slate-950'}`}>{user.name}</h1>
+                      <span className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-[11px] font-semibold ${dark ? 'border-sky-500/30 bg-sky-500/10 text-sky-300' : 'border-sky-700 bg-sky-100 text-sky-900'}`}>
                         <PenSquare className="h-3.5 w-3.5" />
                         Активни огласи {activeAds}
                       </span>
-                      <span className="inline-flex items-center rounded-full border border-amber-500/30 bg-amber-500/10 px-2.5 py-0.5 text-[10px] font-semibold text-amber-300">
+                      <span className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-[10px] font-semibold ${dark ? 'border-amber-500/30 bg-amber-500/10 text-amber-300' : 'border-amber-700 bg-amber-100 text-amber-900'}`}>
                         ID #{user.id}
                       </span>
                     </div>
 
                     <div className="mt-0.5 flex flex-wrap items-center gap-1.5">
-                      <span className="text-[11px] leading-none !text-slate-300 sm:text-xs">Профил со доверба и брз пристап до твоите огласи.</span>
+                      <span className={`text-[11px] leading-none sm:text-xs ${dark ? '!text-slate-300' : 'text-slate-800'}`}>Профил со доверба и брз пристап до твоите огласи.</span>
                     </div>
 
-                    <p className="mt-0.5 max-w-lg text-[12px] leading-[1.1] !text-slate-300 sm:text-[13px] sm:leading-[1.25]">
+                    <p className={`mt-0.5 max-w-lg text-[12px] leading-[1.1] sm:text-[13px] sm:leading-[1.25] ${dark ? '!text-slate-300' : 'text-slate-800'}`}>
                       Управувај со огласите, следи ги зачуваните ставки и
                       <span className="block">провери ги основните податоци на едно место.</span>
                     </p>
@@ -814,16 +814,16 @@ export default function ProfilePage() {
 
               <div className="space-y-1 lg:justify-self-end">
                 <div className="flex flex-wrap items-center gap-1.5 lg:justify-end">
-                  <span className="force-dark-subtle inline-flex items-center gap-1.5 rounded-full border border-[#223653] bg-[#081223] px-2.5 py-1 text-[11px] !text-slate-200 sm:text-xs">
-                    <Sparkles className="h-3.5 w-3.5 text-emerald-400" />
+                  <span className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[11px] sm:text-xs ${dark ? 'force-dark-subtle border-[#223653] bg-[#081223] !text-slate-200' : 'border-slate-500 bg-slate-50 text-slate-900'}`}>
+                    <Sparkles className={`h-3.5 w-3.5 ${dark ? 'text-emerald-400' : 'text-emerald-600'}`} />
                     {locationLabel}
                   </span>
-                  <span className="force-dark-subtle inline-flex items-center gap-1.5 rounded-full border border-[#223653] bg-[#081223] px-2.5 py-1 text-[11px] !text-slate-200 sm:text-xs">
-                    <Clock3 className="h-3.5 w-3.5 text-sky-400" />
+                  <span className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[11px] sm:text-xs ${dark ? 'force-dark-subtle border-[#223653] bg-[#081223] !text-slate-200' : 'border-slate-500 bg-slate-50 text-slate-900'}`}>
+                    <Clock3 className={`h-3.5 w-3.5 ${dark ? 'text-sky-400' : 'text-sky-700'}`} />
                     Член од {joinedLabel}
                   </span>
-                  <span className="force-dark-subtle inline-flex items-center gap-1.5 rounded-full border border-[#223653] bg-[#081223] px-2.5 py-1 text-[11px] !text-slate-200 sm:text-xs">
-                    <BadgeCheck className="h-3.5 w-3.5 text-emerald-400" />
+                  <span className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[11px] sm:text-xs ${dark ? 'force-dark-subtle border-[#223653] bg-[#081223] !text-slate-200' : 'border-slate-500 bg-slate-50 text-slate-900'}`}>
+                    <BadgeCheck className={`h-3.5 w-3.5 ${dark ? 'text-emerald-400' : 'text-emerald-600'}`} />
                     Активен профил
                   </span>
                 </div>
@@ -837,7 +837,7 @@ export default function ProfilePage() {
             </div>
           </section>
 
-          <div className={`flex gap-1.5 overflow-x-auto rounded-[14px] border p-[5px] ${dark ? 'border-[#1d2c43] bg-[#0b1423]' : 'border-slate-300 bg-white shadow-sm'}`}>
+          <div className={`flex gap-1.5 overflow-x-auto rounded-[14px] border p-[5px] ${dark ? 'border-[#1d2c43] bg-[#0b1423]' : 'border-slate-700 bg-white shadow-sm'}`}>
             {tabs.map((tab) => (
               <TabButton key={tab.id} active={activeTab === tab.id} onClick={() => changeTab(tab.id)}>
                 {tab.label}
