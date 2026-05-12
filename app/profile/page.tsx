@@ -1139,9 +1139,15 @@ export default function ProfilePage() {
                               {message.sender_id === user?.id ? 'до ' + (message.receiver_name || 'непознат') : 'од ' + (message.sender_name || 'непознат')}
                             </p>
                             {!message.read ? (
-                              <span className="h-2 w-2 rounded-full bg-red-500" title="Непрочитано" />
+                              <span className="flex items-center gap-1">
+                                <span className="h-2 w-2 rounded-full bg-red-500" />
+                                <span className="text-[10px] text-red-400">Непрочитана</span>
+                              </span>
                             ) : (
-                              <span className="h-2 w-2 rounded-full bg-green-500" title="Прочитано" />
+                              <span className="flex items-center gap-1">
+                                <span className="h-2 w-2 rounded-full bg-green-500" />
+                                <span className="text-[10px] text-green-400">Прочитана</span>
+                              </span>
                             )}
                           </div>
                           <p className="mt-1 truncate text-xs text-slate-400">{message.product_title}</p>
