@@ -38,6 +38,7 @@ export async function GET(request: NextRequest) {
         p.contact_email,
         p.delivery,
         p.condition,
+        u.id as seller_id,
         u.name as seller_name,
         u.email as seller_email
       FROM products p

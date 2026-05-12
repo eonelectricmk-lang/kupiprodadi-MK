@@ -25,6 +25,7 @@ type ProductRow = {
   status: string;
   image_url: string | null;
   images: string[];
+  seller_id: number;
   seller_name: string;
   seller_email: string;
   contact_name: string | null;
@@ -834,9 +835,9 @@ export default function AdminPage() {
                         <div className="flex flex-col gap-4">
                           <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
                             <div>
-                              <h3 className="text-lg font-semibold">{product.title}</h3>
+                              <h3 className="text-lg font-semibold">{product.title} <span className="text-sm font-normal text-slate-500">KP-{String(product.id).padStart(6, '0')}</span></h3>
                               <p className="mt-1 text-sm text-slate-300">
-                                {product.seller_name} · {product.contact_name || 'Нема контакт име'} · {product.contact_phone || 'Нема телефон'}
+                                #{product.seller_id} {product.seller_name} · {product.contact_name || 'Нема контакт име'} · {product.contact_phone || 'Нема телефон'}
                               </p>
                               <p className="mt-1 text-sm text-slate-400">
                                 {product.price} {product.currency} · {product.city || product.location || 'Нема град'} · {product.category}{product.subcategory ? ` / ${product.subcategory}` : ''}
