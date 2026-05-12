@@ -1138,7 +1138,11 @@ export default function ProfilePage() {
                             <p className="truncate text-sm font-semibold text-white">
                               {message.sender_id === user?.id ? 'до ' + (message.receiver_name || 'непознат') : 'од ' + (message.sender_name || 'непознат')}
                             </p>
-                            {!message.read && <span className="h-2 w-2 rounded-full bg-red-500" />}
+                            {!message.read ? (
+                              <span className="h-2 w-2 rounded-full bg-red-500" title="Непрочитано" />
+                            ) : (
+                              <span className="h-2 w-2 rounded-full bg-green-500" title="Прочитано" />
+                            )}
                           </div>
                           <p className="mt-1 truncate text-xs text-slate-400">{message.product_title}</p>
                         </div>
