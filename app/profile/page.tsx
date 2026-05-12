@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, useRef } from 'react';
 import type { ElementType, ReactNode } from 'react';
 import Link from 'next/link';
 import {
@@ -8,6 +8,7 @@ import {
   ArrowRight,
   BadgeCheck,
   CalendarDays,
+  Camera,
   Clock3,
   Eye,
   Heart,
@@ -566,6 +567,8 @@ export default function ProfilePage() {
   const router = useRouter();
   const { dark } = useTheme();
   const [user, setUser] = useState<any>(null);
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [myProducts, setMyProducts] = useState<Product[]>([]);
   const [favorites, setFavorites] = useState<Product[]>([]);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -591,6 +594,7 @@ export default function ProfilePage() {
     }
 
     setUser(userData);
+    setAvatarUrl(userData.avatar_url || null);
     setRecentViews(readRecentViews());
 
     const load = async () => {
@@ -641,6 +645,38 @@ export default function ProfilePage() {
       body: JSON.stringify({ receiver_id: user.id }),
     }).catch(() => {});
   }, [activeTab, user?.id]);
+
+  const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !user?.id) return;
+    if (!file.type.startsWith('image/')) return;
+    if (file.size > 500_000) { alert('Сликата е преголема (макс 500KB)'); return; }
+
+    const reader = new FileReader();
+    reader.onload = async (ev) => {
+      const dataUrl = ev.target?.result as string;
+      try {
+        const res = await fetch('/api/avatar', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ user_id: user.id, image_data: dataUrl }),
+        });
+        const result = await res.json();
+        if (res.ok) {
+          setAvatarUrl(dataUrl);
+          const stored = JSON.parse(localStorage.getItem('user') || '{}');
+          stored.avatar_url = dataUrl;
+          localStorage.setItem('user', JSON.stringify(stored));
+        } else {
+          alert(result.error || 'Грешка при поставување слика');
+        }
+      } catch {
+        alert('Грешка при поставување слика');
+      }
+    };
+    reader.readAsDataURL(file);
+    e.target.value = '';
+  };
 
   const unreadMessages = useMemo(
     () => messages.filter((message) => !message.read && message.receiver_id === user?.id).length,
@@ -794,8 +830,22 @@ export default function ProfilePage() {
             <div className="grid gap-2 p-2.5 sm:p-3 lg:grid-cols-[minmax(0,1.1fr)_minmax(300px,0.9fr)] lg:items-start">
               <div className="min-w-0">
                 <div className="flex min-w-0 gap-3.5">
-                  <div className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-full border sm:h-16 sm:w-16 ${dark ? 'border-[#223653] bg-[#0b1727]' : 'border-slate-500 bg-white shadow-sm'}`}>
-                    <UserCircle2 className={`h-8 w-8 sm:h-9 sm:w-9 ${dark ? 'text-slate-300' : 'text-slate-900'}`} />
+                  <div className="relative shrink-0">
+                    <div className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-full border sm:h-16 sm:w-16 ${dark ? 'border-[#223653] bg-[#0b1727]' : 'border-slate-500 bg-white shadow-sm'} overflow-hidden`}>
+                      {avatarUrl ? (
+                        <img src={avatarUrl} alt="avatar" className="h-full w-full rounded-full object-cover" />
+                      ) : (
+                        <UserCircle2 className={`h-8 w-8 sm:h-9 sm:w-9 ${dark ? 'text-slate-300' : 'text-slate-900'}`} />
+                      )}
+                    </div>
+                    <button
+                      onClick={() => fileInputRef.current?.click()}
+                      className={`absolute -bottom-0.5 -right-0.5 flex h-5 w-5 items-center justify-center rounded-full border sm:h-6 sm:w-6 ${dark ? 'border-[#223653] bg-[#0b1727] text-sky-400 hover:bg-[#1a2a3e]' : 'border-slate-400 bg-white text-sky-700 hover:bg-slate-100'} shadow-md transition-colors`}
+                      title="Постави слика"
+                    >
+                      <Camera className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
+                    </button>
+                    <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handleAvatarUpload} />
                   </div>
 
                   <div className="min-w-0 flex-1 pl-1 sm:pl-1.5">

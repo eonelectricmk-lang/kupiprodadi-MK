@@ -15,7 +15,7 @@ export async function POST(request: NextRequest) {
     }
 
     const user = db.prepare(`
-      SELECT id, email, password, name, phone, location, rating, created_at, COALESCE(is_active, 1) AS is_active
+      SELECT id, email, password, name, phone, location, rating, created_at, avatar_url, COALESCE(is_active, 1) AS is_active
       FROM users
       WHERE email = ?
     `).get(email);
@@ -51,6 +51,7 @@ export async function POST(request: NextRequest) {
           location: user.location || null,
           rating: user.rating ?? 5,
           created_at: user.created_at || null,
+          avatar_url: user.avatar_url || null,
         }
       },
       { status: 200 }

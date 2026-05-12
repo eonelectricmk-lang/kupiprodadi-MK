@@ -28,7 +28,7 @@ export async function POST(request: NextRequest) {
     );
     const result = stmt.run(email, hashedPassword, name, phone || null);
     const createdUser = db.prepare(`
-      SELECT id, email, name, phone, location, rating, created_at
+      SELECT id, email, name, phone, location, rating, created_at, avatar_url
       FROM users
       WHERE id = ?
     `).get(result.lastInsertRowid) as any;
@@ -44,6 +44,7 @@ export async function POST(request: NextRequest) {
           location: createdUser?.location || null,
           rating: createdUser?.rating ?? 5,
           created_at: createdUser?.created_at || null,
+          avatar_url: createdUser?.avatar_url || null,
         }
       },
       { status: 201 }

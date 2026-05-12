@@ -213,6 +213,7 @@ function initializeDb() {
 
     addColumnIfMissing(db, 'users', 'role', "TEXT DEFAULT 'user'");
     addColumnIfMissing(db, 'users', 'is_active', 'BOOLEAN DEFAULT 1');
+    addColumnIfMissing(db, 'users', 'avatar_url', 'TEXT');
     seedDefaultCategories(db);
     migrateCategorySlugs(db);
     seedDefaultBanners(db);

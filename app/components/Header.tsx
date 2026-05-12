@@ -33,6 +33,7 @@ export function Header() {
   const [categoryMenuTop, setCategoryMenuTop] = useState(0);
   const [search, setSearch] = useState('');
   const [unreadCount, setUnreadCount] = useState(0);
+  const [userAvatar, setUserAvatar] = useState<string | null>(null);
 
   const h = dark ? {
     header: 'bg-[#07101c]/95 border-[#172334]',
@@ -101,9 +102,10 @@ export function Header() {
     const fetchUnread = () => {
       try {
         const stored = localStorage.getItem('user');
-        if (!stored) return;
+        if (!stored) { setUserAvatar(null); return; }
         const user = JSON.parse(stored);
         if (!user?.id) return;
+        setUserAvatar(user.avatar_url || null);
         fetch(`/api/messages?user_id=${user.id}`)
           .then((res) => res.json())
           .then((msgs) => {
@@ -230,7 +232,13 @@ export function Header() {
               </div>
             </Link>
             <Link href="/auth">
-              <button className={`transition ${h.icon}`}><UserCircle className="h-5 w-5" /></button>
+              <button className={`transition ${h.icon}`}>
+                {userAvatar ? (
+                  <img src={userAvatar} alt="" className="h-5 w-5 rounded-full object-cover" />
+                ) : (
+                  <UserCircle className="h-5 w-5" />
+                )}
+              </button>
             </Link>
             <Link href="/sell">
               <button className="hidden whitespace-nowrap rounded-lg bg-red-600 px-4 py-2 text-sm font-bold text-white transition hover:bg-red-700 sm:inline-flex">
