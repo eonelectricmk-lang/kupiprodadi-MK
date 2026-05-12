@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
+import { redirect } from 'next/navigation';
 import getDb from '@/lib/db';
 import { getCategoryTree } from '@/lib/category-store';
 import { normalizeCategorySlug } from '@/lib/category-aliases';
-import CategoryPageClient from './CategoryPageClient';
 
 type PageProps = {
   params: Promise<{ slug: string }>;
@@ -71,20 +71,22 @@ export default async function CategoryPage({ params }: PageProps) {
   const slug = normalizeCategorySlug(resolvedParams.slug);
   const db = getDb();
   const categories = getCategoryTree(db, true);
-  let categoryName = '';
+  let categorySlug = slug;
+  let subcategorySlug = '';
 
   for (const category of categories) {
     if (normalizeCategorySlug(category.slug) === slug) {
-      categoryName = category.name;
-      break;
+      categorySlug = normalizeCategorySlug(category.slug);
+      redirect(`/products?category=${encodeURIComponent(categorySlug)}`);
     }
 
     const matchedSubcategory = category.subcategories.find((sub) => normalizeCategorySlug(sub.slug) === slug);
     if (matchedSubcategory) {
-      categoryName = matchedSubcategory.name;
-      break;
+      categorySlug = normalizeCategorySlug(category.slug);
+      subcategorySlug = normalizeCategorySlug(matchedSubcategory.slug);
+      redirect(`/products?category=${encodeURIComponent(categorySlug)}&sub=${encodeURIComponent(subcategorySlug)}`);
     }
   }
 
-  return <CategoryPageClient slug={slug} initialCategoryName={categoryName} />;
+  redirect(`/products?category=${encodeURIComponent(categorySlug)}`);
 }

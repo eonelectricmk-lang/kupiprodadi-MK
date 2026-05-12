@@ -100,7 +100,7 @@ export default function Home() {
                 icon={iconMeta.Icon}
                 iconClassName={iconMeta.className}
                 title={category.name}
-                href={`/categories/${category.slug}`}
+                href={`/products?category=${category.slug}`}
               />
             );
           })}

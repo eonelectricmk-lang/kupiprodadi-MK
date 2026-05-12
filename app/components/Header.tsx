@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
@@ -26,6 +26,7 @@ export function Header() {
   const headerRef = useRef<HTMLElement | null>(null);
   const { dark, setDark } = useTheme();
   const [categories, setCategories] = useState(CATEGORIES);
+  const [headerCategorySlugs, setHeaderCategorySlugs] = useState<string[]>([]);
   const [location, setLocation] = useState('Целa Македонија');
   const [showLocation, setShowLocation] = useState(false);
   const [showCategories, setShowCategories] = useState(false);
@@ -85,6 +86,17 @@ export function Header() {
   }, []);
 
   useEffect(() => {
+    fetch('/api/homepage-sections')
+      .then((response) => response.json())
+      .then((data) => {
+        if (Array.isArray(data?.headerCategorySlugs)) {
+          setHeaderCategorySlugs(data.headerCategorySlugs);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  useEffect(() => {
     if (!showCategories) return undefined;
 
     const updateMenuTop = () => {
@@ -105,7 +117,16 @@ export function Header() {
     setShowLocation(false);
   }, [pathname]);
 
-  const navCategories = categories.slice(0, 5).map((category) => {
+  const orderedHeaderCategories = useMemo(() => {
+    if (!headerCategorySlugs.length) return categories.slice(0, 5);
+    const bySlug = new Map(categories.map((category) => [category.slug, category]));
+    const selected = headerCategorySlugs
+      .map((slug) => bySlug.get(slug))
+      .filter((category): category is typeof categories[number] => Boolean(category));
+    return selected.length ? selected : categories.slice(0, 5);
+  }, [categories, headerCategorySlugs]);
+
+  const navCategories = orderedHeaderCategories.slice(0, 5).map((category) => {
     return {
       slug: category.slug,
       name: category.name,

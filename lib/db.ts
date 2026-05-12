@@ -1,6 +1,7 @@
 import path from 'path';
 import { migrateCategorySlugs, seedDefaultCategories } from '@/lib/category-store';
 import { seedDefaultBanners } from '@/lib/banner-store';
+import { seedHomepageSections } from '@/lib/homepage-sections';
 
 let db: any = null;
 
@@ -172,6 +173,12 @@ function initializeDb() {
         is_active BOOLEAN DEFAULT 1,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP
       );
+
+      CREATE TABLE IF NOT EXISTS homepage_sections (
+        section_key TEXT PRIMARY KEY,
+        data TEXT NOT NULL,
+        updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      );
     `);
 
     const productColumns: Array<[string, string]> = [
@@ -197,6 +204,7 @@ function initializeDb() {
     seedDefaultCategories(db);
     migrateCategorySlugs(db);
     seedDefaultBanners(db);
+    seedHomepageSections(db);
 
     return db;
   } catch (error) {

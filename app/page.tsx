@@ -5,10 +5,11 @@ import Link from 'next/link';
 import Header from './components/Header';
 import CategoryCard from './components/CategoryCard';
 import AdCard from './components/AdCard';
-import TrustBar from './components/TrustBar';
+import TrustBar, { DEFAULT_TRUST_ITEMS } from './components/TrustBar';
 import { CATEGORIES } from '@/lib/categories';
 import { getCategoryIconMeta } from './components/categoryIcons';
 import { DEFAULT_BANNERS } from '@/lib/banner-store';
+import type { HomepageTrustItem } from '@/lib/homepage-sections';
 
 type ProductCard = {
   id: number;
@@ -35,6 +36,8 @@ export default function Home() {
   const [activeBanner, setActiveBanner] = useState(0);
   const [bannerSlides, setBannerSlides] = useState<BannerSlide[]>(DEFAULT_BANNERS);
   const [homeCategories, setHomeCategories] = useState(CATEGORIES);
+  const [homeCategorySlugs, setHomeCategorySlugs] = useState<string[]>([]);
+  const [trustItems, setTrustItems] = useState<HomepageTrustItem[]>(DEFAULT_TRUST_ITEMS);
   const [featuredAds, setFeaturedAds] = useState<ProductCard[]>([]);
   const [cardsPerRow, setCardsPerRow] = useState<6 | 4 | 2>(4);
   const [sortBy, setSortBy] = useState<'newest' | 'oldest' | 'price-asc' | 'price-desc' | 'title-asc'>('newest');
@@ -90,6 +93,20 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
+    fetch('/api/homepage-sections')
+      .then((response) => response.json())
+      .then((data) => {
+        if (Array.isArray(data?.homeCategorySlugs)) {
+          setHomeCategorySlugs(data.homeCategorySlugs);
+        }
+        if (Array.isArray(data?.trustItems) && data.trustItems.length) {
+          setTrustItems(data.trustItems);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  useEffect(() => {
     fetch('/api/products?limit=24&offset=0', { cache: 'no-store' })
       .then((response) => response.json())
       .then((data) => {
@@ -107,6 +124,15 @@ export default function Home() {
 
     return () => clearInterval(intervalId);
   }, [bannerSlides.length]);
+
+  const orderedHomeCategories = useMemo(() => {
+    if (!homeCategorySlugs.length) return homeCategories.slice(0, 6);
+    const bySlug = new Map(homeCategories.map((category) => [category.slug, category]));
+    const selected = homeCategorySlugs
+      .map((slug) => bySlug.get(slug))
+      .filter((category): category is typeof homeCategories[number] => Boolean(category));
+    return selected.length ? selected : homeCategories.slice(0, 6);
+  }, [homeCategories, homeCategorySlugs]);
 
   return (
     <main className="min-h-screen overflow-x-hidden bg-[#040914] text-white">
@@ -147,11 +173,11 @@ export default function Home() {
           </div>
         </section>
 
-        <TrustBar />
+        <TrustBar items={trustItems} />
 
         <section>
           <div className="grid gap-2.5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6">
-            {homeCategories.slice(0, 6).map((category) => {
+            {orderedHomeCategories.slice(0, 6).map((category) => {
               const iconMeta = getCategoryIconMeta(category.slug);
               const Icon = iconMeta.Icon;
               return (
@@ -160,7 +186,7 @@ export default function Home() {
                   icon={Icon}
                   iconClassName={iconMeta.className}
                   title={category.name}
-                  href={`/categories/${category.slug}`}
+                  href={`/products?category=${category.slug}`}
                 />
               );
             })}

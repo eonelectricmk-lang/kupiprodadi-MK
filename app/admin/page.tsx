@@ -72,10 +72,24 @@ type AdminComposeTarget = {
   is_active: number;
 };
 
+type HomepageTrustItem = {
+  icon: 'shield-check' | 'badge-check' | 'zap' | 'users';
+  color: string;
+  title: string;
+  subtitle: string;
+};
+
+type HomepageSectionsState = {
+  headerCategorySlugs: string[];
+  trustItems: HomepageTrustItem[];
+  homeCategorySlugs: string[];
+};
+
 const TABS = [
   { id: 'products', label: 'Огласи' },
   { id: 'users', label: 'Корисници' },
   { id: 'categories', label: 'Категории' },
+  { id: 'homepage', label: 'Уредување банери' },
   { id: 'banners', label: 'Рекламирање' },
 ] as const;
 
@@ -139,6 +153,16 @@ export default function AdminPage() {
     sort_order: '',
     is_active: true,
   });
+  const [homepageSections, setHomepageSections] = useState<HomepageSectionsState>({
+    headerCategorySlugs: [],
+    trustItems: [
+      { icon: 'shield-check', color: 'text-blue-400', title: 'Безбедно купување', subtitle: 'Проверени продавачи' },
+      { icon: 'badge-check', color: 'text-emerald-400', title: '100% Бесплатно', subtitle: 'Објави оглас без надомест' },
+      { icon: 'zap', color: 'text-amber-400', title: 'Брзо и лесно', subtitle: 'Само неколку клика' },
+      { icon: 'users', color: 'text-pink-400', title: '10,000+ активни', subtitle: 'Купувачи секој ден' },
+    ],
+    homeCategorySlugs: [],
+  });
 
   const refreshMe = async () => {
     const response = await fetch('/api/admin/me', { cache: 'no-store' });
@@ -163,6 +187,16 @@ export default function AdminPage() {
     const response = await fetch('/api/admin/banners', { cache: 'no-store' });
     const data = await response.json();
     setBanners(Array.isArray(data?.banners) ? data.banners : []);
+  };
+
+  const refreshHomepageSections = async () => {
+    const response = await fetch('/api/admin/homepage-sections', { cache: 'no-store' });
+    const data = await response.json();
+    setHomepageSections({
+      headerCategorySlugs: Array.isArray(data?.headerCategorySlugs) ? data.headerCategorySlugs : [],
+      trustItems: Array.isArray(data?.trustItems) ? data.trustItems : homepageSections.trustItems,
+      homeCategorySlugs: Array.isArray(data?.homeCategorySlugs) ? data.homeCategorySlugs : [],
+    });
   };
 
   const refreshUsers = async (
@@ -195,6 +229,7 @@ export default function AdminPage() {
     refreshUsers().catch(() => {});
     refreshCategories().catch(() => {});
     refreshBanners().catch(() => {});
+    refreshHomepageSections().catch(() => {});
   }, [me?.authenticated]);
 
   useEffect(() => {
@@ -571,6 +606,48 @@ export default function AdminPage() {
       setMessage('Банерот е избришан.');
     } catch (error) {
       setMessage(error instanceof Error ? error.message : 'Грешка при бришење банер.');
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const updateHomepageCategorySlug = (
+    section: 'headerCategorySlugs' | 'homeCategorySlugs',
+    index: number,
+    value: string,
+  ) => {
+    setHomepageSections((prev) => {
+      const next = [...prev[section]];
+      next[index] = value;
+      return { ...prev, [section]: next };
+    });
+  };
+
+  const updateTrustItem = (index: number, field: 'title' | 'subtitle', value: string) => {
+    setHomepageSections((prev) => ({
+      ...prev,
+      trustItems: prev.trustItems.map((item, itemIndex) => (
+        itemIndex === index ? { ...item, [field]: value } : item
+      )),
+    }));
+  };
+
+  const submitHomepageSections = async (event: React.FormEvent) => {
+    event.preventDefault();
+    setBusy(true);
+    setMessage(null);
+    try {
+      const response = await fetch('/api/admin/homepage-sections', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(homepageSections),
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data?.error || 'Не успеа зачувување на почетните банери');
+      await refreshHomepageSections();
+      setMessage('Почетните банери се ажурирани.');
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : 'Грешка при зачувување на почетните банери.');
     } finally {
       setBusy(false);
     }
@@ -1141,6 +1218,153 @@ export default function AdminPage() {
                           </div>
                         </div>
                       ))}
+                    </div>
+                  </div>
+                </section>
+              )}
+
+              {activeTab === 'homepage' && (
+                <section className="grid gap-5 lg:grid-cols-[440px_1fr]">
+                  <div className="space-y-5">
+                    <div className="rounded-xl border border-[#1d2c43] bg-[#081223] p-5">
+                      <h2 className="text-lg font-bold">Уредување банери</h2>
+                      <p className="mt-2 text-sm leading-6 text-slate-400">
+                        Овде се уредуваат трите live секции на почетната: горниот банер со категории, долниот info банер и долниот банер со категории под info банерот.
+                      </p>
+                      <ul className="mt-4 space-y-2 text-sm text-slate-300">
+                        <li>• Избери кои категории да се прикажуваат горе над големиот банер</li>
+                        <li>• Смени наслови и поднаслови во info банерот</li>
+                        <li>• Избери кои категории да се прикажуваат во долниот банер под info делот</li>
+                      </ul>
+                    </div>
+
+                    <form onSubmit={submitHomepageSections} className="space-y-5 rounded-xl border border-[#1d2c43] bg-[#081223] p-5">
+                      <div className="space-y-3">
+                        <div>
+                          <h3 className="text-base font-bold">Горен банер со категории</h3>
+                          <p className="mt-1 text-xs text-slate-400">Овие 5 категории се прикажуваат над големиот банер, до копчето „Сите категории“.</p>
+                        </div>
+                        <div className="grid gap-3">
+                          {Array.from({ length: 5 }).map((_, index) => (
+                            <div key={`header-cat-${index}`} className="space-y-1.5">
+                              <label className="block text-xs font-semibold uppercase tracking-wide text-slate-400">Позиција {index + 1}</label>
+                              <select
+                                value={homepageSections.headerCategorySlugs[index] || ''}
+                                onChange={(e) => updateHomepageCategorySlug('headerCategorySlugs', index, e.target.value)}
+                                className="h-11 w-full rounded-lg border border-[#223653] bg-[#0b1727] px-3 text-sm text-white"
+                              >
+                                <option value="">Избери категорија</option>
+                                {categories.map((category) => (
+                                  <option key={`header-option-${category.id}`} value={category.slug}>{category.name}</option>
+                                ))}
+                              </select>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div className="space-y-3">
+                        <div>
+                          <h3 className="text-base font-bold">Долен info банер</h3>
+                          <p className="mt-1 text-xs text-slate-400">Смени го текстот што се прикажува во четирите info картички под големиот банер.</p>
+                        </div>
+                        <div className="grid gap-3">
+                          {homepageSections.trustItems.map((item, index) => (
+                            <div key={`${item.icon}-${index}`} className="rounded-lg border border-[#223653] bg-[#0b1727] p-4">
+                              <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-slate-400">Info картичка {index + 1}</p>
+                              <div className="space-y-3">
+                                <Input
+                                  placeholder="Наслов"
+                                  value={item.title}
+                                  onChange={(e) => updateTrustItem(index, 'title', e.target.value)}
+                                />
+                                <Input
+                                  placeholder="Поднаслов"
+                                  value={item.subtitle}
+                                  onChange={(e) => updateTrustItem(index, 'subtitle', e.target.value)}
+                                />
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div className="space-y-3">
+                        <div>
+                          <h3 className="text-base font-bold">Долен банер со категории</h3>
+                          <p className="mt-1 text-xs text-slate-400">Овие 6 категории се прикажуваат под info банерот како category банер.</p>
+                        </div>
+                        <div className="grid gap-3 sm:grid-cols-2">
+                          {Array.from({ length: 6 }).map((_, index) => (
+                            <div key={`home-cat-${index}`} className="space-y-1.5">
+                              <label className="block text-xs font-semibold uppercase tracking-wide text-slate-400">Позиција {index + 1}</label>
+                              <select
+                                value={homepageSections.homeCategorySlugs[index] || ''}
+                                onChange={(e) => updateHomepageCategorySlug('homeCategorySlugs', index, e.target.value)}
+                                className="h-11 w-full rounded-lg border border-[#223653] bg-[#0b1727] px-3 text-sm text-white"
+                              >
+                                <option value="">Избери категорија</option>
+                                {categories.map((category) => (
+                                  <option key={`home-option-${category.id}`} value={category.slug}>{category.name}</option>
+                                ))}
+                              </select>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div className="flex gap-2">
+                        <Button disabled={busy} className="admin-dark-button bg-red-600 hover:bg-red-700 text-white">
+                          Зачувај уредување на банери
+                        </Button>
+                      </div>
+                    </form>
+                  </div>
+
+                  <div className="space-y-5 rounded-xl border border-[#1d2c43] bg-[#081223] p-5">
+                    <div>
+                      <h2 className="text-lg font-bold">Преглед на секциите</h2>
+                      <p className="mt-1 text-sm text-slate-400">Ова е брз преглед на моменталната структура на почетната страница.</p>
+                    </div>
+
+                    <div className="rounded-xl border border-[#223653] bg-[#0b1727] p-4">
+                      <h3 className="text-sm font-bold text-slate-200">Горен банер со категории</h3>
+                      <div className="mt-3 flex flex-wrap gap-2">
+                        {homepageSections.headerCategorySlugs.map((slug, index) => {
+                          const category = categories.find((item) => item.slug === slug);
+                          return (
+                            <span key={`header-preview-${slug || index}`} className="rounded-full border border-[#2c4264] bg-[#122038] px-3 py-1 text-xs text-slate-200">
+                              {category?.name || `Празна позиција ${index + 1}`}
+                            </span>
+                          );
+                        })}
+                      </div>
+                    </div>
+
+                    <div className="rounded-xl border border-[#223653] bg-[#0b1727] p-4">
+                      <h3 className="text-sm font-bold text-slate-200">Долен info банер</h3>
+                      <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                        {homepageSections.trustItems.map((item, index) => (
+                          <div key={`trust-preview-${index}`} className="rounded-lg border border-[#2c4264] bg-[#122038] p-3">
+                            <p className="text-sm font-semibold text-white">{item.title}</p>
+                            <p className="mt-1 text-xs text-slate-400">{item.subtitle}</p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="rounded-xl border border-[#223653] bg-[#0b1727] p-4">
+                      <h3 className="text-sm font-bold text-slate-200">Долен банер со категории</h3>
+                      <div className="mt-3 grid gap-2 sm:grid-cols-2 xl:grid-cols-3">
+                        {homepageSections.homeCategorySlugs.map((slug, index) => {
+                          const category = categories.find((item) => item.slug === slug);
+                          return (
+                            <div key={`home-preview-${slug || index}`} className="rounded-lg border border-[#2c4264] bg-[#122038] px-3 py-2 text-xs text-slate-200">
+                              {category?.name || `Празна позиција ${index + 1}`}
+                            </div>
+                          );
+                        })}
+                      </div>
                     </div>
                   </div>
                 </section>
