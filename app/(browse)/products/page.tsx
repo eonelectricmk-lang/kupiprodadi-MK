@@ -24,7 +24,20 @@ interface Product {
   created_at?: string;
 }
 
-const ITEMS_PER_PAGE = 12;
+const PER_PAGE_OPTIONS = [12, 30, 50, 70, 100] as const;
+const DEFAULT_PER_PAGE = 12;
+
+function getPageNumbers(current: number, total: number): (number | '...')[] {
+  if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1);
+  const pages: (number | '...')[] = [1];
+  if (current > 3) pages.push('...');
+  const start = Math.max(2, current - 1);
+  const end = Math.min(total - 1, current + 1);
+  for (let i = start; i <= end; i++) pages.push(i);
+  if (current < total - 2) pages.push('...');
+  pages.push(total);
+  return pages;
+}
 
 function formatPostedAt(value?: string) {
   if (!value) return 'Денес';
@@ -49,6 +62,7 @@ function ProductsPageContent() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalProducts, setTotalProducts] = useState(0);
+  const [perPage, setPerPage] = useState(DEFAULT_PER_PAGE);
   const [cardsPerRow, setCardsPerRow] = useState<6 | 4 | 2>(4);
   const [sortBy, setSortBy] = useState<'newest' | 'oldest' | 'price-asc' | 'price-desc' | 'title-asc'>('newest');
 
@@ -97,8 +111,8 @@ function ProductsPageContent() {
 
       try {
         const apiParams = new URLSearchParams();
-        apiParams.set('limit', String(ITEMS_PER_PAGE));
-        apiParams.set('offset', String((pageNumber - 1) * ITEMS_PER_PAGE));
+        apiParams.set('limit', String(perPage));
+        apiParams.set('offset', String((pageNumber - 1) * perPage));
 
         if (category) apiParams.set('category', normalizeCategorySlug(category));
         if (sub) apiParams.set('sub', normalizeCategorySlug(sub));
@@ -119,7 +133,7 @@ function ProductsPageContent() {
 
         setProducts(nextProducts);
         setTotalProducts(total);
-        setTotalPages(Math.max(Math.ceil(total / ITEMS_PER_PAGE), 1));
+        setTotalPages(Math.max(Math.ceil(total / perPage), 1));
         setCurrentPage(pageNumber);
       } catch (fetchError) {
         if ((fetchError as Error).name !== 'AbortError') {
@@ -139,7 +153,7 @@ function ProductsPageContent() {
     fetchProducts();
 
     return () => controller.abort();
-  }, [category, search, location, page, sub, trail]);
+  }, [category, search, location, page, sub, trail, perPage]);
 
   const goToPage = (newPage: number) => {
     const nextPage = Math.min(Math.max(newPage, 1), totalPages);
@@ -166,6 +180,22 @@ function ProductsPageContent() {
 
         {!loading && !error && products.length > 0 && (
           <div className="ml-auto flex flex-wrap items-center gap-2">
+            <select
+              value={perPage}
+              onChange={(e) => {
+                const newPerPage = Number(e.target.value);
+                setPerPage(newPerPage);
+                const newParams = new URLSearchParams(searchParams);
+                newParams.delete('page');
+                router.push(`/products?${newParams.toString()}`);
+              }}
+              className="h-9 rounded-lg border border-[#1f3250] bg-[#0f1a2b] px-2.5 text-sm text-slate-200 outline-none transition focus:border-[#2d4f7d]"
+              aria-label="Огласи по страна"
+            >
+              {PER_PAGE_OPTIONS.map((n) => (
+                <option key={n} value={n}>по {n}</option>
+              ))}
+            </select>
             <div className="inline-flex items-center gap-1 rounded-lg border border-[#1f3250] bg-[#0f1a2b] p-1">
             <button
               type="button"
@@ -266,7 +296,7 @@ function ProductsPageContent() {
           </div>
 
           {totalPages > 1 && (
-            <div className="mt-12 flex justify-center gap-2">
+            <div className="mt-12 flex items-center justify-center gap-1.5">
               <Button
                 type="button"
                 onClick={() => goToPage(currentPage - 1)}
@@ -276,20 +306,24 @@ function ProductsPageContent() {
                 ← Назад
               </Button>
 
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map((num) => (
-                <button
-                  key={num}
-                  type="button"
-                  onClick={() => goToPage(num)}
-                  className={`rounded-lg border px-4 py-2 ${
-                    currentPage === num
-                      ? 'border-red-600 bg-red-600 text-white'
-                      : 'border-[#2a3f60] bg-[#122038] text-slate-200 hover:bg-[#1a2d49]'
-                  }`}
-                >
-                  {num}
-                </button>
-              ))}
+              {getPageNumbers(currentPage, totalPages).map((num, i) =>
+                num === '...' ? (
+                  <span key={`e-${i}`} className="px-2 text-sm text-slate-500">...</span>
+                ) : (
+                  <button
+                    key={num}
+                    type="button"
+                    onClick={() => goToPage(num as number)}
+                    className={`rounded-lg border px-3 py-2 text-sm ${
+                      currentPage === num
+                        ? 'border-red-600 bg-red-600 text-white'
+                        : 'border-[#2a3f60] bg-[#122038] text-slate-200 hover:bg-[#1a2d49]'
+                    }`}
+                  >
+                    {num}
+                  </button>
+                )
+              )}
 
               <Button
                 type="button"
