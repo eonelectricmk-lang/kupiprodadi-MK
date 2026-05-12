@@ -7,7 +7,18 @@ export async function GET(request: NextRequest) {
     await requireAdmin();
     const db = getDb();
     const status = request.nextUrl.searchParams.get('status');
+    const sort = request.nextUrl.searchParams.get('sort') || 'newest';
     const where = status ? 'WHERE p.status = ?' : '';
+
+    let orderBy = 'p.created_at DESC';
+    switch (sort) {
+      case 'oldest': orderBy = 'p.created_at ASC'; break;
+      case 'price_asc': orderBy = 'p.price ASC'; break;
+      case 'price_desc': orderBy = 'p.price DESC'; break;
+      case 'title_asc': orderBy = 'p.title ASC'; break;
+      case 'title_desc': orderBy = 'p.title DESC'; break;
+    }
+
     const rows = db.prepare(`
       SELECT
         p.id,
@@ -32,7 +43,7 @@ export async function GET(request: NextRequest) {
       FROM products p
       JOIN users u ON u.id = p.seller_id
       ${where}
-      ORDER BY p.created_at DESC
+      ORDER BY ${orderBy}
     `).all(...(status ? [status] : []));
     const productIds = rows.map((product: any) => product.id);
     const imagesByProduct = new Map<number, string[]>();

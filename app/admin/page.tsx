@@ -140,6 +140,7 @@ export default function AdminPage() {
   const [me, setMe] = useState<AdminMe | null>(null);
   const [activeTab, setActiveTab] = useState<(typeof TABS)[number]['id']>('products');
   const [statusFilter, setStatusFilter] = useState('pending');
+  const [productSort, setProductSort] = useState<'newest' | 'oldest' | 'price_asc' | 'price_desc' | 'title_asc'>('newest');
   const [products, setProducts] = useState<ProductRow[]>([]);
   const [categories, setCategories] = useState<CategoryNode[]>([]);
   const [banners, setBanners] = useState<BannerRow[]>([]);
@@ -189,8 +190,8 @@ export default function AdminPage() {
     return data;
   };
 
-  const refreshProducts = async (nextStatus = statusFilter) => {
-    const response = await fetch(`/api/admin/products?status=${encodeURIComponent(nextStatus)}`, { cache: 'no-store' });
+  const refreshProducts = async (nextStatus = statusFilter, nextSort = productSort) => {
+    const response = await fetch(`/api/admin/products?status=${encodeURIComponent(nextStatus)}&sort=${encodeURIComponent(nextSort)}`, { cache: 'no-store' });
     const data = await response.json();
     setProducts(Array.isArray(data?.products) ? data.products : []);
   };
@@ -252,8 +253,8 @@ export default function AdminPage() {
 
   useEffect(() => {
     if (!me?.authenticated || activeTab !== 'products') return;
-    refreshProducts(statusFilter).catch(() => {});
-  }, [statusFilter, activeTab, me?.authenticated]);
+    refreshProducts(statusFilter, productSort).catch(() => {});
+  }, [statusFilter, productSort, activeTab, me?.authenticated]);
 
   useEffect(() => {
     if (!me?.authenticated || activeTab !== 'users') return;
@@ -788,15 +789,28 @@ export default function AdminPage() {
                 <section className="rounded-xl border border-[#1d2c43] bg-[#081223] p-5">
                   <div className="mb-4 flex items-center justify-between gap-4">
                     <h2 className="text-xl font-bold">Одобрување огласи</h2>
-                    <select
-                      value={statusFilter}
-                      onChange={(e) => setStatusFilter(e.target.value)}
-                      className="rounded-lg border border-[#223653] bg-[#0b1727] px-3 py-2 text-sm text-white"
-                    >
-                      <option value="pending">Pending</option>
-                      <option value="active">Active</option>
-                      <option value="rejected">Rejected</option>
-                    </select>
+                    <div className="flex gap-2">
+                      <select
+                        value={productSort}
+                        onChange={(e) => setProductSort(e.target.value as 'newest' | 'oldest' | 'price_asc' | 'price_desc' | 'title_asc')}
+                        className="rounded-lg border border-[#223653] bg-[#0b1727] px-3 py-2 text-sm text-white"
+                      >
+                        <option value="newest">Најнови</option>
+                        <option value="oldest">Најстари</option>
+                        <option value="price_asc">Цена растечка</option>
+                        <option value="price_desc">Цена опаѓачка</option>
+                        <option value="title_asc">По име (А-Ш)</option>
+                      </select>
+                      <select
+                        value={statusFilter}
+                        onChange={(e) => setStatusFilter(e.target.value)}
+                        className="rounded-lg border border-[#223653] bg-[#0b1727] px-3 py-2 text-sm text-white"
+                      >
+                        <option value="pending">Pending</option>
+                        <option value="active">Active</option>
+                        <option value="rejected">Rejected</option>
+                      </select>
+                    </div>
                   </div>
 
                   <div className="space-y-3">
