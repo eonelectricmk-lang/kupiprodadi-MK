@@ -178,7 +178,7 @@ function CrmDraftsTab() {
 
   const loadDrafts = async () => {
     try {
-      const r = await fetch('/api/crm/drafts');
+      const r = await fetch('/api/crm/drafts?status=draft');
       const d = await r.json();
       setDrafts(d.drafts || []);
       if (catOpts.length > 0) remapDraftCategories(d.drafts || [], catOpts);
@@ -285,7 +285,7 @@ function CrmPublishedTab() {
     try {
       const r = await fetch('/api/admin/products?status=all');
       const d = await r.json();
-      const system = d.products?.filter((p: any) => p.contact_name && p.seller_email === 'kupiprodadi@system.mk') || [];
+      const system = d.products?.filter((p: any) => p.seller_email === 'kupiprodadi@system.mk') || [];
       setImported(system.map((p: any) => ({ id: p.id, title: p.title, price: p.price, status: p.status, url: `/products/${p.id}` })));
     } catch {}
   };
@@ -293,7 +293,7 @@ function CrmPublishedTab() {
   useEffect(() => { loadImported(); }, []);
 
   const removeProduct = async (id: number) => {
-    if (!confirm('Избриши го огласот?')) return;
+    if (!confirm('Избриши го огласот? Ќе се избрише од crm_drafts и од products.')) return;
     try {
       await fetch(`/api/crm/products/${id}`, { method: 'DELETE' });
       loadImported();
@@ -314,6 +314,7 @@ function CrmPublishedTab() {
   return (
     <div className="rounded-xl border border-[#1d2c43] bg-[#081223] p-5">
       <h2 className="mb-4 text-lg font-bold text-emerald-400">✅ CRM Објавени</h2>
+      <p className="mb-3 text-xs text-slate-500">Историја на објавени огласи преку CRM</p>
       {imported.length === 0 && <p className="text-sm text-slate-400">Нема објавени огласи.</p>}
       <div className="space-y-2">
         {imported.map((ad) => (

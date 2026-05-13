@@ -2,11 +2,13 @@ import { NextRequest, NextResponse } from 'next/server';
 import getDb from '@/lib/db';
 import { SYSTEM_EMAIL } from '@/lib/crm';
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   const db = getDb();
-  const drafts = db.prepare(
-    'SELECT * FROM crm_drafts ORDER BY created_at DESC'
-  ).all();
+  const status = request.nextUrl.searchParams.get('status') || '';
+  const sql = status
+    ? 'SELECT * FROM crm_drafts WHERE status = ? ORDER BY created_at DESC'
+    : 'SELECT * FROM crm_drafts ORDER BY created_at DESC';
+  const drafts = db.prepare(sql).all(...(status ? [status] : []));
   return NextResponse.json({ drafts });
 }
 
