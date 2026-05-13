@@ -120,6 +120,23 @@ function initializeDb() {
         FOREIGN KEY (product_id) REFERENCES products(id)
       );
 
+      CREATE TABLE IF NOT EXISTS crm_drafts (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        title TEXT NOT NULL,
+        description TEXT DEFAULT '',
+        price TEXT DEFAULT '',
+        city TEXT DEFAULT '',
+        category TEXT DEFAULT '',
+        seller_name TEXT DEFAULT '',
+        phone TEXT DEFAULT '',
+        images TEXT DEFAULT '[]',
+        source TEXT DEFAULT '',
+        source_url TEXT DEFAULT '',
+        notes TEXT DEFAULT '',
+        status TEXT DEFAULT 'draft',
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      );
+
       CREATE TABLE IF NOT EXISTS contact_messages (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         user_id INTEGER,
@@ -218,6 +235,15 @@ function initializeDb() {
     migrateCategorySlugs(db);
     seedDefaultBanners(db);
     seedHomepageSections(db);
+
+    const systemEmail = 'kupiprodadi@system.mk';
+    const systemUser = db.prepare('SELECT id FROM users WHERE email = ?').get(systemEmail);
+    if (!systemUser) {
+      db.prepare(`
+        INSERT INTO users (email, password, name, phone, location)
+        VALUES (?, ?, ?, ?, ?)
+      `).run(systemEmail, 'system', 'КупиПродади', '', '');
+    }
 
     return db;
   } catch (error) {

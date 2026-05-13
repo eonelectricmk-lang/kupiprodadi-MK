@@ -204,20 +204,29 @@ export default function ProductDetailsClient({ id }: { id: string }) {
   const categoryTrail = useMemo(() => {
     if (!ad) return null;
 
-    const normalizedCategory = normalizeCategorySlug(ad.category);
-    const normalizedSubcategory = normalizeCategorySlug(ad.subcategory);
+    const rawCat = (ad.category || '').trim();
+    const rawSub = (ad.subcategory || '').trim();
+    const normalizedCategory = normalizeCategorySlug(rawCat);
+    const normalizedSubcategory = normalizeCategorySlug(rawSub);
 
     for (const category of categories) {
-      const categorySlug = normalizeCategorySlug(category.slug);
-      if (categorySlug === normalizedCategory) {
-        const matchedSubcategory = category.subcategories.find((sub) => normalizeCategorySlug(sub.slug) === normalizedSubcategory);
+      const catSlug = normalizeCategorySlug(category.slug);
+      const matchByName = catSlug === normalizedCategory || category.name === rawCat;
+      const matchBySlug = catSlug === rawCat;
+
+      if (matchByName || matchBySlug) {
+        const matchedSubcategory = category.subcategories.find((sub) =>
+          normalizeCategorySlug(sub.slug) === normalizedSubcategory || sub.name === rawSub
+        );
         return {
           category: { name: category.name, slug: category.slug },
           subcategory: matchedSubcategory ? { name: matchedSubcategory.name, slug: matchedSubcategory.slug } : null,
         };
       }
 
-      const matchedSubcategory = category.subcategories.find((sub) => normalizeCategorySlug(sub.slug) === normalizedCategory);
+      const matchedSubcategory = category.subcategories.find((sub) =>
+        normalizeCategorySlug(sub.slug) === normalizedCategory || sub.name === rawCat || normalizeCategorySlug(sub.slug) === rawCat
+      );
       if (matchedSubcategory) {
         return {
           category: { name: category.name, slug: category.slug },
@@ -335,33 +344,34 @@ export default function ProductDetailsClient({ id }: { id: string }) {
   const sellerRating = Number(ad.seller_rating || 0);
   const sellerEmail = ad.contact_email || ad.seller_email || '';
   const sellerAvatarUrl = ad.seller_avatar_url || null;
+  const isCrmPublished = ad.seller_email === 'kupiprodadi@system.mk';
   const categoryLink = categoryTrail?.category ? `/categories/${categoryTrail.category.slug}` : null;
   const subcategoryLink = categoryTrail?.subcategory ? `/categories/${categoryTrail.subcategory.slug}` : null;
 
   return (
     <div className="product-detail-page bg-[#050b17] py-8 text-white">
       <div className="mx-auto max-w-6xl px-4">
-        <div className="mb-5 flex flex-wrap items-center gap-2 text-xs text-slate-400">
-          <Link href="/" className="hover:text-white">
+        <div className="mb-5 flex flex-wrap items-center gap-2 text-sm text-white">
+          <Link href="/" className="text-white/70 hover:text-white">
             Почетна
           </Link>
-          <span>/</span>
+          <span className="text-white/40">/</span>
           {categoryTrail?.category && categoryLink ? (
             <>
-              <Link href={categoryLink} className="hover:text-white">
+              <Link href={categoryLink} className="text-white/70 hover:text-white">
                 {categoryTrail.category.name}
               </Link>
               {categoryTrail.subcategory && subcategoryLink && (
                 <>
-                  <span>/</span>
-                  <Link href={subcategoryLink} className="hover:text-white">
+                  <span className="text-white/40">/</span>
+                  <Link href={subcategoryLink} className="text-white/70 hover:text-white">
                     {categoryTrail.subcategory.name}
                   </Link>
                 </>
               )}
             </>
           ) : (
-            <span>Оглас</span>
+            <span className="text-white/70">Оглас</span>
           )}
         </div>
 
@@ -432,7 +442,7 @@ export default function ProductDetailsClient({ id }: { id: string }) {
 
             <div className="mt-5 rounded-xl border border-white/10 bg-[#101f33] p-4">
               <div className="flex items-center justify-between gap-3">
-                <h2 className="text-base font-semibold text-white">Профил на продавач</h2>
+                <h2 className="text-base font-semibold text-white">{isCrmPublished ? 'Продавач' : 'Профил на продавач'}</h2>
                 <p className="text-sm font-semibold text-white">ID: KP-{ad.id.toString().padStart(6, '0')}</p>
               </div>
               <div className="mt-3 flex items-start gap-3">
@@ -447,15 +457,19 @@ export default function ProductDetailsClient({ id }: { id: string }) {
                   <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0">
                       <p className="font-semibold text-white">{sellerName}</p>
-                      <p className="mt-1 text-xs text-slate-400">{ad.preferred_contact || 'Телефон и порака'}</p>
+                      {!isCrmPublished && <p className="mt-1 text-xs text-slate-400">{ad.preferred_contact || 'Телефон и порака'}</p>}
                     </div>
                     <div className="flex shrink-0 flex-col items-start gap-1">
-                      <span className="verified-seller-badge inline-flex items-center gap-1 rounded-full border border-green-500/25 bg-green-500/10 px-2 py-0.5 text-[11px] font-semibold text-green-300">
-                        <ShieldCheck className="h-3 w-3" /> Проверен
-                      </span>
-                      <p className="seller-rating-text flex items-center gap-1 text-xs text-amber-300">
-                        <Star className="h-3.5 w-3.5" /> {sellerRating ? sellerRating.toFixed(1) : '5.0'} рејтинг
-                      </p>
+                      {!isCrmPublished && (
+                        <>
+                          <span className="verified-seller-badge inline-flex items-center gap-1 rounded-full border border-green-500/25 bg-green-500/10 px-2 py-0.5 text-[11px] font-semibold text-green-300">
+                            <ShieldCheck className="h-3 w-3" /> Проверен
+                          </span>
+                          <p className="seller-rating-text flex items-center gap-1 text-xs text-amber-300">
+                            <Star className="h-3.5 w-3.5" /> {sellerRating ? sellerRating.toFixed(1) : '5.0'} рејтинг
+                          </p>
+                        </>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -467,7 +481,7 @@ export default function ProductDetailsClient({ id }: { id: string }) {
                     <Phone className="h-4 w-4" /> {sellerPhone}
                   </a>
                 )}
-                {sellerEmail && (
+                {!isCrmPublished && sellerEmail && (
                   <a href={`mailto:${sellerEmail}`} className="inline-flex h-10 items-center justify-center gap-2 rounded-lg border border-white/15 bg-[#0f1a2b] px-3 text-sm font-semibold text-white hover:bg-[#13243c]">
                     <Mail className="h-4 w-4" /> {sellerEmail}
                   </a>
@@ -475,36 +489,45 @@ export default function ProductDetailsClient({ id }: { id: string }) {
               </div>
             </div>
 
-            <form onSubmit={onSendMessage} className="mt-4 rounded-xl border border-white/10 bg-[#101f33] p-4">
-              <h2 className="flex items-center gap-2 text-base font-semibold text-white">
-                <MessageCircle className="h-4 w-4" /> Контактирај продавач
-              </h2>
-              <div className="mt-3 grid gap-3">
-                <div className="rounded-lg border border-[#2a3f60] bg-[#0f1a2b] px-3 py-2 text-sm text-slate-400">
-                  {loggedInUser ? `Порака од: ${loggedInUser.name}` : 'Мора да се најавите за да испратите порака'}
-                </div>
-                <textarea
-                  required
-                  minLength={5}
-                  value={contactMessage}
-                  onChange={(event) => setContactMessage(event.target.value)}
-                  placeholder={`Здраво, заинтересиран сум за ${ad.title}. Дали е уште достапно?`}
-                  className="min-h-28 resize-y rounded-lg border border-[#2a3f60] bg-[#0f1a2b] px-3 py-2 text-sm leading-5 text-white outline-none placeholder:text-slate-500 focus:border-red-500"
-                />
-                {contactStatus && (
-                  <p className="rounded-lg border border-white/10 bg-[#0f1a2b] px-3 py-2 text-xs text-slate-200">
-                    {contactStatus}
-                  </p>
-                )}
-                <button
-                  type="submit"
-                  disabled={sendingMessage || !loggedInUser}
-                  className="inline-flex h-11 items-center justify-center gap-2 rounded-lg bg-red-600 px-4 text-sm font-semibold text-white transition hover:bg-red-500 disabled:cursor-not-allowed disabled:opacity-70"
-                >
-                  <Send className="h-4 w-4" /> {sendingMessage ? 'Испраќање...' : 'Испрати порака'}
-                </button>
+            {isCrmPublished && sellerPhone ? (
+              <div className="mt-4 rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-5 text-center">
+                <p className="text-sm font-semibold text-emerald-300">📞 Контактирај директно со огласувачот</p>
+                <a href={`tel:${sellerPhone}`} className="mt-3 inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-6 py-3 text-lg font-bold text-white hover:bg-emerald-500 transition">
+                  <Phone className="h-5 w-5" /> {sellerPhone}
+                </a>
               </div>
-            </form>
+            ) : (
+              <form onSubmit={onSendMessage} className="mt-4 rounded-xl border border-white/10 bg-[#101f33] p-4">
+                <h2 className="flex items-center gap-2 text-base font-semibold text-white">
+                  <MessageCircle className="h-4 w-4" /> Контактирај продавач
+                </h2>
+                <div className="mt-3 grid gap-3">
+                  <div className="rounded-lg border border-[#2a3f60] bg-[#0f1a2b] px-3 py-2 text-sm text-slate-400">
+                    {loggedInUser ? `Порака од: ${loggedInUser.name}` : 'Мора да се најавите за да испратите порака'}
+                  </div>
+                  <textarea
+                    required
+                    minLength={5}
+                    value={contactMessage}
+                    onChange={(event) => setContactMessage(event.target.value)}
+                    placeholder={`Здраво, заинтересиран сум за ${ad.title}. Дали е уште достапно?`}
+                    className="min-h-28 resize-y rounded-lg border border-[#2a3f60] bg-[#0f1a2b] px-3 py-2 text-sm leading-5 text-white outline-none placeholder:text-slate-500 focus:border-red-500"
+                  />
+                  {contactStatus && (
+                    <p className="rounded-lg border border-white/10 bg-[#0f1a2b] px-3 py-2 text-xs text-slate-200">
+                      {contactStatus}
+                    </p>
+                  )}
+                  <button
+                    type="submit"
+                    disabled={sendingMessage || !loggedInUser}
+                    className="inline-flex h-11 items-center justify-center gap-2 rounded-lg bg-red-600 px-4 text-sm font-semibold text-white transition hover:bg-red-500 disabled:cursor-not-allowed disabled:opacity-70"
+                  >
+                    <Send className="h-4 w-4" /> {sendingMessage ? 'Испраќање...' : 'Испрати порака'}
+                  </button>
+                </div>
+              </form>
+            )}
 
             <div className="mt-4 grid grid-cols-2 gap-2">
               <button

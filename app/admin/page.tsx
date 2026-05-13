@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useSearchParams, useRouter } from 'next/navigation';
 import Header from '@/app/components/Header';
 import { Button, Container, Input } from '@/app/components/ui';
 import { useTheme } from '@/app/context/ThemeContext';
@@ -106,6 +107,8 @@ const TABS = [
   { id: 'categories', label: 'Категории' },
   { id: 'homepage', label: 'Уредување банери' },
   { id: 'banners', label: 'Голем банер' },
+  { id: 'crm-drafts', label: 'CRM Преземени' },
+  { id: 'crm-published', label: 'CRM Објавени' },
 ] as const;
 
 const CATEGORY_ICON_OPTIONS = [
@@ -136,10 +139,213 @@ const CATEGORY_ICON_OPTIONS = [
   { value: 'package', label: 'Останато / пакет' },
 ] as const;
 
+interface CrmDraft {
+  id: number; title: string; description: string; price: string; city: string;
+  category: string; seller_name: string; phone: string; images: string;
+  source: string; source_url: string; notes: string; created_at: string;
+}
+
+interface ImprtProduct {
+  id: number; title: string; price: number; status: string; url: string;
+}
+
+function CrmDraftsTab() {
+  const [drafts, setDrafts] = useState<CrmDraft[]>([]);
+  const [publishing, setPublishing] = useState<number | null>(null);
+  const [editCat, setEditCat] = useState<Record<number, { category: string; subcategory: string }>>({});
+  const [catOpts, setCatOpts] = useState<Array<{ name: string; slug: string; subcategories: Array<{ name: string; slug: string }> }>>([]);
+
+  useEffect(() => {
+    fetch('/api/categories').then(r => r.json()).then(d => {
+      if (Array.isArray(d?.categories)) setCatOpts(d.categories);
+    }).catch(() => {});
+  }, []);
+
+  const remapDraftCategories = (draftsList: CrmDraft[], categoryOptions: typeof catOpts) => {
+    const catNames = categoryOptions.map(c => c.name);
+    const map: Record<number, { category: string; subcategory: string }> = {};
+    for (const dr of draftsList) {
+      const parts = (dr.category || '').split(/\s*\/\s*/).map((s: string) => s.trim()).filter(Boolean);
+      let match = parts[0] ? catNames.find(c => c.toLowerCase().startsWith(parts[0].toLowerCase().slice(0, 8))) : undefined;
+      match = match || (parts[0] && catNames.includes(parts[0]) ? parts[0] : undefined);
+      const subName = parts.length > 1 ? parts[1] : '';
+      const matchedCat = categoryOptions.find(c => c.name === match);
+      const matchedSub = matchedCat?.subcategories.find(s => s.name.toLowerCase() === subName.toLowerCase());
+      map[dr.id] = { category: match || '', subcategory: matchedSub ? matchedSub.slug : '' };
+    }
+    setEditCat(map);
+  };
+
+  const loadDrafts = async () => {
+    try {
+      const r = await fetch('/api/crm/drafts');
+      const d = await r.json();
+      setDrafts(d.drafts || []);
+      if (catOpts.length > 0) remapDraftCategories(d.drafts || [], catOpts);
+    } catch {}
+  };
+
+  useEffect(() => { loadDrafts(); }, []);
+
+  useEffect(() => {
+    if (catOpts.length > 0 && drafts.length > 0) remapDraftCategories(drafts, catOpts);
+  }, [catOpts]);
+
+  const deleteDraft = async (id: number) => {
+    if (!confirm('Избриши го?')) return;
+    try {
+      await fetch(`/api/crm/drafts/${id}`, { method: 'DELETE' });
+      loadDrafts();
+    } catch {}
+  };
+
+  const publishDraft = async (id: number, category: string, subcategory: string) => {
+    if (!category) { alert('Избери категорија!'); return; }
+    setPublishing(id);
+    try {
+      const r = await fetch(`/api/crm/drafts/${id}/publish`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ category, subcategory }),
+      });
+      const data = await r.json();
+      if (r.ok) {
+        loadDrafts();
+      } else {
+        alert(data.error || 'Грешка при објавување');
+      }
+    } catch (err: any) {
+      alert(err.message);
+    } finally {
+      setPublishing(null);
+    }
+  };
+
+  const draftImages = (draft: CrmDraft): string[] => {
+    try { return JSON.parse(draft.images); } catch { return []; }
+  };
+
+  return (
+    <div className="rounded-xl border border-[#1d2c43] bg-[#081223] p-5">
+      <h2 className="mb-4 text-lg font-bold text-amber-400">📋 CRM Преземени</h2>
+      {drafts.length === 0 && <p className="text-sm text-slate-400">Нема преземени огласи. Испрати преку extension-от.</p>}
+      <div className="space-y-2">
+        {drafts.map((draft) => {
+          const ec = editCat[draft.id] || { category: '', subcategory: '' };
+          return (
+          <div key={draft.id} className="rounded-lg border border-[#223653] bg-[#0b1727] px-4 py-3">
+            <div className="flex items-start gap-3">
+              <div className="min-w-0 flex-1">
+                <div className="text-base font-bold text-white truncate">{draft.title}</div>
+                <div className="text-sm text-slate-300 truncate">
+                  {draft.price && <span>💰 {draft.price} </span>}
+                  {draft.city && <span>📍 {draft.city} </span>}
+                  {draft.seller_name && <span>👤 {draft.seller_name} </span>}
+                  {draft.phone && <span>📞 {draft.phone} </span>}
+                  {draft.source && <span>🔗 {draft.source}</span>}
+                </div>
+                <div className="text-sm text-slate-400 line-clamp-2">{draft.description}</div>
+              </div>
+              <div className="flex items-center gap-1 shrink-0">
+                <select value={ec.category} onChange={e => setEditCat(p => ({ ...p, [draft.id]: { ...p[draft.id], category: e.target.value, subcategory: '' } }))} className="rounded border border-[#223653] bg-[#0b1727] px-2 py-1 text-sm text-white w-[130px]">
+                  <option value="">Категорија</option>
+                  {catOpts.map(c => <option key={c.slug} value={c.name}>{c.name}</option>)}
+                </select>
+                <select value={ec.subcategory} onChange={e => setEditCat(p => ({ ...p, [draft.id]: { ...p[draft.id], subcategory: e.target.value } }))} className="rounded border border-[#223653] bg-[#0b1727] px-2 py-1 text-sm text-white w-[130px]">
+                  <option value="">Подкатегорија</option>
+                  {catOpts.find(c => c.name === ec.category)?.subcategories.map(sc => (
+                    <option key={sc.slug} value={sc.slug}>{sc.name}</option>
+                  ))}
+                </select>
+                <button onClick={() => publishDraft(draft.id, ec.category, ec.subcategory)} disabled={publishing === draft.id} className="rounded px-3 py-1 text-sm bg-emerald-700 hover:bg-emerald-600 text-white font-semibold disabled:opacity-50 whitespace-nowrap">
+                  {publishing === draft.id ? '...' : '📦 Објави'}
+                </button>
+                <button onClick={() => deleteDraft(draft.id)} className="rounded px-2 py-1 text-sm bg-red-700 hover:bg-red-600 text-white">✕</button>
+              </div>
+            </div>
+            {draftImages(draft).length > 0 && (
+              <div className="mt-2 flex gap-2">
+                {draftImages(draft).slice(0, 5).map((url, i) => (
+                  <img key={i} src={url} className="h-24 w-24 rounded object-cover border border-[#223653]" />
+                ))}
+              </div>
+            )}
+          </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function CrmPublishedTab() {
+  const [imported, setImported] = useState<ImprtProduct[]>([]);
+
+  const loadImported = async () => {
+    try {
+      const r = await fetch('/api/admin/products?status=all');
+      const d = await r.json();
+      const system = d.products?.filter((p: any) => p.contact_name && p.seller_email === 'kupiprodadi@system.mk') || [];
+      setImported(system.map((p: any) => ({ id: p.id, title: p.title, price: p.price, status: p.status, url: `/products/${p.id}` })));
+    } catch {}
+  };
+
+  useEffect(() => { loadImported(); }, []);
+
+  const removeProduct = async (id: number) => {
+    if (!confirm('Избриши го огласот?')) return;
+    try {
+      await fetch(`/api/crm/products/${id}`, { method: 'DELETE' });
+      loadImported();
+    } catch {}
+  };
+
+  const setStatus = async (id: number, status: string) => {
+    try {
+      await fetch(`/api/crm/products/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status }),
+      });
+      loadImported();
+    } catch {}
+  };
+
+  return (
+    <div className="rounded-xl border border-[#1d2c43] bg-[#081223] p-5">
+      <h2 className="mb-4 text-lg font-bold text-emerald-400">✅ CRM Објавени</h2>
+      {imported.length === 0 && <p className="text-sm text-slate-400">Нема објавени огласи.</p>}
+      <div className="space-y-2">
+        {imported.map((ad) => (
+          <div key={ad.id} className="flex items-center justify-between rounded-lg border border-[#223653] bg-[#0b1727] px-4 py-3">
+            <div className="min-w-0 flex-1">
+              <div className="flex items-center gap-2">
+                <span className="text-yellow-400 font-bold text-xs">KP-{String(ad.id).padStart(6, '0')}</span>
+                <a href={ad.url} target="_blank" className="truncate text-sm font-semibold text-white hover:text-red-400">{ad.title}</a>
+              </div>
+              <p className="text-xs text-slate-400">{ad.price.toLocaleString()} дин · {ad.status}</p>
+            </div>
+            <div className="flex gap-1 shrink-0 ml-3">
+              <button onClick={() => setStatus(ad.id, 'active')} className="rounded px-2 py-1 text-xs bg-emerald-700 hover:bg-emerald-600 text-white">Активен</button>
+              <button onClick={() => setStatus(ad.id, 'inactive')} className="rounded px-2 py-1 text-xs bg-slate-700 hover:bg-slate-600 text-white">Неактивен</button>
+              <button onClick={() => setStatus(ad.id, 'sold')} className="rounded px-2 py-1 text-xs bg-amber-700 hover:bg-amber-600 text-white">Продадено</button>
+              <button onClick={() => removeProduct(ad.id)} className="rounded px-2 py-1 text-xs bg-red-700 hover:bg-red-600 text-white">✕</button>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export default function AdminPage() {
   const { dark } = useTheme();
+  const searchParams = useSearchParams();
+  const router = useRouter();
   const [me, setMe] = useState<AdminMe | null>(null);
-  const [activeTab, setActiveTab] = useState<(typeof TABS)[number]['id']>('products');
+  const [activeTab, setActiveTab] = useState<(typeof TABS)[number]['id']>(
+    (searchParams.get('tab') as any) || 'products'
+  );
   const [statusFilter, setStatusFilter] = useState('pending');
   const [productSort, setProductSort] = useState<'newest' | 'oldest' | 'price_asc' | 'price_desc' | 'title_asc'>('newest');
   const [adminPerPage, setAdminPerPage] = useState(30);
@@ -792,7 +998,7 @@ export default function AdminPage() {
                 {TABS.map((tab) => (
                   <button
                     key={tab.id}
-                    onClick={() => setActiveTab(tab.id)}
+                    onClick={() => { setActiveTab(tab.id); router.push(`/admin?tab=${tab.id}`); }}
                     className={`admin-dark-button rounded-lg px-4 py-1.5 text-sm font-semibold ${activeTab === tab.id ? 'bg-red-600 text-white' : 'bg-[#0c1628] text-slate-300'}`}
                   >
                     {tab.label}
@@ -1539,6 +1745,14 @@ export default function AdminPage() {
                     </div>
                   </div>
                 </section>
+              )}
+
+              {activeTab === 'crm-drafts' && (
+                <CrmDraftsTab />
+              )}
+
+              {activeTab === 'crm-published' && (
+                <CrmPublishedTab />
               )}
 
               {activeTab === 'banners' && (

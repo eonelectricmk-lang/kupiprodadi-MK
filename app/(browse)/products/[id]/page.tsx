@@ -50,18 +50,24 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 
   const categories = getCategoryTree(db, true);
-  const normalizedCategory = normalizeCategorySlug(product.category);
-  const normalizedSubcategory = normalizeCategorySlug(product.subcategory);
+  const rawCat = (product.category || '').trim();
+  const rawSub = (product.subcategory || '').trim();
+  const normalizedCategory = normalizeCategorySlug(rawCat);
+  const normalizedSubcategory = normalizeCategorySlug(rawSub);
 
   let categoryLabel = '';
   for (const category of categories) {
-    if (normalizeCategorySlug(category.slug) === normalizedCategory) {
-      categoryLabel = category.name;
+    const catSlug = normalizeCategorySlug(category.slug);
+    if (catSlug === normalizedCategory || category.name === rawCat) {
+      const matchedSubcategory = category.subcategories.find(
+        (sub) => normalizeCategorySlug(sub.slug) === normalizedSubcategory || sub.name === rawSub,
+      );
+      categoryLabel = matchedSubcategory ? `${category.name} / ${matchedSubcategory.name}` : category.name;
       break;
     }
 
     const matchedSubcategory = category.subcategories.find(
-      (sub) => normalizeCategorySlug(sub.slug) === normalizedSubcategory || normalizeCategorySlug(sub.slug) === normalizedCategory,
+      (sub) => normalizeCategorySlug(sub.slug) === normalizedCategory || sub.name === rawCat,
     );
     if (matchedSubcategory) {
       categoryLabel = `${category.name} / ${matchedSubcategory.name}`;
