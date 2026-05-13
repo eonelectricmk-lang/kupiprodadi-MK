@@ -29,7 +29,7 @@ export async function PATCH(
     }
 
     const body = await request.json();
-    const { status, title, description, price, currency, category, subcategory, city, contact_name, contact_phone } = body;
+    const { status, title, description, price, currency, category, subcategory, city, contact_name, contact_phone, images } = body;
 
     if (status) {
       const validStatuses = ['active', 'inactive', 'sold'];
@@ -37,6 +37,14 @@ export async function PATCH(
         return NextResponse.json({ error: 'Невалиден статус' }, { status: 400 });
       }
       db.prepare('UPDATE products SET status = ? WHERE id = ?').run(status, productId);
+    }
+
+    if (images && Array.isArray(images)) {
+      db.prepare('DELETE FROM product_images WHERE product_id = ?').run(productId);
+      for (let i = 0; i < images.length; i++) {
+        db.prepare('INSERT INTO product_images (product_id, image_url, sort_order) VALUES (?, ?, ?)').run(productId, images[i], i);
+      }
+      db.prepare('UPDATE products SET image_url = ? WHERE id = ?').run(images[0] || '', productId);
     }
 
     if (title != null || description != null || price != null || currency != null || category != null || subcategory != null || city != null || contact_name != null || contact_phone != null) {

@@ -300,10 +300,19 @@ function CrmPublishedTab() {
           .filter((p: any) => p.seller_email === 'kupiprodadi@system.mk')
           .map((p: any) => [p.id, p.status])
       );
-      const list: any[] = (dr.drafts || []).map((d: any) => ({
-        ...d,
-        productStatus: d.product_id ? (productStatus.get(d.product_id) || 'active') : 'active',
-      }));
+      const productByTitle = new Map(
+        (pr.products || [])
+          .filter((p: any) => p.seller_email === 'kupiprodadi@system.mk')
+          .map((p: any) => [p.title.toLowerCase().trim(), p.id])
+      );
+      const list: any[] = (dr.drafts || []).map((d: any) => {
+        const matchedPid = d.product_id || productByTitle.get(d.title.toLowerCase().trim()) || null;
+        return {
+          ...d,
+          product_id: matchedPid,
+          productStatus: matchedPid ? (productStatus.get(matchedPid) || 'active') : 'active',
+        };
+      });
       setPublished(list);
     } catch {}
   };
@@ -332,6 +341,7 @@ function CrmPublishedTab() {
   };
 
   const startEdit = (draft: any) => {
+    const currentImages = draftImages(draft);
     setEditId(draft.id);
     setEditForm({
       title: draft.title,
@@ -342,11 +352,19 @@ function CrmPublishedTab() {
       seller_name: draft.seller_name || '',
       phone: draft.phone || '',
       city: draft.city || '',
+      images: JSON.stringify(currentImages),
     });
+  };
+
+  const removeEditableImage = (index: number) => {
+    const imgs: string[] = JSON.parse(editForm.images || '[]');
+    imgs.splice(index, 1);
+    setEditForm(p => ({ ...p, images: JSON.stringify(imgs) }));
   };
 
   const saveEdit = async (draft: any) => {
     const pid = draft.product_id;
+    const imgs: string[] = JSON.parse(editForm.images || '[]');
     try {
       if (pid) {
         await fetch(`/api/crm/products/${pid}`, {
@@ -361,6 +379,7 @@ function CrmPublishedTab() {
             city: editForm.city,
             contact_name: editForm.seller_name,
             contact_phone: editForm.phone,
+            images: imgs,
           }),
         });
       }
@@ -375,6 +394,7 @@ function CrmPublishedTab() {
           seller_name: editForm.seller_name,
           phone: editForm.phone,
           city: editForm.city,
+          images: imgs,
         }),
       });
       setEditId(null);
@@ -427,6 +447,16 @@ function CrmPublishedTab() {
                   </select>
                 </div>
                 <textarea value={ef.description} onChange={e => setEditForm(p => ({ ...p, description: e.target.value }))} rows={3} className="w-full rounded border border-[#223653] bg-[#0b1727] px-2 py-1 text-sm text-white" placeholder="Опис" />
+                {(JSON.parse(ef.images || '[]') as string[]).length > 0 && (
+                  <div className="flex flex-wrap gap-2">
+                    {(JSON.parse(ef.images || '[]') as string[]).map((url, i) => (
+                      <div key={i} className="relative group">
+                        <img src={url} className="h-20 w-20 rounded object-cover border border-[#223653]" />
+                        <button onClick={() => removeEditableImage(i)} className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-red-600 text-white text-xs leading-none hover:bg-red-500">✕</button>
+                      </div>
+                    ))}
+                  </div>
+                )}
                 <div className="flex gap-2">
                   <button onClick={() => saveEdit(draft)} className="rounded px-3 py-1 text-sm bg-emerald-700 hover:bg-emerald-600 text-white font-semibold">Зачувај</button>
                   <button onClick={cancelEdit} className="rounded px-3 py-1 text-sm bg-slate-700 hover:bg-slate-600 text-white">Откажи</button>
@@ -436,7 +466,8 @@ function CrmPublishedTab() {
               <>
                 <div className="flex items-start gap-3">
                   <div className="min-w-0 flex-1">
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className="text-cyan-400 font-bold text-xs">CRM-{String(draft.id)}</span>
                       {pid && <span className="text-yellow-400 font-bold text-xs">KP-{String(pid).padStart(6, '0')}</span>}
                       <a href={pid ? `/products/${pid}` : '#'} target="_blank" className="text-base font-bold text-white truncate hover:text-red-400">{draft.title}</a>
                     </div>
