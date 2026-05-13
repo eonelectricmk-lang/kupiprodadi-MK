@@ -473,18 +473,21 @@ function CrmPublishedTab() {
                     <div className="text-sm text-slate-400 line-clamp-2">{draft.description}</div>
                   </div>
                   <div className="flex flex-col items-end gap-1 shrink-0">
-                    <div className="flex flex-wrap justify-end gap-x-2 gap-y-0.5">
+                    <div className="flex flex-wrap justify-end gap-x-2 gap-y-0.5 items-center">
                       <span className="text-cyan-400 font-bold text-xs">КП-{String(draft.id)}</span>
                       {pid && <span className="text-yellow-400 font-bold text-xs">KP-{String(pid).padStart(6, '0')}</span>}
+                      <span className={`text-xs font-bold px-1.5 py-0.5 rounded ${draft.productStatus === 'active' ? 'bg-emerald-700 text-emerald-200' : draft.productStatus === 'sold' ? 'bg-amber-700 text-amber-200' : 'bg-slate-600 text-slate-200'}`}>{draft.productStatus === 'active' ? 'Активен' : draft.productStatus === 'sold' ? 'Продадено' : 'Неактивен'}</span>
                     </div>
                     <button onClick={() => startEdit(draft)} className="rounded px-2 py-1 text-xs bg-cyan-700 hover:bg-cyan-600 text-white font-semibold">Уреди</button>
                     <div className="flex gap-1">
-                      {pid && (
+                      {pid ? (
                         <>
                           <button onClick={() => setStatus(pid, 'active')} disabled={statusLoading === pid} className={`rounded px-2 py-1 text-xs font-semibold ${draft.productStatus === 'active' ? 'bg-emerald-500 ring-1 ring-emerald-300' : 'bg-emerald-700 hover:bg-emerald-600'} text-white disabled:opacity-50`}>Активен</button>
                           <button onClick={() => setStatus(pid, 'inactive')} disabled={statusLoading === pid} className={`rounded px-2 py-1 text-xs font-semibold ${draft.productStatus === 'inactive' ? 'bg-slate-500 ring-1 ring-slate-300' : 'bg-slate-700 hover:bg-slate-600'} text-white disabled:opacity-50`}>Неактивен</button>
                           <button onClick={() => setStatus(pid, 'sold')} disabled={statusLoading === pid} className={`rounded px-2 py-1 text-xs font-semibold ${draft.productStatus === 'sold' ? 'bg-amber-500 ring-1 ring-amber-300' : 'bg-amber-700 hover:bg-amber-600'} text-white disabled:opacity-50`}>Продадено</button>
                         </>
+                      ) : (
+                        <span className="text-xs text-slate-500">без продукт</span>
                       )}
                       <button onClick={() => remove(draft.id, pid)} className="rounded px-2 py-1 text-xs bg-red-700 hover:bg-red-600 text-white font-semibold">Избриши</button>
                     </div>
