@@ -450,9 +450,13 @@ function CrmPublishedTab() {
                     <span className="text-cyan-400 font-bold text-xs">КП-{String(draft.id)}</span>
                     {pid && <span className="text-yellow-400 font-bold text-xs">KP-{String(pid).padStart(6, '0')}</span>}
                   </div>
-                  <div className="flex gap-2">
-                    <button onClick={() => saveEdit(draft)} className="rounded px-3 py-1 text-sm bg-emerald-700 hover:bg-emerald-600 text-white font-semibold">Зачувај</button>
-                    <button onClick={cancelEdit} className="rounded px-3 py-1 text-sm bg-slate-700 hover:bg-slate-600 text-white">Откажи</button>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs text-white font-semibold">Status</span>
+                    <span className={`text-xs font-bold px-1.5 py-0.5 rounded ${draft.productStatus === 'active' ? 'bg-emerald-700 text-emerald-200' : draft.productStatus === 'sold' ? 'bg-amber-700 text-amber-200' : 'bg-slate-600 text-slate-200'}`}>{draft.productStatus === 'active' ? 'Активен' : draft.productStatus === 'sold' ? 'Продадено' : 'Неактивен'}</span>
+                    <div className="flex gap-2">
+                      <button onClick={() => saveEdit(draft)} className="rounded px-3 py-1 text-sm bg-emerald-700 hover:bg-emerald-600 text-white font-semibold">Зачувај</button>
+                      <button onClick={cancelEdit} className="rounded px-3 py-1 text-sm bg-slate-700 hover:bg-slate-600 text-white">Откажи</button>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -474,9 +478,10 @@ function CrmPublishedTab() {
                   </div>
                   <div className="flex flex-col items-end gap-1 shrink-0">
                     <div className="flex flex-wrap justify-end gap-x-2 gap-y-0.5 items-center">
+                      <span className="text-xs text-white font-semibold">Status</span>
+                      <span className={`text-xs font-bold px-1.5 py-0.5 rounded ${draft.productStatus === 'active' ? 'bg-emerald-700 text-emerald-200' : draft.productStatus === 'sold' ? 'bg-amber-700 text-amber-200' : 'bg-slate-600 text-slate-200'}`}>{draft.productStatus === 'active' ? 'Активен' : draft.productStatus === 'sold' ? 'Продадено' : 'Неактивен'}</span>
                       <span className="text-cyan-400 font-bold text-xs">КП-{String(draft.id)}</span>
                       {pid && <span className="text-yellow-400 font-bold text-xs">KP-{String(pid).padStart(6, '0')}</span>}
-                      <span className={`text-xs font-bold px-1.5 py-0.5 rounded ${draft.productStatus === 'active' ? 'bg-emerald-700 text-emerald-200' : draft.productStatus === 'sold' ? 'bg-amber-700 text-amber-200' : 'bg-slate-600 text-slate-200'}`}>{draft.productStatus === 'active' ? 'Активен' : draft.productStatus === 'sold' ? 'Продадено' : 'Неактивен'}</span>
                     </div>
                     <button onClick={() => startEdit(draft)} className="rounded px-2 py-1 text-xs bg-cyan-700 hover:bg-cyan-600 text-white font-semibold">Уреди</button>
                     <div className="flex gap-1">
