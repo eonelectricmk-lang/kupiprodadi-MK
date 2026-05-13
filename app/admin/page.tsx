@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Header from '@/app/components/Header';
 import { Button, Container, Input } from '@/app/components/ui';
@@ -338,7 +338,7 @@ function CrmPublishedTab() {
   );
 }
 
-export default function AdminPage() {
+function AdminPageContent() {
   const { dark } = useTheme();
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -1867,5 +1867,13 @@ export default function AdminPage() {
         </Container>
       </main>
     </>
+  );
+}
+
+export default function AdminPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-[#050b17] py-2.5 text-white md:py-3"><Container><p className="text-slate-400">Се вчитува...</p></Container></div>}>
+      <AdminPageContent />
+    </Suspense>
   );
 }
