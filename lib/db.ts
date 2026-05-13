@@ -134,6 +134,7 @@ function initializeDb() {
         source_url TEXT DEFAULT '',
         notes TEXT DEFAULT '',
         status TEXT DEFAULT 'draft',
+        product_id INTEGER DEFAULT NULL,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP
       );
 
@@ -231,6 +232,7 @@ function initializeDb() {
     addColumnIfMissing(db, 'users', 'role', "TEXT DEFAULT 'user'");
     addColumnIfMissing(db, 'users', 'is_active', 'BOOLEAN DEFAULT 1');
     addColumnIfMissing(db, 'users', 'avatar_url', 'TEXT');
+    addColumnIfMissing(db, 'crm_drafts', 'product_id', 'INTEGER DEFAULT NULL');
     seedDefaultCategories(db);
     migrateCategorySlugs(db);
     seedDefaultBanners(db);

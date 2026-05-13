@@ -66,7 +66,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
       ).run(productId, images[i], i);
     }
 
-    db.prepare('UPDATE crm_drafts SET status = ? WHERE id = ?').run('published', Number(id));
+    db.prepare('UPDATE crm_drafts SET status = ?, product_id = ? WHERE id = ?').run('published', productId, Number(id));
 
     return NextResponse.json({
       id: productId,

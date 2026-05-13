@@ -142,7 +142,8 @@ const CATEGORY_ICON_OPTIONS = [
 interface CrmDraft {
   id: number; title: string; description: string; price: string; city: string;
   category: string; seller_name: string; phone: string; images: string;
-  source: string; source_url: string; notes: string; created_at: string;
+  source: string; source_url: string; notes: string; product_id: number | null;
+  status: string; created_at: string;
 }
 
 interface ImprtProduct {
@@ -279,23 +280,21 @@ function CrmDraftsTab() {
 }
 
 function CrmPublishedTab() {
-  const [published, setPublished] = useState<(CrmDraft & { productId?: number; productStatus?: string })[]>([]);
+  const [published, setPublished] = useState<(CrmDraft & { productStatus?: string })[]>([]);
 
   const loadPublished = async () => {
     try {
-      const [dr, pr] = await Promise.all([
-        fetch('/api/crm/drafts?status=published').then(r => r.json()),
-        fetch('/api/admin/products?status=all').then(r => r.json()).catch(() => ({ products: [] })),
-      ]);
-      const productMap = new Map(
+      const dr = await fetch('/api/crm/drafts?status=published').then(r => r.json());
+      const pr = await fetch('/api/admin/products?status=all').then(r => r.json()).catch(() => ({ products: [] }));
+      const productStatus = new Map(
         (pr.products || [])
           .filter((p: any) => p.seller_email === 'kupiprodadi@system.mk')
-          .map((p: any) => [p.title.toLowerCase().trim(), { id: p.id, status: p.status }])
+          .map((p: any) => [p.id, p.status])
       );
-      const list: any[] = (dr.drafts || []).map((d: any) => {
-        const match = productMap.get(d.title.toLowerCase().trim());
-        return { ...d, productId: match?.id, productStatus: match?.status || 'active' };
-      });
+      const list: any[] = (dr.drafts || []).map((d: any) => ({
+        ...d,
+        productStatus: d.product_id ? (productStatus.get(d.product_id) || 'active') : 'active',
+      }));
       setPublished(list);
     } catch {}
   };
@@ -332,13 +331,15 @@ function CrmPublishedTab() {
       <h2 className="mb-4 text-lg font-bold text-emerald-400">✅ CRM Објавени</h2>
       {published.length === 0 && <p className="text-sm text-slate-400">Нема објавени огласи.</p>}
       <div className="space-y-2">
-        {published.map((draft) => (
+        {published.map((draft) => {
+          const pid = draft.product_id;
+          return (
           <div key={draft.id} className="rounded-lg border border-[#223653] bg-[#0b1727] px-4 py-3">
             <div className="flex items-start gap-3">
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2">
-                  {draft.productId && <span className="text-yellow-400 font-bold text-xs">KP-{String(draft.productId).padStart(6, '0')}</span>}
-                  <a href={draft.productId ? `/products/${draft.productId}` : '#'} target="_blank" className="text-base font-bold text-white truncate hover:text-red-400">{draft.title}</a>
+                  {pid && <span className="text-yellow-400 font-bold text-xs">KP-{String(pid).padStart(6, '0')}</span>}
+                  <a href={pid ? `/products/${pid}` : '#'} target="_blank" className="text-base font-bold text-white truncate hover:text-red-400">{draft.title}</a>
                 </div>
                 <div className="text-sm text-slate-300 truncate">
                   {draft.price && <span>💰 {draft.price} </span>}
@@ -350,14 +351,14 @@ function CrmPublishedTab() {
                 <div className="text-sm text-slate-400 line-clamp-2">{draft.description}</div>
               </div>
               <div className="flex items-center gap-1 shrink-0">
-                {draft.productId && (
+                {pid && (
                   <>
-                    <button onClick={() => setStatus(draft.productId!, 'active')} className="rounded px-2 py-1 text-xs bg-emerald-700 hover:bg-emerald-600 text-white">Активен</button>
-                    <button onClick={() => setStatus(draft.productId!, 'inactive')} className="rounded px-2 py-1 text-xs bg-slate-700 hover:bg-slate-600 text-white">Неактивен</button>
-                    <button onClick={() => setStatus(draft.productId!, 'sold')} className="rounded px-2 py-1 text-xs bg-amber-700 hover:bg-amber-600 text-white">Продадено</button>
+                    <button onClick={() => setStatus(pid, 'active')} className="rounded px-2 py-1 text-xs bg-emerald-700 hover:bg-emerald-600 text-white">Активен</button>
+                    <button onClick={() => setStatus(pid, 'inactive')} className="rounded px-2 py-1 text-xs bg-slate-700 hover:bg-slate-600 text-white">Неактивен</button>
+                    <button onClick={() => setStatus(pid, 'sold')} className="rounded px-2 py-1 text-xs bg-amber-700 hover:bg-amber-600 text-white">Продадено</button>
                   </>
                 )}
-                <button onClick={() => remove(draft.id, draft.productId)} className="rounded px-2 py-1 text-xs bg-red-700 hover:bg-red-600 text-white">✕</button>
+                <button onClick={() => remove(draft.id, pid)} className="rounded px-2 py-1 text-xs bg-red-700 hover:bg-red-600 text-white font-semibold">Избриши оглас</button>
               </div>
             </div>
             {draftImages(draft).length > 0 && (
@@ -368,7 +369,8 @@ function CrmPublishedTab() {
               </div>
             )}
           </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );
