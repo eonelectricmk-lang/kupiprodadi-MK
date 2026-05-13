@@ -284,6 +284,7 @@ function CrmPublishedTab() {
   const [editId, setEditId] = useState<number | null>(null);
   const [editForm, setEditForm] = useState<Record<string, string>>({});
   const [catOpts, setCatOpts] = useState<Array<{ name: string; slug: string; subcategories: Array<{ name: string; slug: string }> }>>([]);
+  const [statusLoading, setStatusLoading] = useState<number | null>(null);
 
   useEffect(() => {
     fetch('/api/categories').then(r => r.json()).then(d => {
@@ -314,15 +315,18 @@ function CrmPublishedTab() {
   };
 
   const setStatus = async (productId: number, status: string) => {
-    if (!productId) return;
+    if (!productId || statusLoading) return;
+    setStatusLoading(productId);
     try {
-      await fetch(`/api/crm/products/${productId}`, {
+      const r = await fetch(`/api/crm/products/${productId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status }),
       });
-      loadPublished();
-    } catch {}
+      if (!r.ok) alert('Грешка при промена на статус');
+      else loadPublished();
+    } catch { alert('Грешка при промена на статус'); }
+    finally { setStatusLoading(null); }
   };
 
   const startEdit = (draft: any) => {
@@ -477,9 +481,9 @@ function CrmPublishedTab() {
                     <div className="flex gap-1">
                       {pid && (
                         <>
-                          <button onClick={() => setStatus(pid, 'active')} className="rounded px-2 py-1 text-xs bg-emerald-700 hover:bg-emerald-600 text-white">Активен</button>
-                          <button onClick={() => setStatus(pid, 'inactive')} className="rounded px-2 py-1 text-xs bg-slate-700 hover:bg-slate-600 text-white">Неактивен</button>
-                          <button onClick={() => setStatus(pid, 'sold')} className="rounded px-2 py-1 text-xs bg-amber-700 hover:bg-amber-600 text-white">Продадено</button>
+                          <button onClick={() => setStatus(pid, 'active')} disabled={statusLoading === pid} className={`rounded px-2 py-1 text-xs font-semibold ${draft.productStatus === 'active' ? 'bg-emerald-500 ring-1 ring-emerald-300' : 'bg-emerald-700 hover:bg-emerald-600'} text-white disabled:opacity-50`}>Активен</button>
+                          <button onClick={() => setStatus(pid, 'inactive')} disabled={statusLoading === pid} className={`rounded px-2 py-1 text-xs font-semibold ${draft.productStatus === 'inactive' ? 'bg-slate-500 ring-1 ring-slate-300' : 'bg-slate-700 hover:bg-slate-600'} text-white disabled:opacity-50`}>Неактивен</button>
+                          <button onClick={() => setStatus(pid, 'sold')} disabled={statusLoading === pid} className={`rounded px-2 py-1 text-xs font-semibold ${draft.productStatus === 'sold' ? 'bg-amber-500 ring-1 ring-amber-300' : 'bg-amber-700 hover:bg-amber-600'} text-white disabled:opacity-50`}>Продадено</button>
                         </>
                       )}
                       <button onClick={() => remove(draft.id, pid)} className="rounded px-2 py-1 text-xs bg-red-700 hover:bg-red-600 text-white font-semibold">Избриши</button>
