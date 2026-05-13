@@ -410,7 +410,6 @@ function CrmPublishedTab() {
             {editing ? (
               <div className="space-y-3">
                 <div className="flex items-center gap-2">
-                  {pid && <span className="text-yellow-400 font-bold text-xs">KP-{String(pid).padStart(6, '0')}</span>}
                   <input value={ef.title} onChange={e => setEditForm(p => ({ ...p, title: e.target.value }))} className="flex-1 rounded border border-[#223653] bg-[#0b1727] px-2 py-1 text-sm text-white" />
                 </div>
                 <div className="grid grid-cols-2 gap-2">
@@ -442,9 +441,15 @@ function CrmPublishedTab() {
                     ))}
                   </div>
                 )}
-                <div className="flex gap-2">
-                  <button onClick={() => saveEdit(draft)} className="rounded px-3 py-1 text-sm bg-emerald-700 hover:bg-emerald-600 text-white font-semibold">Зачувај</button>
-                  <button onClick={cancelEdit} className="rounded px-3 py-1 text-sm bg-slate-700 hover:bg-slate-600 text-white">Откажи</button>
+                <div className="flex items-center justify-between gap-2">
+                  <div className="flex gap-2">
+                    <span className="text-cyan-400 font-bold text-xs">КП-{String(draft.id)}</span>
+                    {pid && <span className="text-yellow-400 font-bold text-xs">KP-{String(pid).padStart(6, '0')}</span>}
+                  </div>
+                  <div className="flex gap-2">
+                    <button onClick={() => saveEdit(draft)} className="rounded px-3 py-1 text-sm bg-emerald-700 hover:bg-emerald-600 text-white font-semibold">Зачувај</button>
+                    <button onClick={cancelEdit} className="rounded px-3 py-1 text-sm bg-slate-700 hover:bg-slate-600 text-white">Откажи</button>
+                  </div>
                 </div>
               </div>
             ) : (
@@ -452,8 +457,6 @@ function CrmPublishedTab() {
                 <div className="flex items-start gap-3">
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2 flex-wrap">
-                      <span className="text-cyan-400 font-bold text-xs">КП-{String(draft.id)}</span>
-                      {pid && <span className="text-yellow-400 font-bold text-xs">KP-{String(pid).padStart(6, '0')}</span>}
                       <a href={pid ? `/products/${pid}` : '#'} target="_blank" className="text-base font-bold text-white truncate hover:text-red-400">{draft.title}</a>
                     </div>
                     <div className="text-sm text-slate-300 truncate">
@@ -465,7 +468,11 @@ function CrmPublishedTab() {
                     </div>
                     <div className="text-sm text-slate-400 line-clamp-2">{draft.description}</div>
                   </div>
-                  <div className="flex flex-col gap-1 shrink-0">
+                  <div className="flex flex-col items-end gap-1 shrink-0">
+                    <div className="flex flex-wrap justify-end gap-x-2 gap-y-0.5">
+                      <span className="text-cyan-400 font-bold text-xs">КП-{String(draft.id)}</span>
+                      {pid && <span className="text-yellow-400 font-bold text-xs">KP-{String(pid).padStart(6, '0')}</span>}
+                    </div>
                     <button onClick={() => startEdit(draft)} className="rounded px-2 py-1 text-xs bg-cyan-700 hover:bg-cyan-600 text-white font-semibold">Уреди</button>
                     <div className="flex gap-1">
                       {pid && (
