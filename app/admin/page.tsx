@@ -279,59 +279,94 @@ function CrmDraftsTab() {
 }
 
 function CrmPublishedTab() {
-  const [imported, setImported] = useState<ImprtProduct[]>([]);
+  const [published, setPublished] = useState<(CrmDraft & { productId?: number; productStatus?: string })[]>([]);
 
-  const loadImported = async () => {
+  const loadPublished = async () => {
     try {
-      const r = await fetch('/api/admin/products?status=all');
-      const d = await r.json();
-      const system = d.products?.filter((p: any) => p.seller_email === 'kupiprodadi@system.mk') || [];
-      setImported(system.map((p: any) => ({ id: p.id, title: p.title, price: p.price, status: p.status, url: `/products/${p.id}` })));
+      const [dr, pr] = await Promise.all([
+        fetch('/api/crm/drafts?status=published').then(r => r.json()),
+        fetch('/api/admin/products?status=all').then(r => r.json()).catch(() => ({ products: [] })),
+      ]);
+      const productMap = new Map(
+        (pr.products || [])
+          .filter((p: any) => p.seller_email === 'kupiprodadi@system.mk')
+          .map((p: any) => [p.title.toLowerCase().trim(), { id: p.id, status: p.status }])
+      );
+      const list: any[] = (dr.drafts || []).map((d: any) => {
+        const match = productMap.get(d.title.toLowerCase().trim());
+        return { ...d, productId: match?.id, productStatus: match?.status || 'active' };
+      });
+      setPublished(list);
     } catch {}
   };
 
-  useEffect(() => { loadImported(); }, []);
+  useEffect(() => { loadPublished(); }, []);
 
-  const removeProduct = async (id: number) => {
-    if (!confirm('Избриши го огласот? Ќе се избрише од crm_drafts и од products.')) return;
+  const remove = async (draftId: number, productId?: number) => {
+    if (!confirm('Избриши го огласот?')) return;
     try {
-      await fetch(`/api/crm/products/${id}`, { method: 'DELETE' });
-      loadImported();
+      if (productId) await fetch(`/api/crm/products/${productId}`, { method: 'DELETE' });
+      await fetch(`/api/crm/drafts/${draftId}`, { method: 'DELETE' });
+      loadPublished();
     } catch {}
   };
 
-  const setStatus = async (id: number, status: string) => {
+  const setStatus = async (productId: number, status: string) => {
+    if (!productId) return;
     try {
-      await fetch(`/api/crm/products/${id}`, {
+      await fetch(`/api/crm/products/${productId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status }),
       });
-      loadImported();
+      loadPublished();
     } catch {}
+  };
+
+  const draftImages = (draft: CrmDraft): string[] => {
+    try { return JSON.parse(draft.images); } catch { return []; }
   };
 
   return (
     <div className="rounded-xl border border-[#1d2c43] bg-[#081223] p-5">
       <h2 className="mb-4 text-lg font-bold text-emerald-400">✅ CRM Објавени</h2>
-      <p className="mb-3 text-xs text-slate-500">Историја на објавени огласи преку CRM</p>
-      {imported.length === 0 && <p className="text-sm text-slate-400">Нема објавени огласи.</p>}
+      {published.length === 0 && <p className="text-sm text-slate-400">Нема објавени огласи.</p>}
       <div className="space-y-2">
-        {imported.map((ad) => (
-          <div key={ad.id} className="flex items-center justify-between rounded-lg border border-[#223653] bg-[#0b1727] px-4 py-3">
-            <div className="min-w-0 flex-1">
-              <div className="flex items-center gap-2">
-                <span className="text-yellow-400 font-bold text-xs">KP-{String(ad.id).padStart(6, '0')}</span>
-                <a href={ad.url} target="_blank" className="truncate text-sm font-semibold text-white hover:text-red-400">{ad.title}</a>
+        {published.map((draft) => (
+          <div key={draft.id} className="rounded-lg border border-[#223653] bg-[#0b1727] px-4 py-3">
+            <div className="flex items-start gap-3">
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center gap-2">
+                  {draft.productId && <span className="text-yellow-400 font-bold text-xs">KP-{String(draft.productId).padStart(6, '0')}</span>}
+                  <a href={draft.productId ? `/products/${draft.productId}` : '#'} target="_blank" className="text-base font-bold text-white truncate hover:text-red-400">{draft.title}</a>
+                </div>
+                <div className="text-sm text-slate-300 truncate">
+                  {draft.price && <span>💰 {draft.price} </span>}
+                  {draft.city && <span>📍 {draft.city} </span>}
+                  {draft.seller_name && <span>👤 {draft.seller_name} </span>}
+                  {draft.phone && <span>📞 {draft.phone} </span>}
+                  {draft.source && <span>🔗 {draft.source}</span>}
+                </div>
+                <div className="text-sm text-slate-400 line-clamp-2">{draft.description}</div>
               </div>
-              <p className="text-xs text-slate-400">{ad.price.toLocaleString()} дин · {ad.status}</p>
+              <div className="flex items-center gap-1 shrink-0">
+                {draft.productId && (
+                  <>
+                    <button onClick={() => setStatus(draft.productId!, 'active')} className="rounded px-2 py-1 text-xs bg-emerald-700 hover:bg-emerald-600 text-white">Активен</button>
+                    <button onClick={() => setStatus(draft.productId!, 'inactive')} className="rounded px-2 py-1 text-xs bg-slate-700 hover:bg-slate-600 text-white">Неактивен</button>
+                    <button onClick={() => setStatus(draft.productId!, 'sold')} className="rounded px-2 py-1 text-xs bg-amber-700 hover:bg-amber-600 text-white">Продадено</button>
+                  </>
+                )}
+                <button onClick={() => remove(draft.id, draft.productId)} className="rounded px-2 py-1 text-xs bg-red-700 hover:bg-red-600 text-white">✕</button>
+              </div>
             </div>
-            <div className="flex gap-1 shrink-0 ml-3">
-              <button onClick={() => setStatus(ad.id, 'active')} className="rounded px-2 py-1 text-xs bg-emerald-700 hover:bg-emerald-600 text-white">Активен</button>
-              <button onClick={() => setStatus(ad.id, 'inactive')} className="rounded px-2 py-1 text-xs bg-slate-700 hover:bg-slate-600 text-white">Неактивен</button>
-              <button onClick={() => setStatus(ad.id, 'sold')} className="rounded px-2 py-1 text-xs bg-amber-700 hover:bg-amber-600 text-white">Продадено</button>
-              <button onClick={() => removeProduct(ad.id)} className="rounded px-2 py-1 text-xs bg-red-700 hover:bg-red-600 text-white">✕</button>
-            </div>
+            {draftImages(draft).length > 0 && (
+              <div className="mt-2 flex gap-2">
+                {draftImages(draft).slice(0, 5).map((url, i) => (
+                  <img key={i} src={url} className="h-24 w-24 rounded object-cover border border-[#223653]" />
+                ))}
+              </div>
+            )}
           </div>
         ))}
       </div>
