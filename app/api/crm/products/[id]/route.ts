@@ -28,14 +28,36 @@ export async function PATCH(
       return NextResponse.json({ error: 'Немате дозвола' }, { status: 403 });
     }
 
-    const { status } = await request.json();
-    const validStatuses = ['active', 'inactive', 'sold'];
-    if (!validStatuses.includes(status)) {
-      return NextResponse.json({ error: 'Невалиден статус' }, { status: 400 });
+    const body = await request.json();
+    const { status, title, description, price, currency, category, subcategory, city, contact_name, contact_phone } = body;
+
+    if (status) {
+      const validStatuses = ['active', 'inactive', 'sold'];
+      if (!validStatuses.includes(status)) {
+        return NextResponse.json({ error: 'Невалиден статус' }, { status: 400 });
+      }
+      db.prepare('UPDATE products SET status = ? WHERE id = ?').run(status, productId);
     }
 
-    db.prepare('UPDATE products SET status = ? WHERE id = ?').run(status, productId);
-    return NextResponse.json({ message: `Статусот е сменет во ${status}` }, { status: 200 });
+    if (title != null || description != null || price != null || currency != null || category != null || subcategory != null || city != null || contact_name != null || contact_phone != null) {
+      const fields: string[] = [];
+      const vals: any[] = [];
+      if (title != null) { fields.push('title = ?'); vals.push(title); }
+      if (description != null) { fields.push('description = ?'); vals.push(description); }
+      if (price != null) { fields.push('price = ?'); vals.push(price); }
+      if (currency != null) { fields.push('currency = ?'); vals.push(currency); }
+      if (category != null) { fields.push('category = ?'); vals.push(category); }
+      if (subcategory != null) { fields.push('subcategory = ?'); vals.push(subcategory); }
+      if (city != null) { fields.push('city = ?'); vals.push(city); }
+      if (contact_name != null) { fields.push('contact_name = ?'); vals.push(contact_name); }
+      if (contact_phone != null) { fields.push('contact_phone = ?'); vals.push(contact_phone); }
+      if (fields.length > 0) {
+        vals.push(productId);
+        db.prepare(`UPDATE products SET ${fields.join(', ')} WHERE id = ?`).run(...vals);
+      }
+    }
+
+    return NextResponse.json({ message: 'Огласот е ажуриран' }, { status: 200 });
   } catch (error) {
     return NextResponse.json({ error: 'Грешка', details: String(error) }, { status: 500 });
   }

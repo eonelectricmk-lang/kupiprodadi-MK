@@ -281,6 +281,15 @@ function CrmDraftsTab() {
 
 function CrmPublishedTab() {
   const [published, setPublished] = useState<(CrmDraft & { productStatus?: string })[]>([]);
+  const [editId, setEditId] = useState<number | null>(null);
+  const [editForm, setEditForm] = useState<Record<string, string>>({});
+  const [catOpts, setCatOpts] = useState<Array<{ name: string; slug: string; subcategories: Array<{ name: string; slug: string }> }>>([]);
+
+  useEffect(() => {
+    fetch('/api/categories').then(r => r.json()).then(d => {
+      if (Array.isArray(d?.categories)) setCatOpts(d.categories);
+    }).catch(() => {});
+  }, []);
 
   const loadPublished = async () => {
     try {
@@ -322,6 +331,62 @@ function CrmPublishedTab() {
     } catch {}
   };
 
+  const startEdit = (draft: any) => {
+    setEditId(draft.id);
+    setEditForm({
+      title: draft.title,
+      description: draft.description,
+      price: draft.price,
+      category: draft.category,
+      subcategory: '',
+      seller_name: draft.seller_name || '',
+      phone: draft.phone || '',
+      city: draft.city || '',
+    });
+  };
+
+  const saveEdit = async (draft: any) => {
+    const pid = draft.product_id;
+    try {
+      if (pid) {
+        await fetch(`/api/crm/products/${pid}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            title: editForm.title,
+            description: editForm.description,
+            price: parseFloat(editForm.price.replace(/[^0-9.,]/g, '')) || 0,
+            category: editForm.category,
+            subcategory: editForm.subcategory,
+            city: editForm.city,
+            contact_name: editForm.seller_name,
+            contact_phone: editForm.phone,
+          }),
+        });
+      }
+      await fetch(`/api/crm/drafts/${draft.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title: editForm.title,
+          description: editForm.description,
+          price: editForm.price,
+          category: editForm.category,
+          seller_name: editForm.seller_name,
+          phone: editForm.phone,
+          city: editForm.city,
+        }),
+      });
+      setEditId(null);
+      loadPublished();
+    } catch {}
+  };
+
+  const cancelEdit = () => {
+    setEditId(null);
+    setEditForm({});
+  };
+
   const draftImages = (draft: CrmDraft): string[] => {
     try { return JSON.parse(draft.images); } catch { return []; }
   };
@@ -333,40 +398,79 @@ function CrmPublishedTab() {
       <div className="space-y-2">
         {published.map((draft) => {
           const pid = draft.product_id;
+          const editing = editId === draft.id;
+          const ef = editForm;
           return (
           <div key={draft.id} className="rounded-lg border border-[#223653] bg-[#0b1727] px-4 py-3">
-            <div className="flex items-start gap-3">
-              <div className="min-w-0 flex-1">
+            {editing ? (
+              <div className="space-y-3">
                 <div className="flex items-center gap-2">
                   {pid && <span className="text-yellow-400 font-bold text-xs">KP-{String(pid).padStart(6, '0')}</span>}
-                  <a href={pid ? `/products/${pid}` : '#'} target="_blank" className="text-base font-bold text-white truncate hover:text-red-400">{draft.title}</a>
+                  <input value={ef.title} onChange={e => setEditForm(p => ({ ...p, title: e.target.value }))} className="flex-1 rounded border border-[#223653] bg-[#0b1727] px-2 py-1 text-sm text-white" />
                 </div>
-                <div className="text-sm text-slate-300 truncate">
-                  {draft.price && <span>💰 {draft.price} </span>}
-                  {draft.city && <span>📍 {draft.city} </span>}
-                  {draft.seller_name && <span>👤 {draft.seller_name} </span>}
-                  {draft.phone && <span>📞 {draft.phone} </span>}
-                  {draft.source && <span>🔗 {draft.source}</span>}
+                <div className="grid grid-cols-2 gap-2">
+                  <input value={ef.price} onChange={e => setEditForm(p => ({ ...p, price: e.target.value }))} className="rounded border border-[#223653] bg-[#0b1727] px-2 py-1 text-sm text-white" placeholder="Цена" />
+                  <input value={ef.city} onChange={e => setEditForm(p => ({ ...p, city: e.target.value }))} className="rounded border border-[#223653] bg-[#0b1727] px-2 py-1 text-sm text-white" placeholder="Град" />
+                  <input value={ef.seller_name} onChange={e => setEditForm(p => ({ ...p, seller_name: e.target.value }))} className="rounded border border-[#223653] bg-[#0b1727] px-2 py-1 text-sm text-white" placeholder="Продавач" />
+                  <input value={ef.phone} onChange={e => setEditForm(p => ({ ...p, phone: e.target.value }))} className="rounded border border-[#223653] bg-[#0b1727] px-2 py-1 text-sm text-white" placeholder="Телефон" />
                 </div>
-                <div className="text-sm text-slate-400 line-clamp-2">{draft.description}</div>
+                <div className="grid grid-cols-2 gap-2">
+                  <select value={ef.category} onChange={e => setEditForm(p => ({ ...p, category: e.target.value, subcategory: '' }))} className="rounded border border-[#223653] bg-[#0b1727] px-2 py-1 text-sm text-white">
+                    <option value="">Категорија</option>
+                    {catOpts.map(c => <option key={c.slug} value={c.name}>{c.name}</option>)}
+                  </select>
+                  <select value={ef.subcategory} onChange={e => setEditForm(p => ({ ...p, subcategory: e.target.value }))} className="rounded border border-[#223653] bg-[#0b1727] px-2 py-1 text-sm text-white">
+                    <option value="">Подкатегорија</option>
+                    {catOpts.find(c => c.name === ef.category)?.subcategories.map(sc => (
+                      <option key={sc.slug} value={sc.slug}>{sc.name}</option>
+                    ))}
+                  </select>
+                </div>
+                <textarea value={ef.description} onChange={e => setEditForm(p => ({ ...p, description: e.target.value }))} rows={3} className="w-full rounded border border-[#223653] bg-[#0b1727] px-2 py-1 text-sm text-white" placeholder="Опис" />
+                <div className="flex gap-2">
+                  <button onClick={() => saveEdit(draft)} className="rounded px-3 py-1 text-sm bg-emerald-700 hover:bg-emerald-600 text-white font-semibold">Зачувај</button>
+                  <button onClick={cancelEdit} className="rounded px-3 py-1 text-sm bg-slate-700 hover:bg-slate-600 text-white">Откажи</button>
+                </div>
               </div>
-              <div className="flex items-center gap-1 shrink-0">
-                {pid && (
-                  <>
-                    <button onClick={() => setStatus(pid, 'active')} className="rounded px-2 py-1 text-xs bg-emerald-700 hover:bg-emerald-600 text-white">Активен</button>
-                    <button onClick={() => setStatus(pid, 'inactive')} className="rounded px-2 py-1 text-xs bg-slate-700 hover:bg-slate-600 text-white">Неактивен</button>
-                    <button onClick={() => setStatus(pid, 'sold')} className="rounded px-2 py-1 text-xs bg-amber-700 hover:bg-amber-600 text-white">Продадено</button>
-                  </>
+            ) : (
+              <>
+                <div className="flex items-start gap-3">
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-2">
+                      {pid && <span className="text-yellow-400 font-bold text-xs">KP-{String(pid).padStart(6, '0')}</span>}
+                      <a href={pid ? `/products/${pid}` : '#'} target="_blank" className="text-base font-bold text-white truncate hover:text-red-400">{draft.title}</a>
+                    </div>
+                    <div className="text-sm text-slate-300 truncate">
+                      {draft.price && <span>💰 {draft.price} </span>}
+                      {draft.city && <span>📍 {draft.city} </span>}
+                      {draft.seller_name && <span>👤 {draft.seller_name} </span>}
+                      {draft.phone && <span>📞 {draft.phone} </span>}
+                      {draft.source && <span>🔗 {draft.source}</span>}
+                    </div>
+                    <div className="text-sm text-slate-400 line-clamp-2">{draft.description}</div>
+                  </div>
+                  <div className="flex flex-col gap-1 shrink-0">
+                    <button onClick={() => startEdit(draft)} className="rounded px-2 py-1 text-xs bg-cyan-700 hover:bg-cyan-600 text-white font-semibold">Уреди</button>
+                    <div className="flex gap-1">
+                      {pid && (
+                        <>
+                          <button onClick={() => setStatus(pid, 'active')} className="rounded px-2 py-1 text-xs bg-emerald-700 hover:bg-emerald-600 text-white">Активен</button>
+                          <button onClick={() => setStatus(pid, 'inactive')} className="rounded px-2 py-1 text-xs bg-slate-700 hover:bg-slate-600 text-white">Неактивен</button>
+                          <button onClick={() => setStatus(pid, 'sold')} className="rounded px-2 py-1 text-xs bg-amber-700 hover:bg-amber-600 text-white">Продадено</button>
+                        </>
+                      )}
+                      <button onClick={() => remove(draft.id, pid)} className="rounded px-2 py-1 text-xs bg-red-700 hover:bg-red-600 text-white font-semibold">Избриши</button>
+                    </div>
+                  </div>
+                </div>
+                {draftImages(draft).length > 0 && (
+                  <div className="mt-2 flex gap-2">
+                    {draftImages(draft).slice(0, 5).map((url, i) => (
+                      <img key={i} src={url} className="h-24 w-24 rounded object-cover border border-[#223653]" />
+                    ))}
+                  </div>
                 )}
-                <button onClick={() => remove(draft.id, pid)} className="rounded px-2 py-1 text-xs bg-red-700 hover:bg-red-600 text-white font-semibold">Избриши оглас</button>
-              </div>
-            </div>
-            {draftImages(draft).length > 0 && (
-              <div className="mt-2 flex gap-2">
-                {draftImages(draft).slice(0, 5).map((url, i) => (
-                  <img key={i} src={url} className="h-24 w-24 rounded object-cover border border-[#223653]" />
-                ))}
-              </div>
+              </>
             )}
           </div>
           );
