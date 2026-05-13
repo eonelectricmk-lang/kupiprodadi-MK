@@ -107,8 +107,8 @@ const TABS = [
   { id: 'categories', label: 'Категории' },
   { id: 'homepage', label: 'Уредување банери' },
   { id: 'banners', label: 'Голем банер' },
-  { id: 'crm-drafts', label: 'CRM Преземени' },
-  { id: 'crm-published', label: 'CRM Објавени' },
+  { id: 'crm-drafts', label: 'Преземени' },
+  { id: 'crm-published', label: 'Објавени' },
 ] as const;
 
 const CATEGORY_ICON_OPTIONS = [
@@ -228,7 +228,7 @@ function CrmDraftsTab() {
 
   return (
     <div className="rounded-xl border border-[#1d2c43] bg-[#081223] p-5">
-      <h2 className="mb-4 text-lg font-bold text-amber-400">📋 CRM Преземени</h2>
+      <h2 className="mb-4 text-lg font-bold text-amber-400">📋 Преземени огласи</h2>
       {drafts.length === 0 && <p className="text-sm text-slate-400">Нема преземени огласи. Испрати преку extension-от.</p>}
       <div className="space-y-2">
         {drafts.map((draft) => {
@@ -294,25 +294,10 @@ function CrmPublishedTab() {
   const loadPublished = async () => {
     try {
       const dr = await fetch('/api/crm/drafts?status=published').then(r => r.json());
-      const pr = await fetch('/api/admin/products?status=all').then(r => r.json()).catch(() => ({ products: [] }));
-      const productStatus = new Map(
-        (pr.products || [])
-          .filter((p: any) => p.seller_email === 'kupiprodadi@system.mk')
-          .map((p: any) => [p.id, p.status])
-      );
-      const productByTitle = new Map(
-        (pr.products || [])
-          .filter((p: any) => p.seller_email === 'kupiprodadi@system.mk')
-          .map((p: any) => [p.title.toLowerCase().trim(), p.id])
-      );
-      const list: any[] = (dr.drafts || []).map((d: any) => {
-        const matchedPid = d.product_id || productByTitle.get(d.title.toLowerCase().trim()) || null;
-        return {
-          ...d,
-          product_id: matchedPid,
-          productStatus: matchedPid ? (productStatus.get(matchedPid) || 'active') : 'active',
-        };
-      });
+      const list: any[] = (dr.drafts || []).map((d: any) => ({
+        ...d,
+        productStatus: d.product_status || (d.product_id ? 'active' : 'unknown'),
+      }));
       setPublished(list);
     } catch {}
   };
@@ -413,7 +398,7 @@ function CrmPublishedTab() {
 
   return (
     <div className="rounded-xl border border-[#1d2c43] bg-[#081223] p-5">
-      <h2 className="mb-4 text-lg font-bold text-emerald-400">✅ CRM Објавени</h2>
+      <h2 className="mb-4 text-lg font-bold text-emerald-400">✅ Објавени огласи</h2>
       {published.length === 0 && <p className="text-sm text-slate-400">Нема објавени огласи.</p>}
       <div className="space-y-2">
         {published.map((draft) => {
@@ -467,7 +452,7 @@ function CrmPublishedTab() {
                 <div className="flex items-start gap-3">
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2 flex-wrap">
-                      <span className="text-cyan-400 font-bold text-xs">CRM-{String(draft.id)}</span>
+                      <span className="text-cyan-400 font-bold text-xs">КП-{String(draft.id)}</span>
                       {pid && <span className="text-yellow-400 font-bold text-xs">KP-{String(pid).padStart(6, '0')}</span>}
                       <a href={pid ? `/products/${pid}` : '#'} target="_blank" className="text-base font-bold text-white truncate hover:text-red-400">{draft.title}</a>
                     </div>
