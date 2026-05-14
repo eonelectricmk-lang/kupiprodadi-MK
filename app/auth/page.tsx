@@ -13,7 +13,7 @@ export default function AuthPage() {
   const router = useRouter();
   const [isLogin, setIsLogin] = useState(true);
   const { dark } = useTheme();
-  const [loggedUser, setLoggedUser] = useState<{ name: string; email: string } | null>(null);
+  const [loggedUser, setLoggedUser] = useState<{ name: string; email: string; avatar_url?: string } | null>(null);
 
   useEffect(() => {
     const stored = localStorage.getItem('user');
@@ -86,7 +86,11 @@ export default function AuthPage() {
                     Најавен профил
                   </div>
                   <div className="mt-6 flex flex-col items-center text-center">
-                    <UserCircle2 className="h-20 w-20 text-slate-400" />
+                    {loggedUser.avatar_url ? (
+                      <img src={loggedUser.avatar_url} alt="" className="h-20 w-20 rounded-full object-cover border-2 border-[#223653]" />
+                    ) : (
+                      <UserCircle2 className="h-20 w-20 text-slate-400" />
+                    )}
                     <h2 className={`mt-4 text-2xl font-black tracking-tight sm:text-3xl ${dark ? 'text-white' : 'text-slate-900'}`}>
                       {loggedUser.name}
                     </h2>
@@ -100,7 +104,7 @@ export default function AuthPage() {
                       <Button onClick={() => router.push('/profile')} className="w-full rounded-xl bg-cyan-700 py-3 text-sm font-bold text-white hover:bg-cyan-600">
                         Оди на профил
                       </Button>
-                      <button onClick={logout} className="flex items-center justify-center gap-2 rounded-xl border border-red-700 bg-red-700/20 px-4 py-3 text-sm font-semibold text-red-400 transition hover:bg-red-700/40">
+                      <button onClick={logout} className={`flex items-center justify-center gap-2 rounded-xl border px-4 py-3 text-sm font-semibold transition ${dark ? 'border-red-700 bg-red-700/20 text-white hover:bg-red-700/40' : 'border-red-600 bg-red-600 text-white hover:bg-red-700'}`}>
                         <LogOut className="h-4 w-4" /> Одјави се
                       </button>
                     </div>
