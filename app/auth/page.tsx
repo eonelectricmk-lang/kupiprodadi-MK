@@ -1,16 +1,32 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { Apple, BadgeCheck, Heart, MessageSquare, ShieldCheck, Sparkles } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { Apple, BadgeCheck, Heart, LogOut, MessageSquare, ShieldCheck, Sparkles, UserCircle2 } from 'lucide-react';
 import Header from '../components/Header';
 import AuthForm from '../components/AuthForm';
-import { Container } from '../components/ui';
+import { Container, Button } from '../components/ui';
 import { useTheme } from '../context/ThemeContext';
 
 export default function AuthPage() {
+  const router = useRouter();
   const [isLogin, setIsLogin] = useState(true);
   const { dark } = useTheme();
+  const [loggedUser, setLoggedUser] = useState<{ name: string; email: string } | null>(null);
+
+  useEffect(() => {
+    const stored = localStorage.getItem('user');
+    if (stored) {
+      try { setLoggedUser(JSON.parse(stored)); } catch { setLoggedUser(null); }
+    }
+  }, []);
+
+  const logout = () => {
+    localStorage.removeItem('user');
+    setLoggedUser(null);
+    router.push('/');
+  };
 
   return (
     <>
@@ -63,95 +79,126 @@ export default function AuthPage() {
             </section>
 
             <section className={`overflow-hidden rounded-[28px] border shadow-2xl lg:mt-2 ${dark ? 'border-[#1d2c43] bg-[#0b1423] shadow-black/20' : 'border-slate-500 bg-white shadow-slate-300/40'}`}>
-              <div className={`border-b px-5 py-4 sm:px-8 ${dark ? 'border-[#1d2c43] bg-[#08101c]' : 'border-slate-500 bg-white'}`}>
-                <div className={`inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold ${dark ? 'border border-[#223653] bg-[#0b1727] text-slate-300' : 'border border-slate-300 bg-white text-slate-900'}`}>
-                  <ShieldCheck className="h-4 w-4 text-emerald-400" />
-                  Брз и безбеден пристап
+              {loggedUser ? (
+                <div className="p-8">
+                  <div className={`inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold ${dark ? 'border border-[#223653] bg-[#0b1727] text-slate-300' : 'border border-slate-300 bg-white text-slate-900'}`}>
+                    <ShieldCheck className="h-4 w-4 text-emerald-400" />
+                    Најавен профил
+                  </div>
+                  <div className="mt-6 flex flex-col items-center text-center">
+                    <UserCircle2 className="h-20 w-20 text-slate-400" />
+                    <h2 className={`mt-4 text-2xl font-black tracking-tight sm:text-3xl ${dark ? 'text-white' : 'text-slate-900'}`}>
+                      {loggedUser.name}
+                    </h2>
+                    <p className={`mt-1 text-sm ${dark ? 'text-slate-400' : 'text-slate-600'}`}>
+                      {loggedUser.email}
+                    </p>
+                    <p className={`mt-2 text-sm font-medium ${dark ? 'text-emerald-400' : 'text-emerald-700'}`}>
+                      Веќе сте најавени
+                    </p>
+                    <div className="mt-6 flex w-full flex-col gap-3">
+                      <Button onClick={() => router.push('/profile')} className="w-full rounded-xl bg-cyan-700 py-3 text-sm font-bold text-white hover:bg-cyan-600">
+                        Оди на профил
+                      </Button>
+                      <button onClick={logout} className="flex items-center justify-center gap-2 rounded-xl border border-red-700 bg-red-700/20 px-4 py-3 text-sm font-semibold text-red-400 transition hover:bg-red-700/40">
+                        <LogOut className="h-4 w-4" /> Одјави се
+                      </button>
+                    </div>
+                  </div>
                 </div>
-                <h2 className={`mt-4 text-2xl font-black tracking-tight sm:text-3xl ${dark ? 'text-white' : 'text-slate-900'}`}>
-                  {isLogin ? 'Најави се' : 'Регистрирај се'}
-                </h2>
-                <p className={`mt-2 text-sm leading-6 ${dark ? 'text-slate-400' : 'text-slate-600'}`}>
-                  Пристапи до сметката со една од опциите подолу или со е-пошта.
-                </p>
-              </div>
+              ) : (
+                <>
+                  <div className={`border-b px-5 py-4 sm:px-8 ${dark ? 'border-[#1d2c43] bg-[#08101c]' : 'border-slate-500 bg-white'}`}>
+                    <div className={`inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold ${dark ? 'border border-[#223653] bg-[#0b1727] text-slate-300' : 'border border-slate-300 bg-white text-slate-900'}`}>
+                      <ShieldCheck className="h-4 w-4 text-emerald-400" />
+                      Брз и безбеден пристап
+                    </div>
+                    <h2 className={`mt-4 text-2xl font-black tracking-tight sm:text-3xl ${dark ? 'text-white' : 'text-slate-900'}`}>
+                      {isLogin ? 'Најави се' : 'Регистрирај се'}
+                    </h2>
+                    <p className={`mt-2 text-sm leading-6 ${dark ? 'text-slate-400' : 'text-slate-600'}`}>
+                      Пристапи до сметката со една од опциите подолу или со е-пошта.
+                    </p>
+                  </div>
 
-              <div className="px-5 py-5 sm:px-8 sm:py-6">
-                <div className="grid gap-3">
-                  <button
-                    type="button"
-                    className="inline-flex items-center justify-center gap-3 rounded-2xl border border-slate-500 bg-white px-4 py-3 text-sm font-semibold text-slate-900 transition hover:bg-slate-50"
-                  >
-                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#ea4335] text-[11px] font-black leading-none text-white">
-                      G
-                    </span>
-                    Продолжи со Google
-                  </button>
-                  <button
-                    type="button"
-                    className="inline-flex items-center justify-center gap-3 rounded-2xl border border-slate-500 bg-white px-4 py-3 text-sm font-semibold text-slate-900 transition hover:bg-slate-50"
-                  >
-                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#1877F2] text-[12px] font-black leading-none text-white">
-                      f
-                    </span>
-                    Продолжи со Facebook
-                  </button>
-                  <button
-                    type="button"
-                    className="inline-flex items-center justify-center gap-3 rounded-2xl border border-slate-500 bg-white px-4 py-3 text-sm font-semibold text-slate-900 transition hover:bg-slate-50"
-                  >
-                    <Apple className="h-5 w-5 text-slate-900" />
-                    Продолжи со Apple
-                  </button>
-                </div>
+                  <div className="px-5 py-5 sm:px-8 sm:py-6">
+                    <div className="grid gap-3">
+                      <button
+                        type="button"
+                        className="inline-flex items-center justify-center gap-3 rounded-2xl border border-slate-500 bg-white px-4 py-3 text-sm font-semibold text-slate-900 transition hover:bg-slate-50"
+                      >
+                        <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#ea4335] text-[11px] font-black leading-none text-white">
+                          G
+                        </span>
+                        Продолжи со Google
+                      </button>
+                      <button
+                        type="button"
+                        className="inline-flex items-center justify-center gap-3 rounded-2xl border border-slate-500 bg-white px-4 py-3 text-sm font-semibold text-slate-900 transition hover:bg-slate-50"
+                      >
+                        <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#1877F2] text-[12px] font-black leading-none text-white">
+                          f
+                        </span>
+                        Продолжи со Facebook
+                      </button>
+                      <button
+                        type="button"
+                        className="inline-flex items-center justify-center gap-3 rounded-2xl border border-slate-500 bg-white px-4 py-3 text-sm font-semibold text-slate-900 transition hover:bg-slate-50"
+                      >
+                        <Apple className="h-5 w-5 text-slate-900" />
+                        Продолжи со Apple
+                      </button>
+                    </div>
 
-                <div className="my-6 flex items-center gap-4">
-                  <div className="h-px flex-1 bg-[#223653]" />
-                  <span className="text-sm font-bold uppercase tracking-[0.18em] text-slate-400">или</span>
-                  <div className="h-px flex-1 bg-[#223653]" />
-                </div>
+                    <div className="my-6 flex items-center gap-4">
+                      <div className="h-px flex-1 bg-[#223653]" />
+                      <span className="text-sm font-bold uppercase tracking-[0.18em] text-slate-400">или</span>
+                      <div className="h-px flex-1 bg-[#223653]" />
+                    </div>
 
-                <div className={`mb-4 grid grid-cols-2 rounded-2xl border p-1 ${dark ? 'border-[#1d2c43] bg-[#081223]' : 'border-slate-400 bg-slate-50'}`}>
-                  <button
-                    type="button"
-                    onClick={() => setIsLogin(true)}
-                    className={`rounded-xl px-4 py-3 text-sm font-semibold transition ${
-                      isLogin
-                        ? 'bg-red-600 text-white shadow-lg shadow-red-600/20'
-                        : dark
-                          ? 'text-slate-300 hover:text-white'
-                          : 'text-slate-500 hover:text-slate-900'
-                    }`}
-                  >
-                    Најава
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setIsLogin(false)}
-                    className={`rounded-xl px-4 py-3 text-sm font-semibold transition ${
-                      !isLogin
-                        ? 'bg-red-600 text-white shadow-lg shadow-red-600/20'
-                        : dark
-                          ? 'text-slate-300 hover:text-white'
-                          : 'text-slate-500 hover:text-slate-900'
-                    }`}
-                  >
-                    Регистрација
-                  </button>
-                </div>
+                    <div className={`mb-4 grid grid-cols-2 rounded-2xl border p-1 ${dark ? 'border-[#1d2c43] bg-[#081223]' : 'border-slate-400 bg-slate-50'}`}>
+                      <button
+                        type="button"
+                        onClick={() => setIsLogin(true)}
+                        className={`rounded-xl px-4 py-3 text-sm font-semibold transition ${
+                          isLogin
+                            ? 'bg-red-600 text-white shadow-lg shadow-red-600/20'
+                            : dark
+                              ? 'text-slate-300 hover:text-white'
+                              : 'text-slate-500 hover:text-slate-900'
+                        }`}
+                      >
+                        Најава
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setIsLogin(false)}
+                        className={`rounded-xl px-4 py-3 text-sm font-semibold transition ${
+                          !isLogin
+                            ? 'bg-red-600 text-white shadow-lg shadow-red-600/20'
+                            : dark
+                              ? 'text-slate-300 hover:text-white'
+                              : 'text-slate-500 hover:text-slate-900'
+                        }`}
+                      >
+                        Регистрација
+                      </button>
+                    </div>
 
-                <AuthForm type={isLogin ? 'login' : 'register'} />
+                    <AuthForm type={isLogin ? 'login' : 'register'} />
 
-                <div className={`mt-6 text-center text-xs leading-5 ${dark ? 'text-slate-500' : 'text-slate-600'}`}>
-                  <p>
-                    Со создавање сметка се согласуваш со нашите{' '}
-                    <Link href="/za-nas" className={`font-medium ${dark ? 'text-slate-300 hover:text-white' : 'text-slate-800 hover:text-slate-900'}`}>
-                      Услови за користење
-                    </Link>
-                    .
-                  </p>
-                </div>
-              </div>
+                    <div className={`mt-6 text-center text-xs leading-5 ${dark ? 'text-slate-500' : 'text-slate-600'}`}>
+                      <p>
+                        Со создавање сметка се согласуваш со нашите{' '}
+                        <Link href="/za-nas" className={`font-medium ${dark ? 'text-slate-300 hover:text-white' : 'text-slate-800 hover:text-slate-900'}`}>
+                          Услови за користење
+                        </Link>
+                        .
+                      </p>
+                    </div>
+                  </div>
+                </>
+              )}
             </section>
           </div>
         </Container>
