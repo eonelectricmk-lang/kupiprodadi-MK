@@ -223,6 +223,8 @@ function initializeDb() {
       ['contact_phone', 'TEXT'],
       ['contact_email', 'TEXT'],
       ['preferred_contact', 'TEXT'],
+      ['has_viber', 'BOOLEAN DEFAULT 0'],
+      ['has_whatsapp', 'BOOLEAN DEFAULT 0'],
     ];
 
     productColumns.forEach(([column, definition]) => {

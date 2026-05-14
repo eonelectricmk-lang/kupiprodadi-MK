@@ -30,6 +30,8 @@ export async function GET(
         p.contact_phone,
         p.contact_email,
         p.preferred_contact,
+        p.has_viber,
+        p.has_whatsapp,
         p.image_url,
         p.views,
         p.created_at,
@@ -143,6 +145,8 @@ export async function PATCH(
           contact_phone = ?,
           contact_email = ?,
           preferred_contact = ?,
+          has_viber = ?,
+          has_whatsapp = ?,
           image_url = ?,
           status = ?
       WHERE id = ?
@@ -173,6 +177,8 @@ export async function PATCH(
         payload.contact_phone || null,
         payload.contact_email || null,
         payload.preferred_contact || null,
+        payload.has_viber ? 1 : 0,
+        payload.has_whatsapp ? 1 : 0,
         primaryImage,
         payload.status || 'active',
         id,

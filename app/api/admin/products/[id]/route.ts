@@ -10,14 +10,23 @@ export async function PATCH(request: NextRequest, context: { params: Promise<{ i
     const db = getDb();
     const params = await context.params;
     const id = Number(params.id);
-    const { status } = await request.json();
+    const { status, has_viber, has_whatsapp } = await request.json();
 
-    if (!ALLOWED.has(status)) {
-      return NextResponse.json({ error: 'Невалиден статус' }, { status: 400 });
+    if (status !== undefined) {
+      if (!ALLOWED.has(status)) {
+        return NextResponse.json({ error: 'Невалиден статус' }, { status: 400 });
+      }
+      db.prepare(`UPDATE products SET status = ? WHERE id = ?`).run(status, id);
     }
 
-    db.prepare(`UPDATE products SET status = ? WHERE id = ?`).run(status, id);
-    return NextResponse.json({ message: 'Статусот е ажуриран' });
+    if (has_viber !== undefined) {
+      db.prepare(`UPDATE products SET has_viber = ? WHERE id = ?`).run(has_viber ? 1 : 0, id);
+    }
+    if (has_whatsapp !== undefined) {
+      db.prepare(`UPDATE products SET has_whatsapp = ? WHERE id = ?`).run(has_whatsapp ? 1 : 0, id);
+    }
+
+    return NextResponse.json({ message: 'Ажурирано' });
   } catch (error) {
     if (error instanceof Error && error.message === 'UNAUTHORIZED_ADMIN') {
       return NextResponse.json({ error: 'Нема дозвола' }, { status: 401 });
