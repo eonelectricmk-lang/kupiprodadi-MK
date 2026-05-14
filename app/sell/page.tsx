@@ -491,11 +491,6 @@ export default function SellPage() {
                   </div>
 
                   <div>
-                    <label className={labelClass}>Контакт лице</label>
-                    <Input value={formData.contactName} onChange={(e) => updateField('contactName', e.target.value)} placeholder="Твоето име" className={fieldClass} />
-                  </div>
-
-                  <div>
                     <label className={labelClass}>Телефон *</label>
                     <Input required type="tel" value={formData.phone} onChange={(e) => updateField('phone', e.target.value)} placeholder="+389 70 123 456" className={fieldClass} />
                     <div className="mt-2 flex gap-4">
