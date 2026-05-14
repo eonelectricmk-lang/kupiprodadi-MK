@@ -140,6 +140,25 @@ const CATEGORY_ICON_OPTIONS = [
   { value: 'package', label: 'Останато / пакет' },
 ] as const;
 
+function viberUrl(phone: string): string {
+  const digits = phone.replace(/\D/g, '');
+  if (digits.startsWith('389')) return `viber://chat?number=%2B${digits}`;
+  if (digits.startsWith('0')) return `viber://chat?number=%2B389${digits.slice(1)}`;
+  return `viber://chat?number=%2B389${digits}`;
+}
+
+function ViberButton({ phone }: { phone: string }) {
+  const url = viberUrl(phone);
+  return (
+    <a href={url} target="_blank" rel="noopener noreferrer" title="Отвори во Viber">
+      <span className="inline-flex items-center gap-0.5 rounded bg-purple-700/40 px-1.5 py-0.5 text-xs font-semibold text-purple-300 hover:bg-purple-600/60 transition cursor-pointer">
+        <svg viewBox="0 0 24 24" className="h-3.5 w-3.5 fill-current"><path d="M11.4 1.02c.35-.01.72 0 1.08.02 3.58.12 6.88 1.62 9.27 4.3a12.8 12.8 0 0 1 2.17 3.4c1.42 3.36 1.2 7.2-.6 10.38a12.56 12.56 0 0 1-2.16 3.02c-2.44 2.52-5.82 3.96-9.48 3.86-1.17-.04-2.32-.2-3.44-.52-1.2-.34-2.35-.8-3.44-1.38L.7 23.8l1.85-4.5a12.82 12.82 0 0 1-1.3-3.08 12.82 12.82 0 0 1-.22-5.55A12.6 12.6 0 0 1 5.55 2.9 12.49 12.49 0 0 1 11.4 1.02zm.34 4.05c-.14.03-.28.1-.35.22-.14.22-.15.5-.02.72.17.3.33.6.54.87.58.82 1.3 1.53 2.13 2.1.32.23.67.43 1.03.58.22.1.48.07.67-.07.24-.17.32-.5.19-.77a.57.57 0 0 0-.2-.23c-.44-.36-.85-.76-1.22-1.2-.3-.35-.56-.73-.77-1.14-.14-.27-.46-.46-.77-.4a.44.44 0 0 0-.23.15.4.4 0 0 0-.1.11zm-.12 2.4c-.02 0-.05 0-.07.02-.3.07-.55.3-.6.6-.07.37.18.73.56.8.07.02.14.05.2.1.3.2.58.42.84.66.25.26.48.54.68.84.1.16.26.28.44.3.22.03.44-.05.58-.22.17-.2.2-.49.07-.72a6.9 6.9 0 0 0-1.14-1.5 6.8 6.8 0 0 0-1.2-.88.44.44 0 0 0-.24-.07zm-1.56.36c-.18.03-.34.18-.38.37a.54.54 0 0 0 .23.58c.67.45 1.26 1 1.74 1.65.27.36.5.76.68 1.18.06.16.2.28.37.3.22.03.43-.08.54-.27.14-.22.12-.51-.04-.7a7.2 7.2 0 0 0-2.27-1.9.54.54 0 0 0-.31-.08zm-1.1.37c-.14.02-.28.1-.37.23-.15.22-.14.51.02.72.46.58.8 1.24 1.03 1.94.1.3.4.5.72.43.32-.06.53-.38.48-.7-.16-.82-.51-1.59-1.02-2.25a.63.63 0 0 0-.47-.26.5.5 0 0 0-.1-.01zm3.06 2.07c-.27.04-.54.22-.67.48-.16.32-.05.7.26.9.07.05.14.1.2.16a4.1 4.1 0 0 1 1 1.31c.1.2.3.34.53.34.25 0 .48-.14.57-.38.1-.27.02-.58-.2-.76a6 6 0 0 0-1.17-.9.73.73 0 0 0-.31-.1.67.67 0 0 0-.2-.04z"/></svg>
+                        Viber
+                      </span>
+    </a>
+  );
+}
+
 interface CrmDraft {
   id: number; title: string; description: string; price: string; city: string;
   category: string; seller_name: string; phone: string; images: string;
@@ -473,11 +492,9 @@ function CrmPublishedTab() {
                       {draft.city && <span>📍 {draft.city} </span>}
                       {draft.seller_name && <span>👤 {draft.seller_name} </span>}
                       {draft.phone && <span>📞 {draft.phone} </span>}
+                      {draft.phone && <ViberButton phone={draft.phone} />}
                       {draft.source && <span>🔗 {draft.source}</span>}
                     </div>
-                    <div className="text-sm text-slate-400 line-clamp-2">{draft.description}</div>
-                  </div>
-                  <div className="flex flex-col items-end gap-1 shrink-0">
                     <div className="flex flex-wrap justify-end gap-x-2 gap-y-0.5 items-center">
                       <span className="text-xs text-white font-semibold">Status</span>
                       <span className={`text-xs font-bold px-1.5 py-0.5 rounded ${draft.productStatus === 'active' ? 'bg-emerald-700 text-emerald-200' : draft.productStatus === 'sold' ? 'bg-amber-700 text-amber-200' : 'bg-slate-600 text-slate-200'}`}>{draft.productStatus === 'active' ? 'Активен' : draft.productStatus === 'sold' ? 'Продадено' : 'Неактивен'}</span>
@@ -495,7 +512,7 @@ function CrmPublishedTab() {
                       ) : (
                         <span className="text-xs text-slate-500">без продукт</span>
                       )}
-                      <button onClick={() => remove(draft.id, pid)} className="rounded px-2 py-1 text-xs bg-red-700 hover:bg-red-600 text-white font-semibold">Избриши</button>
+                      <button onClick={() => remove(draft.id, pid ?? undefined)} className="rounded px-2 py-1 text-xs bg-red-700 hover:bg-red-600 text-white font-semibold">Избриши</button>
                     </div>
                   </div>
                 </div>
