@@ -34,6 +34,7 @@ type FormData = {
   preferredContact: string;
   hasViber: boolean;
   hasWhatsapp: boolean;
+  hasTelegram: boolean;
 };
 
 const INITIAL_FORM: FormData = {
@@ -55,6 +56,7 @@ const INITIAL_FORM: FormData = {
   preferredContact: 'Телефон',
   hasViber: false,
   hasWhatsapp: false,
+  hasTelegram: false,
 };
 
 const CONDITIONS = ['Ново', 'Како ново', 'Многу добро', 'Добро', 'Користено', 'За делови'];
@@ -169,6 +171,7 @@ export default function SellPage() {
           preferredContact: product.preferred_contact || 'Телефон',
           hasViber: Boolean(product.has_viber),
           hasWhatsapp: Boolean(product.has_whatsapp),
+          hasTelegram: Boolean(product.has_telegram),
         });
 
         const loadedImages = Array.isArray(product.images) && product.images.length > 0
@@ -256,6 +259,7 @@ export default function SellPage() {
           preferred_contact: formData.preferredContact,
           has_viber: formData.hasViber ? 1 : 0,
           has_whatsapp: formData.hasWhatsapp ? 1 : 0,
+          has_telegram: formData.hasTelegram ? 1 : 0,
           location: [formData.city, formData.neighborhood].filter(Boolean).join(', '),
           image_url: imagePreviews[0] || null,
           images: imagePreviews,
@@ -486,11 +490,6 @@ export default function SellPage() {
                     <Input value={formData.neighborhood} onChange={(e) => updateField('neighborhood', e.target.value)} placeholder="на пр. Аеродром" className={fieldClass} />
                   </div>
 
-                  <div className="md:col-span-2">
-                    <label className={labelClass}>Напомена за локација</label>
-                    <Input value={formData.addressNote} onChange={(e) => updateField('addressNote', e.target.value)} placeholder="на пр. лично преземање кај City Mall" className={fieldClass} />
-                  </div>
-
                   <div>
                     <label className={labelClass}>Контакт лице</label>
                     <Input value={formData.contactName} onChange={(e) => updateField('contactName', e.target.value)} placeholder="Твоето име" className={fieldClass} />
@@ -506,12 +505,21 @@ export default function SellPage() {
                       </label>
                       <label className="flex items-center gap-2 cursor-pointer">
                         <input type="checkbox" checked={formData.hasWhatsapp} onChange={(e) => updateField('hasWhatsapp', e.target.checked)} className="h-4 w-4 rounded border-[#3a5276] bg-[#081223]" />
-                        <span className="text-sm font-semibold text-emerald-300">Имам WhatsApp</span>
+                        <span className="text-sm font-semibold text-emerald-300">WhatsApp</span>
+                      </label>
+                      <label className="flex items-center gap-2 cursor-pointer">
+                        <input type="checkbox" checked={formData.hasTelegram} onChange={(e) => updateField('hasTelegram', e.target.checked)} className="h-4 w-4 rounded border-[#3a5276] bg-[#081223]" />
+                        <span className="text-sm font-semibold text-sky-300">Telegram</span>
                       </label>
                     </div>
                   </div>
 
-                  <div className="md:col-span-2">
+                  <div>
+                    <label className={labelClass}>Контакт лице</label>
+                    <Input value={formData.contactName} onChange={(e) => updateField('contactName', e.target.value)} placeholder="Твоето име" className={fieldClass} />
+                  </div>
+
+                  <div>
                     <label className={labelClass}>Email</label>
                     <Input type="email" value={formData.email} onChange={(e) => updateField('email', e.target.value)} placeholder="ime@example.com" className={fieldClass} />
                   </div>

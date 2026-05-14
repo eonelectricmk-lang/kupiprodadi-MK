@@ -171,6 +171,7 @@ export async function POST(request: NextRequest) {
       preferred_contact,
       has_viber,
       has_whatsapp,
+      has_telegram,
       location,
       seller_id,
       image_url,
@@ -211,14 +212,15 @@ export async function POST(request: NextRequest) {
         contact_name,
         contact_phone,
         contact_email,
-      preferred_contact,
-      has_viber,
-      has_whatsapp,
-      seller_id,
+        preferred_contact,
+        has_viber,
+        has_whatsapp,
+        has_telegram,
+        seller_id,
         image_url,
         status
       )
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `);
 
     const insertImage = db.prepare(`
@@ -247,6 +249,7 @@ export async function POST(request: NextRequest) {
         preferred_contact || null,
         has_viber ? 1 : 0,
         has_whatsapp ? 1 : 0,
+        has_telegram ? 1 : 0,
         seller_id,
         primaryImage,
         'pending',
