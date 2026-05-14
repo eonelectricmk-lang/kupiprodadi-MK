@@ -4,6 +4,7 @@ import { Suspense, useEffect, useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Header from '@/app/components/Header';
 import { Button, Container, Input } from '@/app/components/ui';
+import { Check, Trash2, X } from 'lucide-react';
 import { useTheme } from '@/app/context/ThemeContext';
 import { slugify } from '@/lib/slugify';
 
@@ -697,6 +698,23 @@ function AdminPageContent() {
     await refreshMe();
   };
 
+  const deleteProduct = async (id: number) => {
+    if (!confirm('Дали си сигурен дека сакаш трајно да го избришеш овој оглас?')) return;
+    setBusy(true);
+    setMessage(null);
+    try {
+      const response = await fetch(`/api/admin/products/${id}`, { method: 'DELETE' });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data?.error || 'Не успеа бришење');
+      await refreshProducts(statusFilter);
+      setMessage('Огласот е трајно избришан.');
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : 'Грешка при бришење.');
+    } finally {
+      setBusy(false);
+    }
+  };
+
   const changeProductStatus = async (id: number, status: string) => {
     setBusy(true);
     setMessage(null);
@@ -1229,9 +1247,10 @@ function AdminPageContent() {
                                 {product.condition || 'Нема состојба'} · {product.delivery || 'Нема достава'} · {product.contact_email || product.seller_email}
                               </p>
                             </div>
-                            <div className="flex gap-2">
-                              <Button onClick={() => changeProductStatus(product.id, 'active')} className="admin-dark-button bg-green-600 hover:bg-green-500 text-white">Одобри</Button>
-                              <Button onClick={() => changeProductStatus(product.id, 'rejected')} className="admin-dark-button bg-red-700 hover:bg-red-600 text-white">Одбиј</Button>
+                            <div className="flex gap-2 flex-wrap">
+                              <Button onClick={() => changeProductStatus(product.id, 'active')} className="admin-dark-button bg-green-600 hover:bg-green-500 text-white"><Check size={16} className="inline-block" /> Одобри</Button>
+                              <Button onClick={() => changeProductStatus(product.id, 'rejected')} className="admin-dark-button bg-orange-700 hover:bg-orange-600 text-white"><X size={16} className="inline-block" /> Одбиј</Button>
+                              <Button onClick={() => deleteProduct(product.id)} className="admin-dark-button bg-red-900 hover:bg-red-800 text-white ring-1 ring-red-500"><Trash2 size={16} className="inline-block" /> Избриши</Button>
                               {product.status !== 'pending' && (
                                 <Button onClick={() => changeProductStatus(product.id, 'pending')} className="admin-dark-button bg-slate-700 hover:bg-slate-600 text-white">Врати pending</Button>
                               )}

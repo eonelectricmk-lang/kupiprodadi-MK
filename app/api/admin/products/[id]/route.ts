@@ -25,3 +25,25 @@ export async function PATCH(request: NextRequest, context: { params: Promise<{ i
     return NextResponse.json({ error: 'Грешка при менување статус', details: String(error) }, { status: 500 });
   }
 }
+
+export async function DELETE(request: NextRequest, context: { params: Promise<{ id: string }> }) {
+  try {
+    await requireAdmin();
+    const db = getDb();
+    const params = await context.params;
+    const id = Number(params.id);
+
+    db.prepare(`DELETE FROM product_images WHERE product_id = ?`).run(id);
+    db.prepare(`DELETE FROM cart WHERE product_id = ?`).run(id);
+    db.prepare(`DELETE FROM favorites WHERE product_id = ?`).run(id);
+    db.prepare(`DELETE FROM messages WHERE product_id = ?`).run(id);
+    db.prepare(`DELETE FROM products WHERE id = ?`).run(id);
+
+    return NextResponse.json({ message: 'Огласот е избришан' });
+  } catch (error) {
+    if (error instanceof Error && error.message === 'UNAUTHORIZED_ADMIN') {
+      return NextResponse.json({ error: 'Нема дозвола' }, { status: 401 });
+    }
+    return NextResponse.json({ error: 'Грешка при бришење', details: String(error) }, { status: 500 });
+  }
+}
