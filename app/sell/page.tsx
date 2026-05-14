@@ -518,6 +518,16 @@ export default function SellPage() {
                     <label className={labelClass}>Email</label>
                     <Input type="email" value={formData.email} onChange={(e) => updateField('email', e.target.value)} placeholder="ime@example.com" className={fieldClass} />
                   </div>
+
+                  <div className="flex items-end">
+                    <Button
+                      type="submit"
+                      disabled={submitting || loadingEdit}
+                      className="h-12 w-full bg-red-600 text-base font-bold hover:bg-red-700 disabled:bg-slate-700"
+                    >
+                      {submitting ? (editingProductId ? 'Зачувување...' : 'Објавување...') : editingProductId ? 'Зачувај измени' : 'Објави оглас'}
+                    </Button>
+                  </div>
                 </div>
               </section>
             </div>
