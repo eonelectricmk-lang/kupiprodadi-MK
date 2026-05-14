@@ -81,9 +81,9 @@ const CITIES = [
   'Гевгелија',
   'Ресен',
 ];
+const fieldClass = '!bg-[#0b1727] !border-[#223653] !text-white !placeholder:text-slate-500 focus:!border-red-500 focus:!ring-red-500/20 invalid:!border-red-500 invalid:!ring-2 invalid:!ring-red-500/40';
 
-const fieldClass = '!bg-[#0b1727] !border-[#223653] !text-white !placeholder:text-slate-500 focus:!border-red-500 focus:!ring-red-500/20';
-const selectClass = 'h-12 w-full rounded-lg border border-[#223653] bg-[#0b1727] px-3 text-sm text-white outline-none transition focus:border-red-500 focus:ring-2 focus:ring-red-500/20';
+const selectClass = 'h-12 w-full rounded-lg border border-[#223653] bg-[#0b1727] px-3 text-sm text-white outline-none transition focus:border-red-500 focus:ring-2 focus:ring-red-500/20 invalid:border-red-500 invalid:ring-2 invalid:ring-red-500/40';
 const labelClass = 'mb-2 block text-sm font-semibold text-slate-100';
 
 export default function SellPage() {
