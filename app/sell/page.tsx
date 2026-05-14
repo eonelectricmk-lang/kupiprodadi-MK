@@ -53,7 +53,7 @@ const INITIAL_FORM: FormData = {
   phone: '',
   email: '',
   preferredContact: 'Телефон',
-  hasViber: true,
+  hasViber: false,
   hasWhatsapp: false,
 };
 
@@ -465,17 +465,6 @@ export default function SellPage() {
                       ))}
                     </select>
                   </div>
-
-                  <div className="flex gap-4 items-end pb-2">
-                    <label className="flex items-center gap-2 cursor-pointer">
-                      <input type="checkbox" checked={formData.hasViber} onChange={(e) => updateField('hasViber', e.target.checked)} className="h-4 w-4 rounded border-[#3a5276] bg-[#081223]" />
-                      <span className="text-sm font-semibold text-purple-300">Имам Viber</span>
-                    </label>
-                    <label className="flex items-center gap-2 cursor-pointer">
-                      <input type="checkbox" checked={formData.hasWhatsapp} onChange={(e) => updateField('hasWhatsapp', e.target.checked)} className="h-4 w-4 rounded border-[#3a5276] bg-[#081223]" />
-                      <span className="text-sm font-semibold text-emerald-300">Имам WhatsApp</span>
-                    </label>
-                  </div>
                 </div>
               </section>
 
@@ -510,6 +499,16 @@ export default function SellPage() {
                   <div>
                     <label className={labelClass}>Телефон *</label>
                     <Input required type="tel" value={formData.phone} onChange={(e) => updateField('phone', e.target.value)} placeholder="+389 70 123 456" className={fieldClass} />
+                    <div className="mt-2 flex gap-4">
+                      <label className="flex items-center gap-2 cursor-pointer">
+                        <input type="checkbox" checked={formData.hasViber} onChange={(e) => updateField('hasViber', e.target.checked)} className="h-4 w-4 rounded border-[#3a5276] bg-[#081223]" />
+                        <span className="text-sm font-semibold text-purple-300">Имам Viber</span>
+                      </label>
+                      <label className="flex items-center gap-2 cursor-pointer">
+                        <input type="checkbox" checked={formData.hasWhatsapp} onChange={(e) => updateField('hasWhatsapp', e.target.checked)} className="h-4 w-4 rounded border-[#3a5276] bg-[#081223]" />
+                        <span className="text-sm font-semibold text-emerald-300">Имам WhatsApp</span>
+                      </label>
+                    </div>
                   </div>
 
                   <div className="md:col-span-2">
