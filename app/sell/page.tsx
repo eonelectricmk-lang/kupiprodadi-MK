@@ -44,7 +44,7 @@ const INITIAL_FORM: FormData = {
   condition: '',
   price: '',
   currency: '€',
-  negotiable: true,
+  negotiable: false,
   description: '',
   city: '',
   neighborhood: '',
@@ -81,9 +81,13 @@ const CITIES = [
   'Гевгелија',
   'Ресен',
 ];
-const fieldClass = '!bg-[#0b1727] !border-[#223653] !text-white !placeholder:text-slate-500 focus:!border-red-500 focus:!ring-red-500/20 invalid:!border-red-500 invalid:!ring-2 invalid:!ring-red-500/40';
+const fieldClass = '!bg-[#0b1727] !border-[#223653] !text-white !placeholder:text-slate-500 focus:!border-red-500 focus:!ring-red-500/20';
 
-const selectClass = 'h-12 w-full rounded-lg border border-[#223653] bg-[#0b1727] px-3 text-sm text-white outline-none transition focus:border-red-500 focus:ring-2 focus:ring-red-500/20 invalid:border-red-500 invalid:ring-2 invalid:ring-red-500/40';
+const selectClass = 'h-12 w-full rounded-lg border border-[#223653] bg-[#0b1727] px-3 text-sm text-white outline-none transition focus:border-red-500 focus:ring-2 focus:ring-red-500/20';
+
+const fieldErrorClass = '!bg-[#0b1727] !border-red-500 !ring-2 !ring-red-500/40 !text-white !placeholder:text-slate-500 focus:!border-red-500 focus:!ring-red-500/20';
+
+const selectErrorClass = 'h-12 w-full rounded-lg border border-red-500 bg-[#0b1727] px-3 text-sm text-white outline-none transition ring-2 ring-red-500/40 focus:border-red-500 focus:ring-2 focus:ring-red-500/20';
 const labelClass = 'mb-2 block text-sm font-semibold text-slate-100';
 
 export default function SellPage() {
@@ -92,6 +96,7 @@ export default function SellPage() {
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
   const [submitting, setSubmitting] = useState(false);
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
+  const [wasValidated, setWasValidated] = useState(false);
   const [editingProductId, setEditingProductId] = useState<number | null>(null);
   const [loadingEdit, setLoadingEdit] = useState(false);
   const [categories, setCategories] = useState<CategoryOption[]>(
@@ -230,6 +235,7 @@ export default function SellPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setWasValidated(true);
     setSubmitting(true);
     setStatusMessage(null);
 
