@@ -665,7 +665,7 @@ export default function ProductDetailsClient({ id }: { id: string }) {
 
               <div className="mt-3.5 grid gap-1.5">
                 {sellerPhone && (
-                  <a href={`tel:${sellerPhone}`} className="inline-flex h-9 items-center justify-center gap-2 rounded-lg bg-red-600 px-3 text-sm font-bold text-white hover:bg-red-500 transition shadow-lg shadow-red-900/20">
+                  <a href={`tel:${sellerPhone}`} className="inline-flex h-9 items-center justify-center gap-2 rounded-lg border border-blue-500/30 bg-blue-500/10 px-3 text-sm font-bold text-blue-400 hover:bg-blue-500/20 transition">
                     <Phone className="h-3.5 w-3.5" /> {sellerPhone}
                   </a>
                 )}
