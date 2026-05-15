@@ -732,6 +732,7 @@ type ReportRow = {
   reporter_email: string | null;
   seller_name: string;
   seller_id: number;
+  ip_address: string | null;
 };
 
 function ReportsTab() {
@@ -806,8 +807,10 @@ function ReportsTab() {
                 </div>
                 <div className="mt-0.5 text-sm text-slate-300">
                   <span>👤 Продавач: <span className="font-semibold text-blue-300">IDP:{report.seller_id}</span> {report.seller_name}</span>
-                  {report.reporter_name && <span> · Пријавил: {report.reporter_name}</span>}
+                  {report.reporter_name && <span> · Пријавил: <span className="font-semibold text-sky-300">{report.reporter_name}</span></span>}
+                  {report.reporter_email && <span> · {report.reporter_email}</span>}
                   <span> · {new Date(report.created_at).toLocaleDateString('mk-MK')}</span>
+                  {report.ip_address && <span> · IP: {report.ip_address}</span>}
                   {report.reason && <span> · <span className="text-slate-400">{report.reason}</span></span>}
                 </div>
               </div>

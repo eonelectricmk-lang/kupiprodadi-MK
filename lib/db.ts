@@ -250,6 +250,9 @@ function initializeDb() {
     addColumnIfMissing(db, 'products', 'sold_at', 'DATETIME DEFAULT NULL');
     addColumnIfMissing(db, 'crm_drafts', 'product_id', 'INTEGER DEFAULT NULL');
     addColumnIfMissing(db, 'crm_drafts', 'subcategory', 'TEXT');
+    addColumnIfMissing(db, 'reports', 'reporter_name', 'TEXT');
+    addColumnIfMissing(db, 'reports', 'reporter_email', 'TEXT');
+    addColumnIfMissing(db, 'reports', 'ip_address', 'TEXT');
     seedDefaultCategories(db);
     migrateCategorySlugs(db);
     addMissingSubcategories(db);

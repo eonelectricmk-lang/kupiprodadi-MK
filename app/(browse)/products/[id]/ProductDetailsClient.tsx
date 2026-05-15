@@ -138,6 +138,11 @@ export default function ProductDetailsClient({ id }: { id: string }) {
   const [isSaved, setIsSaved] = useState(false);
   const [copiedLink, setCopiedLink] = useState(false);
   const [reported, setReported] = useState(false);
+  const [showReportModal, setShowReportModal] = useState(false);
+  const [reportName, setReportName] = useState('');
+  const [reportEmail, setReportEmail] = useState('');
+  const [reportReason, setReportReason] = useState('');
+  const [sendingReport, setSendingReport] = useState(false);
   const [contactMessage, setContactMessage] = useState('');
   const [contactStatus, setContactStatus] = useState<string | null>(null);
   const [sendingMessage, setSendingMessage] = useState(false);
@@ -308,9 +313,15 @@ export default function ProductDetailsClient({ id }: { id: string }) {
     window.open(`https://www.facebook.com/sharer/sharer.php?u=${shareUrl}`, '_blank', 'noopener,noreferrer');
   };
 
-  const onReport = async () => {
+  const onReport = () => {
     if (!ad) return;
-    if (!confirm('Дали сте сигурни дека сакате да го пријавите овој оглас?')) return;
+    setReportReason('');
+    setShowReportModal(true);
+  };
+
+  const submitReport = async () => {
+    if (!ad) return;
+    setSendingReport(true);
     try {
       await fetch('/api/reports', {
         method: 'POST',
@@ -318,12 +329,14 @@ export default function ProductDetailsClient({ id }: { id: string }) {
         body: JSON.stringify({
           product_id: ad.id,
           reporter_id: loggedInUser?.id || null,
-          reason: 'Пријавено од корисник',
+          reason: reportReason || 'Пријавено од корисник',
         }),
       });
+      setShowReportModal(false);
       setReported(true);
       setTimeout(() => setReported(false), 3000);
     } catch {}
+    setSendingReport(false);
   };
 
   const onToggleFavorite = async () => {
@@ -734,6 +747,44 @@ export default function ProductDetailsClient({ id }: { id: string }) {
           </div>
         </div>
       </div>
+
+      {showReportModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60" onClick={() => setShowReportModal(false)}>
+          <div className="mx-4 w-full max-w-md rounded-xl border border-[#1d2c43] bg-[#0b1727] p-6 shadow-2xl" onClick={e => e.stopPropagation()}>
+            <h3 className="text-lg font-bold text-white">Пријавете злоупотреба</h3>
+            <p className="mt-1 text-sm text-slate-400">Овој оглас ќе биде прегледан од администратор.</p>
+
+            <div className="mt-5 space-y-4">
+              <div>
+                <label className="block text-sm font-semibold text-slate-200">Опишете ја причината за пријавата</label>
+                <textarea
+                  value={reportReason}
+                  onChange={e => setReportReason(e.target.value)}
+                  placeholder="Кратко објаснување зошто го пријавувате овој оглас..."
+                  rows={4}
+                  className="mt-1 w-full rounded-lg border border-[#223653] bg-[#081223] px-3 py-2 text-sm text-white outline-none focus:border-sky-500/50 resize-none"
+                />
+              </div>
+            </div>
+
+            <div className="mt-6 flex items-center gap-3">
+              <button
+                onClick={() => setShowReportModal(false)}
+                className="flex-1 rounded-lg border border-[#223653] bg-[#081223] px-4 py-2.5 text-sm font-semibold text-slate-300 hover:bg-[#122038] transition"
+              >
+                Откажи
+              </button>
+              <button
+                onClick={submitReport}
+                disabled={sendingReport}
+                className="flex-1 rounded-lg bg-red-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-red-700 disabled:opacity-50 transition"
+              >
+                {sendingReport ? 'Се испраќа...' : 'Испрати'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

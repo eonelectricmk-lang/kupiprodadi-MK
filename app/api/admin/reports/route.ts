@@ -15,6 +15,7 @@ export async function GET() {
         r.reason,
         r.status,
         r.created_at,
+        r.ip_address,
         p.title as product_title,
         p.image_url as product_image,
         p.price as product_price,
