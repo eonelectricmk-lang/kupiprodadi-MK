@@ -411,7 +411,7 @@ export default function ProductDetailsClient({ id }: { id: string }) {
     return (
       <div className="product-detail-page bg-[#050b17] py-8 text-white">
         <div className="mx-auto max-w-6xl px-4">
-          <div className="rounded-lg border border-white/10 bg-[#0e1828] py-16 text-center text-slate-400">
+          <div className="rounded-lg border border-white/20 bg-[#0e1828] py-16 text-center text-slate-400">
             Вчитување оглас...
           </div>
         </div>
@@ -486,7 +486,7 @@ export default function ProductDetailsClient({ id }: { id: string }) {
 
         <div className="grid items-start gap-5 lg:grid-cols-[1.35fr_1fr]">
           <div className="min-w-0">
-            <div className="overflow-hidden rounded-xl border border-white/10 bg-[#0e1828] relative">
+            <div className="overflow-hidden rounded-xl border border-white/20 bg-[#0e1828] relative">
               <img src={images[activeImage] || FALLBACK_IMAGE} alt={ad.title} className="block h-[280px] w-full object-cover sm:h-[340px] lg:h-[400px]" />
               {ad.sold_at && (
                 <div className="absolute inset-0 flex items-center justify-center bg-black/40">
@@ -527,17 +527,17 @@ export default function ProductDetailsClient({ id }: { id: string }) {
               </div>
             )}
 
-            <div className="mt-3 rounded-xl border border-white/10 bg-[#0e1828] p-3 overflow-hidden">
+            <div className="mt-3 rounded-xl border border-white/20 bg-[#0e1828] p-3 overflow-hidden">
               <h2 className="text-base font-semibold text-white">Опис на огласот</h2>
               <p className="mt-1.5 break-all whitespace-pre-line text-sm leading-relaxed text-slate-300">{ad.description}</p>
             </div>
 
-            <div className="mt-4 rounded-xl border border-[#1e2d40] bg-[#0b1727] p-3">
+            <div className="mt-4 rounded-xl border border-[#2a3f55] bg-[#0b1727] p-3">
               <div className="flex items-center gap-2">
                 {ad.prevProduct ? (
                   <Link
                     href={`/products/${ad.prevProduct.id}`}
-                    className="flex-1 rounded-lg border border-[#1e2d40] bg-[#081223] px-3 py-2 text-sm font-semibold text-slate-300 hover:bg-[#1d2c43] transition text-center"
+                    className="flex-1 rounded-lg border border-[#2a3f55] bg-[#081223] px-3 py-2 text-sm font-semibold text-slate-300 hover:bg-[#1d2c43] transition text-center"
                   >
                     ← Претходен
                   </Link>
@@ -549,7 +549,7 @@ export default function ProductDetailsClient({ id }: { id: string }) {
                 {ad.nextProduct ? (
                   <Link
                     href={`/products/${ad.nextProduct.id}`}
-                    className="flex-1 rounded-lg border border-[#1e2d40] bg-[#081223] px-3 py-2 text-sm font-semibold text-slate-300 hover:bg-[#1d2c43] transition text-center"
+                    className="flex-1 rounded-lg border border-[#2a3f55] bg-[#081223] px-3 py-2 text-sm font-semibold text-slate-300 hover:bg-[#1d2c43] transition text-center"
                   >
                     Следен →
                   </Link>
@@ -574,7 +574,7 @@ export default function ProductDetailsClient({ id }: { id: string }) {
                     const img = (sp as any).image_url || (sp as any).images?.[0] || undefined;
                     return (
                       <Link key={sp.id} href={`/products/${sp.id}?seller_id=${ad.seller_id}`}>
-                        <div className="overflow-hidden rounded-xl border border-[#1e2d40] bg-[#0b1727] transition hover:border-[#4d6fad] hover:bg-[#122038]">
+                        <div className="overflow-hidden rounded-xl border border-[#2a3f55] bg-[#0b1727] transition hover:border-[#4d6fad] hover:bg-[#122038]">
                           <div className="aspect-[4/3] overflow-hidden">
                             <img
                               src={img || 'https://picsum.photos/640/480?grayscale&blur=1'}
@@ -595,7 +595,7 @@ export default function ProductDetailsClient({ id }: { id: string }) {
             )}
           </div>
 
-          <div className="min-w-0 rounded-2xl border border-white/10 bg-[#0e1828] p-3 pb-1">
+          <div className="min-w-0 rounded-2xl border border-white/20 bg-[#0e1828] p-3 pb-1">
             <div className="flex items-start justify-between gap-3">
               <h1 className="text-3xl font-bold leading-tight">{ad.title}</h1>
             </div>
@@ -611,10 +611,10 @@ export default function ProductDetailsClient({ id }: { id: string }) {
             </div>
 
             <div className="mt-3 flex flex-wrap gap-2 text-xs text-slate-400">
-              <span className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-[#101f33] px-2 py-0.5">
+              <span className="inline-flex items-center gap-1 rounded-full border border-white/20 bg-[#101f33] px-2 py-0.5">
                 <CalendarDays className="h-3 w-3" /> {formatPostedAt(ad.created_at)}
               </span>
-              <span className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-[#101f33] px-2 py-0.5">
+              <span className="inline-flex items-center gap-1 rounded-full border border-white/20 bg-[#101f33] px-2 py-0.5">
                 <Eye className="h-3 w-3" /> {Number(ad.views || 0).toLocaleString('mk-MK')} прегледи
               </span>
               <span className="inline-flex items-center gap-1 rounded-full border border-yellow-500/20 bg-yellow-500/5 px-2 py-0.5 text-yellow-500/80">
@@ -631,7 +631,7 @@ export default function ProductDetailsClient({ id }: { id: string }) {
               )}
             </div>
 
-            <div className="mt-3 rounded-xl border border-white/10 bg-[#101f33] p-3">
+            <div className="mt-3 rounded-xl border border-white/20 bg-[#101f33] p-3">
               <div className="flex items-center justify-between gap-3">
                 <h2 className="text-base font-bold text-blue-400 uppercase tracking-wider">{isCrmPublished ? 'Продавач' : 'Профил'}</h2>
                 <div className="flex items-center gap-2">
@@ -644,7 +644,7 @@ export default function ProductDetailsClient({ id }: { id: string }) {
                 </div>
               </div>
                 <div className="mt-1 flex items-center gap-3">
-                  <div className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#172945] text-slate-200 border border-white/10">
+                  <div className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#172945] text-slate-200 border border-white/20">
                   {sellerAvatarUrl ? (
                     <img src={sellerAvatarUrl} alt="" className="h-full w-full rounded-full object-cover" />
                   ) : (
@@ -704,7 +704,7 @@ export default function ProductDetailsClient({ id }: { id: string }) {
                   </a>
                 </div>
               ) : (
-                <form onSubmit={onSendMessage} className="mt-2 rounded-xl border border-white/10 bg-[#101f33] p-3">
+                <form onSubmit={onSendMessage} className="mt-2 rounded-xl border border-white/20 bg-[#101f33] p-3">
                   <h2 className="flex items-center gap-2 text-base font-bold text-white uppercase tracking-wider">
                     <MessageCircle className="h-3.5 w-3.5 text-red-500" /> Порака
                   </h2>
@@ -732,25 +732,25 @@ export default function ProductDetailsClient({ id }: { id: string }) {
 
             <div className="mt-2.5 space-y-1.5">
               <div className="grid grid-cols-2 gap-2">
-                <button type="button" onClick={onToggleFavorite} className={`inline-flex h-9 items-center justify-center gap-2 rounded-lg border text-sm font-bold transition ${isSaved ? 'border-red-500/30 bg-red-500/10 text-red-300' : 'border-white/10 bg-[#0f1a2b] text-white hover:bg-[#13243c]'}`}>
+                <button type="button" onClick={onToggleFavorite} className={`inline-flex h-9 items-center justify-center gap-2 rounded-lg border text-sm font-bold transition ${isSaved ? 'border-red-500/30 bg-red-500/10 text-red-300' : 'border-white/20 bg-[#0f1a2b] text-white hover:bg-[#13243c]'}`}>
                   <Bookmark className="h-3.5 w-3.5" /> {isSaved ? 'Зачувано' : 'Зачувај'}
                 </button>
-                <button type="button" onClick={onCopyLink} className={`inline-flex h-9 items-center justify-center gap-2 rounded-lg border text-sm font-bold transition ${copiedLink ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-300' : 'border-white/10 bg-[#0f1a2b] text-white hover:bg-[#13243c]'}`}>
+                <button type="button" onClick={onCopyLink} className={`inline-flex h-9 items-center justify-center gap-2 rounded-lg border text-sm font-bold transition ${copiedLink ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-300' : 'border-white/20 bg-[#0f1a2b] text-white hover:bg-[#13243c]'}`}>
                   <Copy className="h-3.5 w-3.5" /> {copiedLink ? 'Копирано' : 'Линк'}
                 </button>
               </div>
               <div className="grid grid-cols-2 gap-2">
-                <button type="button" onClick={onShareFacebook} className="inline-flex h-9 items-center justify-center gap-2 rounded-lg border border-white/10 bg-[#0f1a2b] text-sm font-bold text-white hover:bg-[#13243c]">
+                <button type="button" onClick={onShareFacebook} className="inline-flex h-9 items-center justify-center gap-2 rounded-lg border border-white/20 bg-[#0f1a2b] text-sm font-bold text-white hover:bg-[#13243c]">
                   <Share2 className="h-3.5 w-3.5" /> Сподели
                 </button>
-                <button type="button" onClick={onReport} className={`inline-flex h-9 items-center justify-center gap-2 rounded-lg border text-sm font-bold transition ${reported ? 'border-amber-500/30 bg-amber-500/10 text-amber-300' : 'border-white/10 bg-[#0f1a2b] text-white hover:bg-[#13243c]'}`}>
+                <button type="button" onClick={onReport} className={`inline-flex h-9 items-center justify-center gap-2 rounded-lg border text-sm font-bold transition ${reported ? 'border-amber-500/30 bg-amber-500/10 text-amber-300' : 'border-white/20 bg-[#0f1a2b] text-white hover:bg-[#13243c]'}`}>
                   <AlertTriangle className="h-3.5 w-3.5" /> {reported ? 'Пријавено' : 'Пријави'}
                 </button>
               </div>
             </div>
 
             {ad.delivery && (
-              <div className="mt-2 rounded-xl border border-white/10 bg-[#101f33] py-2 px-3 text-sm text-slate-400">
+              <div className="mt-2 rounded-xl border border-white/20 bg-[#101f33] py-2 px-3 text-sm text-slate-400">
                 <p className="flex items-center gap-2 font-bold text-white uppercase tracking-tighter">
                   <Truck className="h-3.5 w-3.5 text-blue-400" /> Достава
                 </p>
@@ -758,7 +758,7 @@ export default function ProductDetailsClient({ id }: { id: string }) {
               </div>
             )}
 
-            <div className="mt-2 rounded-xl border border-white/10 bg-[#101f33] py-2 px-3 text-sm text-slate-400">
+            <div className="mt-2 rounded-xl border border-white/20 bg-[#101f33] py-2 px-3 text-sm text-slate-400">
               <p className="flex items-center gap-2 font-bold text-white uppercase tracking-tighter">
                 <MapPin className="h-3.5 w-3.5 text-emerald-400" /> Локација
               </p>
@@ -802,7 +802,7 @@ export default function ProductDetailsClient({ id }: { id: string }) {
             <div className="mt-6 flex items-center gap-3">
                 <button
                   onClick={() => setShowReportModal(false)}
-                  className="flex-1 rounded-lg border border-[#1e2d40] bg-[#081223] px-4 py-2.5 text-sm font-semibold text-slate-300 hover:bg-[#122038] transition"
+                  className="flex-1 rounded-lg border border-[#2a3f55] bg-[#081223] px-4 py-2.5 text-sm font-semibold text-slate-300 hover:bg-[#122038] transition"
                 >
                 Откажи
               </button>
