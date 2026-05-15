@@ -565,8 +565,8 @@ export default function ProductDetailsClient({ id }: { id: string }) {
               <div className="mt-4">
                 <div className="mb-2 flex items-center justify-between">
                   <h3 className="text-sm font-semibold text-slate-300">Други огласи од овој огласувач</h3>
-                  <Link href={`/products?seller_id=${ad.seller_id}`} className="text-sm font-bold text-red-400 hover:text-red-300 transition">
-                    Види ги сите
+                  <Link href={`/products?seller_id=${ad.seller_id}`} className="text-sm font-bold text-white hover:text-slate-300 transition">
+                    Види ги сите &gt;
                   </Link>
                 </div>
                 <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
