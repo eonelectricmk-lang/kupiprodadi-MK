@@ -443,9 +443,9 @@ export default function ProductDetailsClient({ id }: { id: string }) {
   const subcategoryLink = categoryTrail?.subcategory ? `/categories/${categoryTrail.subcategory.slug}` : null;
 
   return (
-    <div className="product-detail-page bg-[#050b17] py-8 text-white">
+    <div className="product-detail-page bg-[#050b17] py-6 text-white">
       <div className="mx-auto max-w-6xl px-4">
-        <div className="mb-5 flex flex-wrap items-center gap-2 text-sm text-white">
+        <div className="mb-3 flex flex-wrap items-center gap-2 text-sm text-white">
           <Link href="/" className="text-white/70 hover:text-white">
             Почетна
           </Link>
@@ -484,10 +484,10 @@ export default function ProductDetailsClient({ id }: { id: string }) {
           </div>
         )}
 
-        <div className="grid gap-8 lg:grid-cols-[1.35fr_1fr]">
+        <div className="grid gap-5 lg:grid-cols-[1.35fr_1fr]">
           <div className="min-w-0">
-            <div className="overflow-hidden rounded-2xl border border-white/10 bg-[#0e1828] relative">
-              <img src={images[activeImage] || FALLBACK_IMAGE} alt={ad.title} className="block h-[300px] w-full object-cover sm:h-[360px] lg:h-[420px]" />
+            <div className="overflow-hidden rounded-xl border border-white/10 bg-[#0e1828] relative">
+              <img src={images[activeImage] || FALLBACK_IMAGE} alt={ad.title} className="block h-[280px] w-full object-cover sm:h-[340px] lg:h-[400px]" />
               {ad.sold_at && (
                 <div className="absolute inset-0 flex items-center justify-center bg-black/40">
                   <span className="-rotate-12 rounded border-4 border-red-500 bg-red-500/10 px-4 py-2 text-2xl font-black text-red-500 sm:text-3xl lg:text-4xl leading-tight">ПРОДАДЕНО !</span>
@@ -508,15 +508,15 @@ export default function ProductDetailsClient({ id }: { id: string }) {
             </div>
 
             {images.length > 1 && (
-              <div className="mt-3 grid grid-cols-4 gap-2">
-                {images.map((image, idx) => (
+              <div className="mt-2 grid grid-cols-8 gap-2">
+                {images.slice(0, 8).map((image, idx) => (
                   <button
                     key={`${image}-${idx}`}
                     type="button"
                     onClick={() => setActiveImage(idx)}
                     className={`overflow-hidden rounded-lg border bg-[#0e1828] relative ${activeImage === idx ? 'border-red-500' : 'border-white/15'}`}
                   >
-                    <img src={image} alt={`${ad.title} ${idx + 1}`} className="block h-16 w-full object-cover sm:h-20" />
+                    <img src={image} alt={`${ad.title} ${idx + 1}`} className="block h-12 w-full object-cover sm:h-14" />
                     {ad.sold_at && (
                       <div className="absolute inset-0 flex items-center justify-center bg-black/40">
                         <span className="rounded border border-red-500 bg-red-500/10 px-1 py-0.5 text-[7px] font-black text-red-500 leading-tight">ПРОД !</span>
@@ -527,44 +527,49 @@ export default function ProductDetailsClient({ id }: { id: string }) {
               </div>
             )}
 
-            <div className="mt-4 rounded-xl border border-white/10 bg-[#0e1828] p-4 overflow-hidden">
-              <h2 className="text-base font-semibold text-white">Опис на огласот</h2>
-              <p className="mt-2 break-all whitespace-pre-line text-sm leading-relaxed text-slate-300">{ad.description}</p>
+            <div className="mt-3 rounded-xl border border-white/10 bg-[#0e1828] p-3 overflow-hidden">
+              <h2 className="text-sm font-semibold text-white">Опис на огласот</h2>
+              <p className="mt-1.5 break-all whitespace-pre-line text-[13px] leading-relaxed text-slate-300">{ad.description}</p>
             </div>
 
-            <div className="mt-6 rounded-xl border border-[#1d2c43] bg-[#0b1727] p-4">
-              <div className="flex items-center gap-3">
+            <div className="mt-4 rounded-xl border border-[#1d2c43] bg-[#0b1727] p-3">
+              <div className="flex items-center gap-2">
                 {ad.prevProduct ? (
                   <Link
                     href={`/products/${ad.prevProduct.id}`}
-                    className="flex-1 rounded-lg border border-[#223653] bg-[#081223] px-4 py-2.5 text-sm font-semibold text-slate-300 hover:bg-[#1d2c43] transition text-center"
+                    className="flex-1 rounded-lg border border-[#223653] bg-[#081223] px-3 py-2 text-[13px] font-semibold text-slate-300 hover:bg-[#1d2c43] transition text-center"
                   >
-                    ← Претходен оглас
+                    ← Претходен
                   </Link>
                 ) : (
-                  <span className="flex-1 rounded-lg border border-[#223653]/30 bg-[#081223]/50 px-4 py-2.5 text-sm font-semibold text-slate-600 text-center cursor-not-allowed">
-                    ← Претходен оглас
+                  <span className="flex-1 rounded-lg border border-[#223653]/30 bg-[#081223]/50 px-3 py-2 text-[13px] font-semibold text-slate-600 text-center cursor-not-allowed">
+                    ← Претходен
                   </span>
                 )}
                 {ad.nextProduct ? (
                   <Link
                     href={`/products/${ad.nextProduct.id}`}
-                    className="flex-1 rounded-lg border border-[#223653] bg-[#081223] px-4 py-2.5 text-sm font-semibold text-slate-300 hover:bg-[#1d2c43] transition text-center"
+                    className="flex-1 rounded-lg border border-[#223653] bg-[#081223] px-3 py-2 text-[13px] font-semibold text-slate-300 hover:bg-[#1d2c43] transition text-center"
                   >
-                    Следен оглас →
+                    Следен →
                   </Link>
                 ) : (
-                  <span className="flex-1 rounded-lg border border-[#223653]/30 bg-[#081223]/50 px-4 py-2.5 text-sm font-semibold text-slate-600 text-center cursor-not-allowed">
-                    Следен оглас →
+                  <span className="flex-1 rounded-lg border border-[#223653]/30 bg-[#081223]/50 px-3 py-2 text-[13px] font-semibold text-slate-600 text-center cursor-not-allowed">
+                    Следен →
                   </span>
                 )}
               </div>
             </div>
 
             {ad.seller_id && sellerProducts.length > 0 && (
-              <div className="mt-6">
-                <h3 className="mb-3 text-sm font-semibold text-slate-300">Погледни ги другите огласи од овој огласувач</h3>
-                <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+              <div className="mt-4">
+                <div className="mb-2 flex items-center justify-between">
+                  <h3 className="text-[13px] font-semibold text-slate-300">Други огласи од овој огласувач</h3>
+                  <Link href={`/products?seller_id=${ad.seller_id}`} className="text-[12px] font-bold text-red-400 hover:text-red-300 transition">
+                    Види ги сите
+                  </Link>
+                </div>
+                <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
                   {sellerProducts.slice(0, 4).map((sp) => {
                     const img = (sp as any).image_url || (sp as any).images?.[0] || undefined;
                     return (
@@ -577,9 +582,9 @@ export default function ProductDetailsClient({ id }: { id: string }) {
                               className="h-full w-full object-cover"
                             />
                           </div>
-                          <div className="p-2.5">
-                            <p className="line-clamp-1 text-sm font-semibold text-white">{sp.title}</p>
-                            <p className="mt-1 text-xs font-bold text-red-400">{sp.price.toLocaleString()} {sp.currency || '€'}</p>
+                          <div className="p-2">
+                            <p className="line-clamp-1 text-[12px] font-semibold text-white">{sp.title}</p>
+                            <p className="mt-0.5 text-[12px] font-bold text-red-400">{sp.price.toLocaleString()} {sp.currency || '€'}</p>
                           </div>
                         </div>
                       </Link>
@@ -590,113 +595,96 @@ export default function ProductDetailsClient({ id }: { id: string }) {
             )}
           </div>
 
-          <div className="min-w-0 rounded-2xl border border-white/10 bg-[#0e1828] p-6">
-            <div className="flex items-center justify-between gap-3">
-              <h1 className="text-3xl font-bold">{ad.title}</h1>
-              <span
-                className={`shrink-0 inline-flex items-center ${ad.seller_is_active ? 'text-green-400' : 'text-slate-500'}`}
-                title={ad.seller_is_active ? 'Проверен продавач' : 'Непроверен продавач'}
-              >
-                <ShieldCheck className="h-6 w-6" />
-              </span>
+          <div className="min-w-0 rounded-2xl border border-white/10 bg-[#0e1828] p-5">
+            <div className="flex items-start justify-between gap-3">
+              <h1 className="text-2xl font-bold leading-tight">{ad.title}</h1>
             </div>
-            <div className="mt-2 flex flex-wrap items-center gap-2">
-              <p className="text-3xl font-bold text-red-500">
-                {ad.price.toLocaleString('mk-MK')} <span className="text-white">{ad.currency || '€'}</span>
+            <div className="mt-2 flex flex-wrap items-baseline gap-2">
+              <p className="text-3xl font-black text-red-500">
+                {ad.price.toLocaleString('mk-MK')} <span className="text-xl text-white">{ad.currency || '€'}</span>
               </p>
-              {Boolean(ad.negotiable) && <span className="rounded bg-orange-500/20 px-2 py-0.5 text-xs font-semibold text-orange-300">Цена по договор</span>}
-              {!ad.negotiable && <span className="rounded bg-red-500/20 px-2 py-0.5 text-xs font-semibold text-red-300">Цената е фиксна</span>}
-              {Boolean(ad.trade_possible) && <span className="rounded bg-emerald-500/20 px-2 py-0.5 text-xs font-semibold text-emerald-300">Можна замена</span>}
+              <div className="flex flex-wrap gap-1.5">
+                {Boolean(ad.negotiable) && <span className="rounded bg-orange-500/20 px-2 py-0.5 text-[10px] font-bold text-orange-300 uppercase">По договор</span>}
+                {!ad.negotiable && <span className="rounded bg-red-500/20 px-2 py-0.5 text-[10px] font-bold text-red-300 uppercase">Фиксна</span>}
+                {Boolean(ad.trade_possible) && <span className="rounded bg-emerald-500/20 px-2 py-0.5 text-[10px] font-bold text-emerald-300 uppercase">Замена</span>}
+              </div>
             </div>
 
-            <div className="mt-3 flex flex-wrap gap-2 text-xs text-slate-400">
-              <span className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-[#101f33] px-2.5 py-1">
-                <CalendarDays className="h-3.5 w-3.5" /> {formatPostedAt(ad.created_at)}
+            <div className="mt-3 flex flex-wrap gap-2 text-[11px] text-slate-400">
+              <span className="inline-flex items-center gap-1 rounded-full border border-white/5 bg-[#101f33] px-2 py-0.5">
+                <CalendarDays className="h-3 w-3" /> {formatPostedAt(ad.created_at)}
               </span>
-              <span className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-[#101f33] px-2.5 py-1">
-                <Eye className="h-3.5 w-3.5" /> {Number(ad.views || 0).toLocaleString('mk-MK')} прегледи
+              <span className="inline-flex items-center gap-1 rounded-full border border-white/5 bg-[#101f33] px-2 py-0.5">
+                <Eye className="h-3 w-3" /> {Number(ad.views || 0).toLocaleString('mk-MK')} прегледи
               </span>
-              <span className="inline-flex items-center gap-1 rounded-full border border-yellow-500/30 bg-yellow-500/10 px-2.5 py-1 text-yellow-400">
+              <span className="inline-flex items-center gap-1 rounded-full border border-yellow-500/20 bg-yellow-500/5 px-2 py-0.5 text-yellow-500/80">
                 ID: KP-{ad.id.toString().padStart(6, '0')}
               </span>
             </div>
 
-            <div className="mt-4 grid grid-cols-2 gap-2 text-sm">
+            <div className="mt-3">
               {ad.condition && (
-                <div className="rounded-xl border border-white/10 bg-[#101f33] py-2 px-3">
-                  <p className="text-xs text-slate-400">Состојба</p>
-                  <p className="mt-0.5 font-semibold text-white">{ad.condition}</p>
+                <div className="inline-flex rounded-lg border border-white/5 bg-[#101f33] py-1.5 px-3">
+                  <p className="text-[12px] text-slate-400 mr-2">Состојба:</p>
+                  <p className="text-[12px] font-bold text-white">{ad.condition}</p>
                 </div>
               )}
-              <div className="verified-seller-badge rounded-xl border border-green-500/30 bg-green-500/10 py-2 px-3">
-                <p className="verified-seller-text flex items-center gap-1.5 text-xs font-semibold text-green-300">
-                  <ShieldCheck className="h-3.5 w-3.5" />
-                  Проверен продавач
-                </p>
-                <p className="seller-rating-text mt-0.5 flex items-center gap-1.5 text-xs text-amber-300">
-                  <Star className="h-3.5 w-3.5" />
-                  {sellerRating ? sellerRating.toFixed(1) : '5.0'} рејтинг
-                </p>
-              </div>
             </div>
 
-            <div className="mt-5 rounded-xl border border-white/10 bg-[#101f33] p-4">
+            <div className="mt-4 rounded-xl border border-white/5 bg-[#101f33] p-3.5">
               <div className="flex items-center justify-between gap-3">
-                <h2 className="text-base font-semibold text-white">{isCrmPublished ? 'Продавач' : 'Профил на продавач'}</h2>
-                <span className="inline-flex shrink-0 items-center rounded-lg border border-blue-500/30 bg-blue-500/10 px-2.5 py-1 text-sm font-semibold text-blue-400">IDP: {ad.seller_id}</span>
+                <h2 className="text-[13px] font-bold text-white uppercase tracking-wider">{isCrmPublished ? 'Продавач' : 'Профил'}</h2>
+                <div className="flex items-center gap-2">
+                  {ad.seller_is_active && (
+                    <span className="inline-flex items-center gap-1 rounded-full bg-green-500/10 px-2 py-0.5 text-[10px] font-bold text-green-400 border border-green-500/20">
+                      <ShieldCheck className="h-3 w-3" /> ПРОВЕРЕН
+                    </span>
+                  )}
+                  <span className="text-[10px] font-bold text-slate-500">IDP: {ad.seller_id}</span>
+                </div>
               </div>
-              <div className="mt-3 flex items-start gap-3">
-                <div className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#172945] text-slate-200">
+              <div className="mt-3 flex items-center gap-3">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#172945] text-slate-200 border border-white/10">
                   {sellerAvatarUrl ? (
                     <img src={sellerAvatarUrl} alt="" className="h-full w-full rounded-full object-cover" />
                   ) : (
-                    <UserCircle2 className="h-9 w-9" />
+                    <UserCircle2 className="h-7 w-7" />
                   )}
                 </div>
                 <div className="min-w-0 flex-1">
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="min-w-0">
-                      <p className="font-semibold text-white">{sellerName}</p>
-                      {!isCrmPublished && <p className="mt-1 text-xs text-slate-400">{ad.preferred_contact || 'Телефон и порака'}</p>}
+                  <p className="truncate text-sm font-bold text-white">{sellerName}</p>
+                  <div className="mt-0.5 flex items-center gap-2">
+                    <div className="flex items-center gap-1 text-[11px] text-amber-400 font-bold">
+                      <Star className="h-3 w-3 fill-current" /> {sellerRating ? sellerRating.toFixed(1) : '5.0'}
                     </div>
-                    <div className="flex shrink-0 flex-col items-start gap-1">
-                      {!isCrmPublished && (
-                        <>
-                          <span className="verified-seller-badge inline-flex items-center gap-1 rounded-full border border-green-500/25 bg-green-500/10 px-2 py-0.5 text-[11px] font-semibold text-green-300">
-                            <ShieldCheck className="h-3 w-3" /> Проверен
-                          </span>
-                          <p className="seller-rating-text flex items-center gap-1 text-xs text-amber-300">
-                            <Star className="h-3.5 w-3.5" /> {sellerRating ? sellerRating.toFixed(1) : '5.0'} рејтинг
-                          </p>
-                        </>
-                      )}
-                    </div>
+                    <span className="text-[11px] text-slate-500">•</span>
+                    <p className="truncate text-[11px] text-slate-400">{ad.preferred_contact || 'Телефон и порака'}</p>
                   </div>
                 </div>
               </div>
 
-              <div className="mt-4 grid gap-2">
+              <div className="mt-3.5 grid gap-1.5">
                 {sellerPhone && (
-                  <a href={`tel:${sellerPhone}`} className="inline-flex h-10 items-center justify-center gap-2 rounded-lg border border-white/15 bg-[#0f1a2b] px-3 text-sm font-semibold text-white hover:bg-[#13243c]">
-                    <Phone className="h-4 w-4" /> {sellerPhone}
+                  <a href={`tel:${sellerPhone}`} className="inline-flex h-9 items-center justify-center gap-2 rounded-lg bg-red-600 px-3 text-sm font-bold text-white hover:bg-red-500 transition shadow-lg shadow-red-900/20">
+                    <Phone className="h-3.5 w-3.5" /> {sellerPhone}
                   </a>
                 )}
                 {sellerPhone && (
-                  <div className="flex justify-around gap-2">
-                    <a href={Boolean(ad.has_viber) ? viberUrl(sellerPhone) : '#'} target={Boolean(ad.has_viber) ? '_blank' : undefined} rel={Boolean(ad.has_viber) ? 'noopener noreferrer' : undefined} className={`inline-flex items-center gap-1.5 text-sm font-semibold transition ${Boolean(ad.has_viber) ? 'text-purple-400 hover:text-purple-300' : 'text-slate-600 cursor-default pointer-events-none'}`}>
-                      <ViberIcon className="h-4 w-4" /> Viber
+                  <div className="flex justify-between px-1">
+                    <a href={Boolean(ad.has_viber) ? viberUrl(sellerPhone) : '#'} target={Boolean(ad.has_viber) ? '_blank' : undefined} rel={Boolean(ad.has_viber) ? 'noopener noreferrer' : undefined} className={`inline-flex items-center gap-1 text-[11px] font-bold transition ${Boolean(ad.has_viber) ? 'text-purple-400 hover:text-purple-300' : 'text-slate-600 cursor-default pointer-events-none'}`}>
+                      <ViberIcon className="h-3.5 w-3.5" /> Viber
                     </a>
-                    <a href={Boolean(ad.has_whatsapp) ? waUrl(sellerPhone) : '#'} target={Boolean(ad.has_whatsapp) ? '_blank' : undefined} rel={Boolean(ad.has_whatsapp) ? 'noopener noreferrer' : undefined} className={`inline-flex items-center gap-1.5 text-sm font-semibold transition ${Boolean(ad.has_whatsapp) ? 'text-emerald-400 hover:text-emerald-300' : 'text-slate-600 cursor-default pointer-events-none'}`}>
-                      <WhatsAppIcon className="h-4 w-4" /> WhatsApp
+                    <a href={Boolean(ad.has_whatsapp) ? waUrl(sellerPhone) : '#'} target={Boolean(ad.has_whatsapp) ? '_blank' : undefined} rel={Boolean(ad.has_whatsapp) ? 'noopener noreferrer' : undefined} className={`inline-flex items-center gap-1 text-[11px] font-bold transition ${Boolean(ad.has_whatsapp) ? 'text-emerald-400 hover:text-emerald-300' : 'text-slate-600 cursor-default pointer-events-none'}`}>
+                      <WhatsAppIcon className="h-3.5 w-3.5" /> WhatsApp
                     </a>
-                    <a href={Boolean(ad.has_telegram) ? tgUrl(sellerPhone) : '#'} target={Boolean(ad.has_telegram) ? '_blank' : undefined} rel={Boolean(ad.has_telegram) ? 'noopener noreferrer' : undefined} className={`inline-flex items-center gap-1.5 text-sm font-semibold transition ${Boolean(ad.has_telegram) ? 'text-sky-400 hover:text-sky-300' : 'text-slate-600 cursor-default pointer-events-none'}`}>
-                      <TelegramIcon className="h-4 w-4" /> Telegram
+                    <a href={Boolean(ad.has_telegram) ? tgUrl(sellerPhone) : '#'} target={Boolean(ad.has_telegram) ? '_blank' : undefined} rel={Boolean(ad.has_telegram) ? 'noopener noreferrer' : undefined} className={`inline-flex items-center gap-1 text-[11px] font-bold transition ${Boolean(ad.has_telegram) ? 'text-sky-400 hover:text-sky-300' : 'text-slate-600 cursor-default pointer-events-none'}`}>
+                      <TelegramIcon className="h-3.5 w-3.5" /> Telegram
                     </a>
                   </div>
                 )}
                 {!isCrmPublished && sellerEmail && (
-                  <a href={`mailto:${sellerEmail}`} className="inline-flex h-10 items-center justify-center gap-2 rounded-lg border border-white/15 bg-[#0f1a2b] px-3 text-sm font-semibold text-white hover:bg-[#13243c]">
-                    <Mail className="h-4 w-4" /> {sellerEmail}
+                  <a href={`mailto:${sellerEmail}`} className="mt-1 inline-flex h-8 items-center justify-center gap-2 rounded-lg border border-white/5 bg-[#0f1a2b] px-3 text-[12px] font-semibold text-slate-300 hover:bg-[#13243c] transition">
+                    <Mail className="h-3 w-3" /> {sellerEmail}
                   </a>
                 )}
               </div>
@@ -704,114 +692,80 @@ export default function ProductDetailsClient({ id }: { id: string }) {
 
             {loggedInUser?.id !== ad.seller_id && (
               isCrmPublished && sellerPhone ? (
-                <div className="mt-4 rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-5 text-center">
-                  <p className="text-sm font-semibold text-emerald-300">📞 Контактирај директно со огласувачот</p>
-                  <a href={`tel:${sellerPhone}`} className="mt-3 inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-6 py-3 text-lg font-bold text-white hover:bg-emerald-500 transition">
-                    <Phone className="h-5 w-5" /> {sellerPhone}
+                <div className="mt-3 rounded-xl border border-emerald-500/20 bg-emerald-500/5 p-4 text-center">
+                  <p className="text-[12px] font-bold text-emerald-400">📞 Контактирајте го огласувачот</p>
+                  <a href={`tel:${sellerPhone}`} className="mt-2 inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-4 py-2 text-md font-black text-white hover:bg-emerald-500 transition">
+                    <Phone className="h-4 w-4" /> {sellerPhone}
                   </a>
                 </div>
               ) : (
-                <form onSubmit={onSendMessage} className="mt-4 rounded-xl border border-white/10 bg-[#101f33] p-4">
-                  <h2 className="flex items-center gap-2 text-base font-semibold text-white">
-                    <MessageCircle className="h-4 w-4" /> Контактирај продавач
+                <form onSubmit={onSendMessage} className="mt-3 rounded-xl border border-white/10 bg-[#101f33] p-3.5">
+                  <h2 className="flex items-center gap-2 text-[13px] font-bold text-white uppercase tracking-wider">
+                    <MessageCircle className="h-3.5 w-3.5 text-red-500" /> Порака
                   </h2>
-                  <div className="mt-3 grid gap-3">
-                    <div className="rounded-lg border border-[#2a3f60] bg-[#0f1a2b] px-3 py-2 text-sm text-slate-400">
-                      {loggedInUser ? `Порака од: ${loggedInUser.name}` : 'Мора да се најавите за да испратите порака'}
-                    </div>
+                  <div className="mt-2.5 grid gap-2.5">
                     <textarea
                       required
                       minLength={5}
                       value={contactMessage}
                       onChange={(event) => setContactMessage(event.target.value)}
-                      placeholder={`Здраво, заинтересиран сум за ${ad.title}. Дали е уште достапно?`}
-                      className="min-h-28 resize-y rounded-lg border border-[#2a3f60] bg-[#0f1a2b] px-3 py-2 text-sm leading-5 text-white outline-none placeholder:text-slate-500 focus:border-red-500"
+                      placeholder={`Здраво, заинтересиран сум за огласов...`}
+                      className="min-h-20 resize-none rounded-lg border border-[#2a3f60] bg-[#0f1a2b] px-3 py-2 text-[13px] leading-snug text-white outline-none placeholder:text-slate-500 focus:border-red-500/50"
                     />
-                    {contactStatus && (
-                      <p className="rounded-lg border border-white/10 bg-[#0f1a2b] px-3 py-2 text-xs text-slate-200">
-                        {contactStatus}
-                      </p>
-                    )}
                     <button
                       type="submit"
                       disabled={sendingMessage || !loggedInUser}
-                      className="inline-flex h-11 items-center justify-center gap-2 rounded-lg bg-red-600 px-4 text-sm font-semibold text-white transition hover:bg-red-500 disabled:cursor-not-allowed disabled:opacity-70"
+                      className="inline-flex h-9 items-center justify-center gap-2 rounded-lg bg-red-600 px-4 text-sm font-bold text-white transition hover:bg-red-500 disabled:cursor-not-allowed disabled:opacity-50"
                     >
-                      <Send className="h-4 w-4" /> {sendingMessage ? 'Испраќање...' : 'Испрати порака'}
+                      <Send className="h-3.5 w-3.5" /> {sendingMessage ? '...' : 'Испрати'}
                     </button>
+                    {contactStatus && <p className="text-center text-[11px] text-slate-400">{contactStatus}</p>}
                   </div>
                 </form>
               )
             )}
 
-            {ad.status !== 'pending' && (
-              <div className="mt-4 grid grid-cols-2 gap-2">
-                <button
-                  type="button"
-                  onClick={onToggleFavorite}
-                  className={`inline-flex h-11 items-center justify-center gap-2 rounded-lg border text-sm font-semibold transition ${
-                    isSaved
-                      ? 'border-red-500/40 bg-red-500/10 text-red-200'
-                      : 'border-white/15 bg-[#0f1a2b] text-white hover:bg-[#13243c]'
-                  }`}
-                >
-                  <Bookmark className="h-4 w-4" /> {isSaved ? 'Зачувано' : 'Зачувај'}
+            <div className="mt-3.5 space-y-2">
+              <div className="grid grid-cols-2 gap-2">
+                <button type="button" onClick={onToggleFavorite} className={`inline-flex h-9 items-center justify-center gap-2 rounded-lg border text-[12px] font-bold transition ${isSaved ? 'border-red-500/40 bg-red-500/10 text-red-300' : 'border-white/10 bg-[#0f1a2b] text-white hover:bg-[#13243c]'}`}>
+                  <Bookmark className="h-3.5 w-3.5" /> {isSaved ? 'Зачувано' : 'Зачувај'}
                 </button>
-                <button
-                  type="button"
-                  onClick={onCopyLink}
-                  className={`inline-flex h-11 items-center justify-center gap-2 rounded-lg border text-sm font-semibold transition ${
-                    copiedLink
-                      ? 'border-emerald-500/40 bg-emerald-500/10 text-emerald-200'
-                      : 'border-white/15 bg-[#0f1a2b] text-white hover:bg-[#13243c]'
-                  }`}
-                >
-                  <Copy className="h-4 w-4" /> {copiedLink ? 'Копирано' : 'Копирај линк'}
-                </button>
-                <button
-                  type="button"
-                  onClick={onShareFacebook}
-                  className="inline-flex h-11 items-center justify-center gap-2 rounded-lg border border-white/15 bg-[#0f1a2b] text-sm font-semibold text-white hover:bg-[#13243c]"
-                >
-                  <Share2 className="h-4 w-4" /> Сподели
-                </button>
-                <button
-                  type="button"
-                  onClick={onReport}
-                  className={`inline-flex h-11 items-center justify-center gap-2 rounded-lg border text-sm font-semibold transition ${
-                    reported
-                      ? 'border-amber-500/40 bg-amber-500/10 text-amber-200'
-                      : 'border-white/15 bg-[#0f1a2b] text-white hover:bg-[#13243c]'
-                  }`}
-                >
-                  <AlertTriangle className="h-4 w-4" /> {reported ? 'Пријавено' : 'Пријави'}
+                <button type="button" onClick={onCopyLink} className={`inline-flex h-9 items-center justify-center gap-2 rounded-lg border text-[12px] font-bold transition ${copiedLink ? 'border-emerald-500/40 bg-emerald-500/10 text-emerald-300' : 'border-white/10 bg-[#0f1a2b] text-white hover:bg-[#13243c]'}`}>
+                  <Copy className="h-3.5 w-3.5" /> {copiedLink ? 'Копирано' : 'Линк'}
                 </button>
               </div>
-            )}
+              <div className="grid grid-cols-2 gap-2">
+                <button type="button" onClick={onShareFacebook} className="inline-flex h-9 items-center justify-center gap-2 rounded-lg border border-white/10 bg-[#0f1a2b] text-[12px] font-bold text-white hover:bg-[#13243c]">
+                  <Share2 className="h-3.5 w-3.5" /> Сподели
+                </button>
+                <button type="button" onClick={onReport} className={`inline-flex h-9 items-center justify-center gap-2 rounded-lg border text-[12px] font-bold transition ${reported ? 'border-amber-500/40 bg-amber-500/10 text-amber-300' : 'border-white/10 bg-[#0f1a2b] text-white hover:bg-[#13243c]'}`}>
+                  <AlertTriangle className="h-3.5 w-3.5" /> {reported ? 'Пријавено' : 'Пријави'}
+                </button>
+              </div>
+            </div>
 
             {ad.delivery && (
-              <div className="mt-4 rounded-xl border border-white/10 bg-[#101f33] p-4 text-sm text-slate-300">
-                <p className="flex items-center gap-2 font-semibold text-white">
-                  <Truck className="h-4 w-4" /> Достава
+              <div className="mt-3.5 rounded-xl border border-white/5 bg-[#101f33] p-3 text-[12px] text-slate-400">
+                <p className="flex items-center gap-2 font-bold text-white uppercase tracking-tighter">
+                  <Truck className="h-3.5 w-3.5 text-blue-400" /> Достава
                 </p>
-                <p className="mt-2">{ad.delivery}</p>
+                <p className="mt-1">{ad.delivery}</p>
               </div>
             )}
 
-            <div className="mt-4 rounded-xl border border-white/10 bg-[#101f33] p-4 text-sm text-slate-300">
-              <p className="flex items-center gap-2 font-semibold text-white">
-                <MapPin className="h-4 w-4" /> Локација
+            <div className="mt-3.5 rounded-xl border border-white/5 bg-[#101f33] p-3 text-[12px] text-slate-400">
+              <p className="flex items-center gap-2 font-bold text-white uppercase tracking-tighter">
+                <MapPin className="h-3.5 w-3.5 text-emerald-400" /> Локација
               </p>
-              <p className="mt-2">
+              <p className="mt-1">
                 {ad.city || ad.location || 'Македонија'}
                 {ad.neighborhood ? `, ${ad.neighborhood}` : ''}
-                {ad.address_note ? ` - ${ad.address_note}` : ''}
               </p>
             </div>
 
-            <div className="mt-4 flex items-center gap-2 text-xs text-slate-500">
-              <span className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-[#101f33] px-2.5 py-1">
-                <Copy className="h-3.5 w-3.5" /> Безбедна комуникација
+            <div className="mt-3 flex items-center gap-2 text-[10px] text-slate-500 px-1">
+              <span className="inline-flex items-center gap-1">
+                <ShieldCheck className="h-3 w-3" /> Безбедна комуникација
               </span>
             </div>
           </div>
