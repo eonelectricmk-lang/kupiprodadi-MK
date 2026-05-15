@@ -141,8 +141,6 @@ export default function ProductDetailsClient({ id }: { id: string }) {
   const [copiedLink, setCopiedLink] = useState(false);
   const [reported, setReported] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
-  const [reportName, setReportName] = useState('');
-  const [reportEmail, setReportEmail] = useState('');
   const [reportReason, setReportReason] = useState('');
   const [sendingReport, setSendingReport] = useState(false);
   const [contactMessage, setContactMessage] = useState('');
@@ -252,7 +250,7 @@ export default function ProductDetailsClient({ id }: { id: string }) {
       window.localStorage.setItem(recentViewsKey, JSON.stringify(list.slice(0, 12)));
       window.dispatchEvent(new Event('storage'));
     } catch {
-      // Ignore storage issues; the page should still work normally.
+      // Ignore storage issues
     }
   }, [ad, images]);
 
@@ -631,29 +629,28 @@ export default function ProductDetailsClient({ id }: { id: string }) {
               )}
             </div>
 
-            <div className="mt-3 rounded-xl border border-white/5 bg-[#101f33] overflow-hidden">
-              <div className="p-3">
-                <div className="flex items-center justify-between gap-3">
-                  <h2 className="text-base font-bold text-white uppercase tracking-wider">{isCrmPublished ? 'Продавач' : 'Профил'}</h2>
-                  <div className="flex items-center gap-2">
-                    {ad.seller_is_active && (
-                      <span className="inline-flex items-center gap-1 rounded-full bg-green-500/10 px-2 py-0.5 text-xs font-bold text-green-400 border border-green-500/20">
-                        <ShieldCheck className="h-3 w-3" /> ПРОВЕРЕН
-                      </span>
-                    )}
-                    <span className="text-xs font-bold text-slate-500">IDP: {ad.seller_id}</span>
-                  </div>
+            <div className="mt-3 rounded-xl border border-white/5 bg-[#101f33] p-3">
+              <div className="flex items-center justify-between gap-3">
+                <h2 className="text-base font-bold text-white uppercase tracking-wider">{isCrmPublished ? 'Продавач' : 'Профил'}</h2>
+                <div className="flex items-center gap-2">
+                  {ad.seller_is_active && (
+                    <span className="inline-flex items-center gap-1 rounded-full bg-green-500/10 px-2 py-0.5 text-xs font-bold text-green-400 border border-green-500/20">
+                      <ShieldCheck className="h-3 w-3" /> ПРОВЕРЕН
+                    </span>
+                  )}
+                  <span className="text-xs font-bold text-slate-500">IDP: {ad.seller_id}</span>
                 </div>
-                <div className="mt-3 flex items-center gap-3">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#172945] text-slate-200 border border-white/10">
+              </div>
+                <div className="mt-1 flex items-center gap-3">
+                  <div className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#172945] text-slate-200 border border-white/10">
                     {sellerAvatarUrl ? (
                       <img src={sellerAvatarUrl} alt="" className="h-full w-full rounded-full object-cover" />
                     ) : (
-                      <UserCircle2 className="h-7 w-7" />
+                      <UserCircle2 className="h-10 w-10" />
                     )}
                   </div>
                   <div className="min-w-0 flex-1">
-                    <p className="truncate text-base font-semibold text-white">{sellerName}</p>
+                    <p className="truncate text-2xl font-bold text-white">{sellerName}</p>
                     <div className="mt-0.5 flex items-center gap-2">
                       <div className="flex items-center gap-1 text-xs text-amber-400 font-bold">
                         <Star className="h-3 w-3 fill-current" /> {sellerRating ? sellerRating.toFixed(1) : '5.0'}
@@ -663,32 +660,29 @@ export default function ProductDetailsClient({ id }: { id: string }) {
                     </div>
                   </div>
                 </div>
-              </div>
 
-              <div className="flex flex-col gap-px w-full">
+              <div className="mt-3.5 grid gap-1.5">
                 {sellerPhone && (
-                  <a href={`tel:${sellerPhone}`} className="flex h-11 w-full items-center justify-center gap-2 border-t border-blue-500/30 bg-blue-500/10 px-3 text-sm font-bold text-blue-400 hover:bg-blue-500/20 transition">
-                    <Phone className="h-4 w-4" /> {sellerPhone}
+                  <a href={`tel:${sellerPhone}`} className="inline-flex h-9 items-center justify-center gap-2 rounded-lg bg-red-600 px-3 text-sm font-bold text-white hover:bg-red-500 transition shadow-lg shadow-red-900/20">
+                    <Phone className="h-3.5 w-3.5" /> {sellerPhone}
                   </a>
                 )}
-                <div className="bg-[#101f33] p-2 flex justify-between px-4">
-                  {sellerPhone && (
-                    <>
-                      <a href={Boolean(ad.has_viber) ? viberUrl(sellerPhone) : '#'} target={Boolean(ad.has_viber) ? '_blank' : undefined} rel={Boolean(ad.has_viber) ? 'noopener noreferrer' : undefined} className={`inline-flex items-center gap-1 text-xs font-bold transition ${Boolean(ad.has_viber) ? 'text-purple-400 hover:text-purple-300' : 'text-slate-600 cursor-default pointer-events-none'}`}>
-                        <ViberIcon className="h-3.5 w-3.5" /> Viber
-                      </a>
-                      <a href={Boolean(ad.has_whatsapp) ? waUrl(sellerPhone) : '#'} target={Boolean(ad.has_whatsapp) ? '_blank' : undefined} rel={Boolean(ad.has_whatsapp) ? 'noopener noreferrer' : undefined} className={`inline-flex items-center gap-1 text-xs font-bold transition ${Boolean(ad.has_whatsapp) ? 'text-emerald-400 hover:text-emerald-300' : 'text-slate-600 cursor-default pointer-events-none'}`}>
-                        <WhatsAppIcon className="h-3.5 w-3.5" /> WhatsApp
-                      </a>
-                      <a href={Boolean(ad.has_telegram) ? tgUrl(sellerPhone) : '#'} target={Boolean(ad.has_telegram) ? '_blank' : undefined} rel={Boolean(ad.has_telegram) ? 'noopener noreferrer' : undefined} className={`inline-flex items-center gap-1 text-xs font-bold transition ${Boolean(ad.has_telegram) ? 'text-sky-400 hover:text-sky-300' : 'text-slate-600 cursor-default pointer-events-none'}`}>
-                        <TelegramIcon className="h-3.5 w-3.5" /> Telegram
-                      </a>
-                    </>
-                  )}
-                </div>
+                {sellerPhone && (
+                  <div className="flex justify-between px-1">
+                    <a href={Boolean(ad.has_viber) ? viberUrl(sellerPhone) : '#'} target={Boolean(ad.has_viber) ? '_blank' : undefined} rel={Boolean(ad.has_viber) ? 'noopener noreferrer' : undefined} className={`inline-flex items-center gap-1 text-xs font-bold transition ${Boolean(ad.has_viber) ? 'text-purple-400 hover:text-purple-300' : 'text-slate-600 cursor-default pointer-events-none'}`}>
+                      <ViberIcon className="h-3.5 w-3.5" /> Viber
+                    </a>
+                    <a href={Boolean(ad.has_whatsapp) ? waUrl(sellerPhone) : '#'} target={Boolean(ad.has_whatsapp) ? '_blank' : undefined} rel={Boolean(ad.has_whatsapp) ? 'noopener noreferrer' : undefined} className={`inline-flex items-center gap-1 text-xs font-bold transition ${Boolean(ad.has_whatsapp) ? 'text-emerald-400 hover:text-emerald-300' : 'text-slate-600 cursor-default pointer-events-none'}`}>
+                      <WhatsAppIcon className="h-3.5 w-3.5" /> WhatsApp
+                    </a>
+                    <a href={Boolean(ad.has_telegram) ? tgUrl(sellerPhone) : '#'} target={Boolean(ad.has_telegram) ? '_blank' : undefined} rel={Boolean(ad.has_telegram) ? 'noopener noreferrer' : undefined} className={`inline-flex items-center gap-1 text-xs font-bold transition ${Boolean(ad.has_telegram) ? 'text-sky-400 hover:text-sky-300' : 'text-slate-600 cursor-default pointer-events-none'}`}>
+                      <TelegramIcon className="h-3.5 w-3.5" /> Telegram
+                    </a>
+                  </div>
+                )}
                 {!isCrmPublished && sellerEmail && (
-                  <a href={`mailto:${sellerEmail}`} className="flex h-9 w-full items-center justify-center gap-2 border-t border-white/5 bg-[#0f1a2b] px-3 text-sm font-semibold text-slate-300 hover:bg-[#13243c] transition">
-                    <Mail className="h-3.5 w-3.5" /> {sellerEmail}
+                  <a href={`mailto:${sellerEmail}`} className="mt-1 inline-flex h-8 items-center justify-center gap-2 rounded-lg border border-white/5 bg-[#0f1a2b] px-3 text-sm font-semibold text-slate-300 hover:bg-[#13243c] transition">
+                    <Mail className="h-3 w-3" /> {sellerEmail}
                   </a>
                 )}
               </div>
@@ -696,12 +690,10 @@ export default function ProductDetailsClient({ id }: { id: string }) {
 
             {loggedInUser?.id !== ad.seller_id && (
               isCrmPublished && sellerPhone ? (
-                <div className="mt-3 rounded-xl border border-emerald-500/20 bg-emerald-500/5 overflow-hidden text-center">
-                  <div className="p-3 pb-2">
-                    <p className="text-lg font-black text-emerald-400 leading-tight">📞 Контактирајте го огласувачот</p>
-                  </div>
-                  <a href={`tel:${sellerPhone}`} className="flex w-full items-center justify-center gap-2 bg-emerald-600 px-4 py-3 text-lg font-black text-white hover:bg-emerald-500 transition">
-                    <Phone className="h-5 w-5" /> {sellerPhone}
+                <div className="mt-3 rounded-xl border border-emerald-500/20 bg-emerald-500/5 p-4 text-center">
+                  <p className="text-sm font-bold text-emerald-400">📞 Контактирајте го огласувачот</p>
+                  <a href={`tel:${sellerPhone}`} className="mt-2 inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-4 py-2 text-md font-black text-white hover:bg-emerald-500 transition">
+                    <Phone className="h-4 w-4" /> {sellerPhone}
                   </a>
                 </div>
               ) : (
