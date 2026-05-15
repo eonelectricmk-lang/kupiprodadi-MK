@@ -67,9 +67,22 @@ export async function GET(
       ORDER BY sort_order ASC, id ASC
     `).all(resolvedParams.id) as Array<{ image_url: string }>;
 
+    const prod = product as Record<string, unknown>;
+    const cat = prod.category as string;
+
+    const prevProduct = db.prepare(`
+      SELECT id, title FROM products WHERE id < ? AND category = ? AND status = 'active' ORDER BY id DESC LIMIT 1
+    `).get(resolvedParams.id, cat) as { id: number; title: string } | undefined;
+
+    const nextProduct = db.prepare(`
+      SELECT id, title FROM products WHERE id > ? AND category = ? AND status = 'active' ORDER BY id ASC LIMIT 1
+    `).get(resolvedParams.id, cat) as { id: number; title: string } | undefined;
+
     return NextResponse.json({
-      ...(product as Record<string, unknown>),
+      ...prod,
       images: images.map((image) => image.image_url),
+      prevProduct: prevProduct ? { id: prevProduct.id, title: prevProduct.title } : null,
+      nextProduct: nextProduct ? { id: nextProduct.id, title: nextProduct.title } : null,
     }, { status: 200 });
   } catch (error) {
     console.error('Error fetching product:', error);

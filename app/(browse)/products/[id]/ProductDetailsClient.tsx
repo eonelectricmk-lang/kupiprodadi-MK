@@ -105,6 +105,8 @@ interface ProductDetails {
   seller_rating?: number;
   seller_avatar_url?: string | null;
   seller_is_active?: number | boolean;
+  prevProduct?: { id: number; title: string } | null;
+  nextProduct?: { id: number; title: string } | null;
 }
 
 type CategoryOption = {
@@ -744,6 +746,38 @@ export default function ProductDetailsClient({ id }: { id: string }) {
                 <Copy className="h-3.5 w-3.5" /> Безбедна комуникација
               </span>
             </div>
+
+            {(ad.prevProduct || ad.nextProduct) && (
+              <div className="mt-6 flex items-center gap-3">
+                {ad.prevProduct ? (
+                  <Link
+                    href={`/products/${ad.prevProduct.id}`}
+                    className="flex-1 rounded-lg border border-[#223653] bg-[#0b1727] px-4 py-2.5 text-sm font-semibold text-slate-300 hover:bg-[#1d2c43] transition text-center"
+                  >
+                    ← Претходен оглас
+                  </Link>
+                ) : <div className="flex-1" />}
+                {ad.nextProduct ? (
+                  <Link
+                    href={`/products/${ad.nextProduct.id}`}
+                    className="flex-1 rounded-lg border border-[#223653] bg-[#0b1727] px-4 py-2.5 text-sm font-semibold text-slate-300 hover:bg-[#1d2c43] transition text-center"
+                  >
+                    Следен оглас →
+                  </Link>
+                ) : <div className="flex-1" />}
+              </div>
+            )}
+
+            {ad.seller_id && (
+              <div className="mt-3">
+                <Link
+                  href={`/products?seller_id=${ad.seller_id}`}
+                  className="flex items-center justify-center gap-2 rounded-lg border border-sky-500/30 bg-sky-500/10 px-4 py-2.5 text-sm font-semibold text-sky-300 hover:bg-sky-500/20 transition"
+                >
+                  Повеќе огласи од овој огласувач
+                </Link>
+              </div>
+            )}
           </div>
         </div>
       </div>
