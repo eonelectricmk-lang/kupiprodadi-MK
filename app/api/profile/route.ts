@@ -4,7 +4,7 @@ import getDb from '@/lib/db';
 export async function PATCH(request: NextRequest) {
   try {
     const db = getDb();
-    const { user_id, name, phone, location } = await request.json();
+    const { user_id, name, phone, location, avatar_url } = await request.json();
 
     if (!user_id) {
       return NextResponse.json({ error: 'Недостига ID на корисник' }, { status: 400 });
@@ -21,6 +21,7 @@ export async function PATCH(request: NextRequest) {
     if (name !== undefined) { fields.push('name = ?'); values.push(name); }
     if (phone !== undefined) { fields.push('phone = ?'); values.push(phone); }
     if (location !== undefined) { fields.push('location = ?'); values.push(location); }
+    if (avatar_url !== undefined) { fields.push('avatar_url = ?'); values.push(avatar_url); }
 
     if (fields.length === 0) {
       return NextResponse.json({ error: 'Нема полиња за ажурирање' }, { status: 400 });
