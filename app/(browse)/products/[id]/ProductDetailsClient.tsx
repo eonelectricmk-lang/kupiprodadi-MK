@@ -150,6 +150,7 @@ export default function ProductDetailsClient({ id }: { id: string }) {
   const [sendingMessage, setSendingMessage] = useState(false);
   const [loggedInUser, setLoggedInUser] = useState<{ id: number; name: string; phone?: string; email?: string } | null>(null);
   const [categories, setCategories] = useState<CategoryOption[]>(CATEGORIES as CategoryOption[]);
+  const [sellerProducts, setSellerProducts] = useState<ProductDetails[]>([]);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -174,6 +175,16 @@ export default function ProductDetailsClient({ id }: { id: string }) {
         const data = await response.json();
         setAd(data);
         setActiveImage(0);
+
+        if (data.seller_id) {
+          try {
+            const sellerRes = await fetch(`/api/products?seller_id=${data.seller_id}&limit=5`, { signal: controller.signal });
+            const sellerData = await sellerRes.json();
+            if (Array.isArray(sellerData.products)) {
+              setSellerProducts(sellerData.products.filter((p: any) => p.id !== data.id));
+            }
+          } catch {}
+        }
       } catch (fetchError) {
         if ((fetchError as Error).name !== 'AbortError') {
           console.error('Error fetching product:', fetchError);
@@ -768,14 +779,31 @@ export default function ProductDetailsClient({ id }: { id: string }) {
               </div>
             )}
 
-            {ad.seller_id && (
-              <div className="mt-3">
-                <Link
-                  href={`/products?seller_id=${ad.seller_id}`}
-                  className="flex items-center justify-center gap-2 rounded-lg border border-sky-500/30 bg-sky-500/10 px-4 py-2.5 text-sm font-semibold text-sky-300 hover:bg-sky-500/20 transition"
-                >
-                  Повеќе огласи од овој огласувач
-                </Link>
+            {ad.seller_id && sellerProducts.length > 0 && (
+              <div className="mt-6">
+                <h3 className="mb-3 text-sm font-semibold text-slate-300">Погледни ги другите огласи од овој огласувач</h3>
+                <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+                  {sellerProducts.slice(0, 4).map((sp) => {
+                    const img = (sp as any).image_url || (sp as any).images?.[0] || undefined;
+                    return (
+                      <Link key={sp.id} href={`/products/${sp.id}?seller_id=${ad.seller_id}`}>
+                        <div className="overflow-hidden rounded-xl border border-[#1d2c43] bg-[#0b1727] transition hover:border-[#2d4f7d] hover:bg-[#122038]">
+                          <div className="aspect-[4/3] overflow-hidden">
+                            <img
+                              src={img || 'https://picsum.photos/640/480?grayscale&blur=1'}
+                              alt={sp.title}
+                              className="h-full w-full object-cover"
+                            />
+                          </div>
+                          <div className="p-2.5">
+                            <p className="line-clamp-1 text-sm font-semibold text-white">{sp.title}</p>
+                            <p className="mt-1 text-xs font-bold text-red-400">{sp.price.toLocaleString()} {sp.currency || '€'}</p>
+                          </div>
+                        </div>
+                      </Link>
+                    );
+                  })}
+                </div>
               </div>
             )}
           </div>
