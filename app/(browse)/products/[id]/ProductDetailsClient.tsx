@@ -531,6 +531,57 @@ export default function ProductDetailsClient({ id }: { id: string }) {
               <h2 className="text-base font-semibold text-white">Опис на огласот</h2>
               <p className="mt-2 break-all whitespace-pre-line text-sm leading-relaxed text-slate-300">{ad.description}</p>
             </div>
+
+            {(ad.prevProduct || ad.nextProduct) && (
+              <div className="mt-6 rounded-xl border border-[#1d2c43] bg-[#0b1727] p-4">
+                <div className="flex items-center gap-3">
+                  {ad.prevProduct ? (
+                    <Link
+                      href={`/products/${ad.prevProduct.id}`}
+                      className="flex-1 rounded-lg border border-[#223653] bg-[#081223] px-4 py-2.5 text-sm font-semibold text-slate-300 hover:bg-[#1d2c43] transition text-center"
+                    >
+                      ← Претходен оглас
+                    </Link>
+                  ) : <div className="flex-1" />}
+                  {ad.nextProduct ? (
+                    <Link
+                      href={`/products/${ad.nextProduct.id}`}
+                      className="flex-1 rounded-lg border border-[#223653] bg-[#081223] px-4 py-2.5 text-sm font-semibold text-slate-300 hover:bg-[#1d2c43] transition text-center"
+                    >
+                      Следен оглас →
+                    </Link>
+                  ) : <div className="flex-1" />}
+                </div>
+              </div>
+            )}
+
+            {ad.seller_id && sellerProducts.length > 0 && (
+              <div className="mt-6">
+                <h3 className="mb-3 text-sm font-semibold text-slate-300">Погледни ги другите огласи од овој огласувач</h3>
+                <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+                  {sellerProducts.slice(0, 4).map((sp) => {
+                    const img = (sp as any).image_url || (sp as any).images?.[0] || undefined;
+                    return (
+                      <Link key={sp.id} href={`/products/${sp.id}?seller_id=${ad.seller_id}`}>
+                        <div className="overflow-hidden rounded-xl border border-[#1d2c43] bg-[#0b1727] transition hover:border-[#2d4f7d] hover:bg-[#122038]">
+                          <div className="aspect-[4/3] overflow-hidden">
+                            <img
+                              src={img || 'https://picsum.photos/640/480?grayscale&blur=1'}
+                              alt={sp.title}
+                              className="h-full w-full object-cover"
+                            />
+                          </div>
+                          <div className="p-2.5">
+                            <p className="line-clamp-1 text-sm font-semibold text-white">{sp.title}</p>
+                            <p className="mt-1 text-xs font-bold text-red-400">{sp.price.toLocaleString()} {sp.currency || '€'}</p>
+                          </div>
+                        </div>
+                      </Link>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
           </div>
 
           <div className="min-w-0 rounded-2xl border border-white/10 bg-[#0e1828] p-6">
@@ -757,57 +808,6 @@ export default function ProductDetailsClient({ id }: { id: string }) {
                 <Copy className="h-3.5 w-3.5" /> Безбедна комуникација
               </span>
             </div>
-
-            {(ad.prevProduct || ad.nextProduct) && (
-              <div className="mt-6 rounded-xl border border-[#1d2c43] bg-[#0b1727] p-4">
-                <div className="flex items-center gap-3">
-                  {ad.prevProduct ? (
-                    <Link
-                      href={`/products/${ad.prevProduct.id}`}
-                      className="flex-1 rounded-lg border border-[#223653] bg-[#081223] px-4 py-2.5 text-sm font-semibold text-slate-300 hover:bg-[#1d2c43] transition text-center"
-                    >
-                      ← Претходен оглас
-                    </Link>
-                  ) : <div className="flex-1" />}
-                  {ad.nextProduct ? (
-                    <Link
-                      href={`/products/${ad.nextProduct.id}`}
-                      className="flex-1 rounded-lg border border-[#223653] bg-[#081223] px-4 py-2.5 text-sm font-semibold text-slate-300 hover:bg-[#1d2c43] transition text-center"
-                    >
-                      Следен оглас →
-                    </Link>
-                  ) : <div className="flex-1" />}
-                </div>
-              </div>
-            )}
-
-            {ad.seller_id && sellerProducts.length > 0 && (
-              <div className="mt-6">
-                <h3 className="mb-3 text-sm font-semibold text-slate-300">Погледни ги другите огласи од овој огласувач</h3>
-                <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
-                  {sellerProducts.slice(0, 4).map((sp) => {
-                    const img = (sp as any).image_url || (sp as any).images?.[0] || undefined;
-                    return (
-                      <Link key={sp.id} href={`/products/${sp.id}?seller_id=${ad.seller_id}`}>
-                        <div className="overflow-hidden rounded-xl border border-[#1d2c43] bg-[#0b1727] transition hover:border-[#2d4f7d] hover:bg-[#122038]">
-                          <div className="aspect-[4/3] overflow-hidden">
-                            <img
-                              src={img || 'https://picsum.photos/640/480?grayscale&blur=1'}
-                              alt={sp.title}
-                              className="h-full w-full object-cover"
-                            />
-                          </div>
-                          <div className="p-2.5">
-                            <p className="line-clamp-1 text-sm font-semibold text-white">{sp.title}</p>
-                            <p className="mt-1 text-xs font-bold text-red-400">{sp.price.toLocaleString()} {sp.currency || '€'}</p>
-                          </div>
-                        </div>
-                      </Link>
-                    );
-                  })}
-                </div>
-              </div>
-            )}
           </div>
         </div>
       </div>
