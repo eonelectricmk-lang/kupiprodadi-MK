@@ -38,7 +38,7 @@ export default function Footer() {
   }, []);
 
   return (
-    <footer className="bg-[#050c16] border-t border-[#2a3a4e] text-slate-400 mt-auto">
+    <footer className="bg-[#050c16] border-t border-[#172334] text-slate-400 mt-auto">
       <div className="max-w-6xl mx-auto px-4 py-3">
         <div className="mb-6 grid grid-cols-1 gap-8 md:grid-cols-2 xl:grid-cols-[1.35fr_0.9fr_0.9fr_0.9fr] xl:gap-10">
 
@@ -172,7 +172,7 @@ export default function Footer() {
         </div>
 
         {/* Bottom bar */}
-        <div className="border-t border-[#2a3a4e] pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm">
+        <div className="border-t border-[#172334] pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm">
           <p>© 2026 КупиПродади. Сите права задржани.</p>
           <div className="flex gap-6">
             <Link href="/privacy" className="hover:text-white transition">Приватност</Link>

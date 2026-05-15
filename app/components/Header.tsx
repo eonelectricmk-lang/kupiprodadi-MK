@@ -36,19 +36,19 @@ export function Header() {
   const [userAvatar, setUserAvatar] = useState<string | null>(null);
 
   const h = dark ? {
-    header: 'bg-[#07101c]/95 border-[#2a3a4e]',
+    header: 'bg-[#07101c]/95 border-[#172334]',
     search: 'bg-[#0b1727] border-gray-400',
     searchInput: 'text-gray-100 placeholder-gray-500',
     searchIcon: 'text-gray-400',
-    location: 'bg-[#0b1727] border-[#2f4057] text-gray-200',
-    locationDropdown: 'bg-[#0f1b2b] border-[#2f4057]',
+    location: 'bg-[#0b1727] border-[#1f3047] text-gray-200',
+    locationDropdown: 'bg-[#0f1b2b] border-[#1f3047]',
     locationItem: 'text-gray-200 hover:bg-[#14243a]',
     icon: 'text-gray-400 hover:text-white',
-    navBar: 'bg-[#050c16] border-[#2a3a4e]',
-    allCats: 'bg-[#121f33] hover:bg-[#1a2d49] text-white border-2 border-[#3a4e6e]',
-    navCat: 'bg-[#0f1a2b] text-gray-300 hover:text-white hover:bg-[#16263d] border-2 border-[#3a4e6e]',
+    navBar: 'bg-[#050c16] border-[#172334]',
+    allCats: 'bg-[#121f33] hover:bg-[#1a2d49] text-white border-2 border-[#1d2c43]',
+    navCat: 'bg-[#0f1a2b] text-gray-300 hover:text-white hover:bg-[#16263d] border-2 border-[#1d2c43]',
     more: 'text-gray-400 hover:text-white',
-    dropdown: 'bg-[#0d1727] border-[#2f4057]',
+    dropdown: 'bg-[#0d1727] border-[#1f3047]',
     subText: 'text-gray-300 hover:text-white',
     logo: 'text-white',
   } : {
