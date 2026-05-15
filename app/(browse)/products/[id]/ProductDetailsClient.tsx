@@ -532,28 +532,34 @@ export default function ProductDetailsClient({ id }: { id: string }) {
               <p className="mt-2 break-all whitespace-pre-line text-sm leading-relaxed text-slate-300">{ad.description}</p>
             </div>
 
-            {(ad.prevProduct || ad.nextProduct) && (
-              <div className="mt-6 rounded-xl border border-[#1d2c43] bg-[#0b1727] p-4">
-                <div className="flex items-center gap-3">
-                  {ad.prevProduct ? (
-                    <Link
-                      href={`/products/${ad.prevProduct.id}`}
-                      className="flex-1 rounded-lg border border-[#223653] bg-[#081223] px-4 py-2.5 text-sm font-semibold text-slate-300 hover:bg-[#1d2c43] transition text-center"
-                    >
-                      ← Претходен оглас
-                    </Link>
-                  ) : <div className="flex-1" />}
-                  {ad.nextProduct ? (
-                    <Link
-                      href={`/products/${ad.nextProduct.id}`}
-                      className="flex-1 rounded-lg border border-[#223653] bg-[#081223] px-4 py-2.5 text-sm font-semibold text-slate-300 hover:bg-[#1d2c43] transition text-center"
-                    >
-                      Следен оглас →
-                    </Link>
-                  ) : <div className="flex-1" />}
-                </div>
+            <div className="mt-6 rounded-xl border border-[#1d2c43] bg-[#0b1727] p-4">
+              <div className="flex items-center gap-3">
+                {ad.prevProduct ? (
+                  <Link
+                    href={`/products/${ad.prevProduct.id}`}
+                    className="flex-1 rounded-lg border border-[#223653] bg-[#081223] px-4 py-2.5 text-sm font-semibold text-slate-300 hover:bg-[#1d2c43] transition text-center"
+                  >
+                    ← Претходен оглас
+                  </Link>
+                ) : (
+                  <span className="flex-1 rounded-lg border border-[#223653]/30 bg-[#081223]/50 px-4 py-2.5 text-sm font-semibold text-slate-600 text-center cursor-not-allowed">
+                    ← Претходен оглас
+                  </span>
+                )}
+                {ad.nextProduct ? (
+                  <Link
+                    href={`/products/${ad.nextProduct.id}`}
+                    className="flex-1 rounded-lg border border-[#223653] bg-[#081223] px-4 py-2.5 text-sm font-semibold text-slate-300 hover:bg-[#1d2c43] transition text-center"
+                  >
+                    Следен оглас →
+                  </Link>
+                ) : (
+                  <span className="flex-1 rounded-lg border border-[#223653]/30 bg-[#081223]/50 px-4 py-2.5 text-sm font-semibold text-slate-600 text-center cursor-not-allowed">
+                    Следен оглас →
+                  </span>
+                )}
               </div>
-            )}
+            </div>
 
             {ad.seller_id && sellerProducts.length > 0 && (
               <div className="mt-6">
