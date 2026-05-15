@@ -508,7 +508,7 @@ export default function ProductDetailsClient({ id }: { id: string }) {
             </div>
 
             {images.length > 1 && (
-              <div className="mt-2 grid grid-cols-8 gap-2">
+              <div className="mt-2 grid grid-cols-4 gap-2">
                 {images.slice(0, 8).map((image, idx) => (
                   <button
                     key={`${image}-${idx}`}
@@ -516,7 +516,7 @@ export default function ProductDetailsClient({ id }: { id: string }) {
                     onClick={() => setActiveImage(idx)}
                     className={`overflow-hidden rounded-lg border bg-[#0e1828] relative ${activeImage === idx ? 'border-red-500' : 'border-white/15'}`}
                   >
-                    <img src={image} alt={`${ad.title} ${idx + 1}`} className="block h-12 w-full object-cover sm:h-14" />
+                    <img src={image} alt={`${ad.title} ${idx + 1}`} className="block h-16 w-full object-cover sm:h-20" />
                     {ad.sold_at && (
                       <div className="absolute inset-0 flex items-center justify-center bg-black/40">
                         <span className="rounded border border-red-500 bg-red-500/10 px-1 py-0.5 text-[7px] font-black text-red-500 leading-tight">ПРОД !</span>
@@ -528,8 +528,8 @@ export default function ProductDetailsClient({ id }: { id: string }) {
             )}
 
             <div className="mt-3 rounded-xl border border-white/10 bg-[#0e1828] p-3 overflow-hidden">
-              <h2 className="text-sm font-semibold text-white">Опис на огласот</h2>
-              <p className="mt-1.5 break-all whitespace-pre-line text-[13px] leading-relaxed text-slate-300">{ad.description}</p>
+              <h2 className="text-base font-semibold text-white">Опис на огласот</h2>
+              <p className="mt-1.5 break-all whitespace-pre-line text-sm leading-relaxed text-slate-300">{ad.description}</p>
             </div>
 
             <div className="mt-4 rounded-xl border border-[#1d2c43] bg-[#0b1727] p-3">
@@ -537,24 +537,24 @@ export default function ProductDetailsClient({ id }: { id: string }) {
                 {ad.prevProduct ? (
                   <Link
                     href={`/products/${ad.prevProduct.id}`}
-                    className="flex-1 rounded-lg border border-[#223653] bg-[#081223] px-3 py-2 text-[13px] font-semibold text-slate-300 hover:bg-[#1d2c43] transition text-center"
+                    className="flex-1 rounded-lg border border-[#223653] bg-[#081223] px-3 py-2 text-sm font-semibold text-slate-300 hover:bg-[#1d2c43] transition text-center"
                   >
                     ← Претходен
                   </Link>
                 ) : (
-                  <span className="flex-1 rounded-lg border border-[#223653]/30 bg-[#081223]/50 px-3 py-2 text-[13px] font-semibold text-slate-600 text-center cursor-not-allowed">
+                  <span className="flex-1 rounded-lg border border-[#223653]/30 bg-[#081223]/50 px-3 py-2 text-sm font-semibold text-slate-600 text-center cursor-not-allowed">
                     ← Претходен
                   </span>
                 )}
                 {ad.nextProduct ? (
                   <Link
                     href={`/products/${ad.nextProduct.id}`}
-                    className="flex-1 rounded-lg border border-[#223653] bg-[#081223] px-3 py-2 text-[13px] font-semibold text-slate-300 hover:bg-[#1d2c43] transition text-center"
+                    className="flex-1 rounded-lg border border-[#223653] bg-[#081223] px-3 py-2 text-sm font-semibold text-slate-300 hover:bg-[#1d2c43] transition text-center"
                   >
                     Следен →
                   </Link>
                 ) : (
-                  <span className="flex-1 rounded-lg border border-[#223653]/30 bg-[#081223]/50 px-3 py-2 text-[13px] font-semibold text-slate-600 text-center cursor-not-allowed">
+                  <span className="flex-1 rounded-lg border border-[#223653]/30 bg-[#081223]/50 px-3 py-2 text-sm font-semibold text-slate-600 text-center cursor-not-allowed">
                     Следен →
                   </span>
                 )}
@@ -564,8 +564,8 @@ export default function ProductDetailsClient({ id }: { id: string }) {
             {ad.seller_id && sellerProducts.length > 0 && (
               <div className="mt-4">
                 <div className="mb-2 flex items-center justify-between">
-                  <h3 className="text-[13px] font-semibold text-slate-300">Други огласи од овој огласувач</h3>
-                  <Link href={`/products?seller_id=${ad.seller_id}`} className="text-[12px] font-bold text-red-400 hover:text-red-300 transition">
+                  <h3 className="text-sm font-semibold text-slate-300">Други огласи од овој огласувач</h3>
+                  <Link href={`/products?seller_id=${ad.seller_id}`} className="text-sm font-bold text-red-400 hover:text-red-300 transition">
                     Види ги сите
                   </Link>
                 </div>
@@ -583,8 +583,8 @@ export default function ProductDetailsClient({ id }: { id: string }) {
                             />
                           </div>
                           <div className="p-2">
-                            <p className="line-clamp-1 text-[12px] font-semibold text-white">{sp.title}</p>
-                            <p className="mt-0.5 text-[12px] font-bold text-red-400">{sp.price.toLocaleString()} {sp.currency || '€'}</p>
+                            <p className="line-clamp-1 text-sm font-semibold text-white">{sp.title}</p>
+                            <p className="mt-0.5 text-sm font-bold text-red-400">{sp.price.toLocaleString()} {sp.currency || '€'}</p>
                           </div>
                         </div>
                       </Link>
@@ -597,20 +597,20 @@ export default function ProductDetailsClient({ id }: { id: string }) {
 
           <div className="min-w-0 rounded-2xl border border-white/10 bg-[#0e1828] p-5">
             <div className="flex items-start justify-between gap-3">
-              <h1 className="text-2xl font-bold leading-tight">{ad.title}</h1>
+              <h1 className="text-3xl font-bold leading-tight">{ad.title}</h1>
             </div>
             <div className="mt-2 flex flex-wrap items-baseline gap-2">
               <p className="text-3xl font-black text-red-500">
                 {ad.price.toLocaleString('mk-MK')} <span className="text-xl text-white">{ad.currency || '€'}</span>
               </p>
               <div className="flex flex-wrap gap-1.5">
-                {Boolean(ad.negotiable) && <span className="rounded bg-orange-500/20 px-2 py-0.5 text-[10px] font-bold text-orange-300 uppercase">По договор</span>}
-                {!ad.negotiable && <span className="rounded bg-red-500/20 px-2 py-0.5 text-[10px] font-bold text-red-300 uppercase">Фиксна</span>}
-                {Boolean(ad.trade_possible) && <span className="rounded bg-emerald-500/20 px-2 py-0.5 text-[10px] font-bold text-emerald-300 uppercase">Замена</span>}
+                {Boolean(ad.negotiable) && <span className="rounded bg-orange-500/20 px-2 py-0.5 text-xs font-bold text-orange-300 uppercase">По договор</span>}
+                {!ad.negotiable && <span className="rounded bg-red-500/20 px-2 py-0.5 text-xs font-bold text-red-300 uppercase">Фиксна</span>}
+                {Boolean(ad.trade_possible) && <span className="rounded bg-emerald-500/20 px-2 py-0.5 text-xs font-bold text-emerald-300 uppercase">Замена</span>}
               </div>
             </div>
 
-            <div className="mt-3 flex flex-wrap gap-2 text-[11px] text-slate-400">
+            <div className="mt-3 flex flex-wrap gap-2 text-xs text-slate-400">
               <span className="inline-flex items-center gap-1 rounded-full border border-white/5 bg-[#101f33] px-2 py-0.5">
                 <CalendarDays className="h-3 w-3" /> {formatPostedAt(ad.created_at)}
               </span>
@@ -625,22 +625,22 @@ export default function ProductDetailsClient({ id }: { id: string }) {
             <div className="mt-3">
               {ad.condition && (
                 <div className="inline-flex rounded-lg border border-white/5 bg-[#101f33] py-1.5 px-3">
-                  <p className="text-[12px] text-slate-400 mr-2">Состојба:</p>
-                  <p className="text-[12px] font-bold text-white">{ad.condition}</p>
+                  <p className="text-sm text-slate-400 mr-2">Состојба:</p>
+                  <p className="text-sm font-bold text-white">{ad.condition}</p>
                 </div>
               )}
             </div>
 
             <div className="mt-4 rounded-xl border border-white/5 bg-[#101f33] p-3.5">
               <div className="flex items-center justify-between gap-3">
-                <h2 className="text-[13px] font-bold text-white uppercase tracking-wider">{isCrmPublished ? 'Продавач' : 'Профил'}</h2>
+                <h2 className="text-base font-bold text-white uppercase tracking-wider">{isCrmPublished ? 'Продавач' : 'Профил'}</h2>
                 <div className="flex items-center gap-2">
                   {ad.seller_is_active && (
-                    <span className="inline-flex items-center gap-1 rounded-full bg-green-500/10 px-2 py-0.5 text-[10px] font-bold text-green-400 border border-green-500/20">
+                    <span className="inline-flex items-center gap-1 rounded-full bg-green-500/10 px-2 py-0.5 text-xs font-bold text-green-400 border border-green-500/20">
                       <ShieldCheck className="h-3 w-3" /> ПРОВЕРЕН
                     </span>
                   )}
-                  <span className="text-[10px] font-bold text-slate-500">IDP: {ad.seller_id}</span>
+                  <span className="text-xs font-bold text-slate-500">IDP: {ad.seller_id}</span>
                 </div>
               </div>
               <div className="mt-3 flex items-center gap-3">
@@ -652,13 +652,13 @@ export default function ProductDetailsClient({ id }: { id: string }) {
                   )}
                 </div>
                 <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-bold text-white">{sellerName}</p>
+                  <p className="truncate text-base font-semibold text-white">{sellerName}</p>
                   <div className="mt-0.5 flex items-center gap-2">
-                    <div className="flex items-center gap-1 text-[11px] text-amber-400 font-bold">
+                    <div className="flex items-center gap-1 text-xs text-amber-400 font-bold">
                       <Star className="h-3 w-3 fill-current" /> {sellerRating ? sellerRating.toFixed(1) : '5.0'}
                     </div>
-                    <span className="text-[11px] text-slate-500">•</span>
-                    <p className="truncate text-[11px] text-slate-400">{ad.preferred_contact || 'Телефон и порака'}</p>
+                    <span className="text-xs text-slate-500">•</span>
+                    <p className="truncate text-xs text-slate-400">{ad.preferred_contact || 'Телефон и порака'}</p>
                   </div>
                 </div>
               </div>
@@ -671,19 +671,19 @@ export default function ProductDetailsClient({ id }: { id: string }) {
                 )}
                 {sellerPhone && (
                   <div className="flex justify-between px-1">
-                    <a href={Boolean(ad.has_viber) ? viberUrl(sellerPhone) : '#'} target={Boolean(ad.has_viber) ? '_blank' : undefined} rel={Boolean(ad.has_viber) ? 'noopener noreferrer' : undefined} className={`inline-flex items-center gap-1 text-[11px] font-bold transition ${Boolean(ad.has_viber) ? 'text-purple-400 hover:text-purple-300' : 'text-slate-600 cursor-default pointer-events-none'}`}>
+                    <a href={Boolean(ad.has_viber) ? viberUrl(sellerPhone) : '#'} target={Boolean(ad.has_viber) ? '_blank' : undefined} rel={Boolean(ad.has_viber) ? 'noopener noreferrer' : undefined} className={`inline-flex items-center gap-1 text-xs font-bold transition ${Boolean(ad.has_viber) ? 'text-purple-400 hover:text-purple-300' : 'text-slate-600 cursor-default pointer-events-none'}`}>
                       <ViberIcon className="h-3.5 w-3.5" /> Viber
                     </a>
-                    <a href={Boolean(ad.has_whatsapp) ? waUrl(sellerPhone) : '#'} target={Boolean(ad.has_whatsapp) ? '_blank' : undefined} rel={Boolean(ad.has_whatsapp) ? 'noopener noreferrer' : undefined} className={`inline-flex items-center gap-1 text-[11px] font-bold transition ${Boolean(ad.has_whatsapp) ? 'text-emerald-400 hover:text-emerald-300' : 'text-slate-600 cursor-default pointer-events-none'}`}>
+                    <a href={Boolean(ad.has_whatsapp) ? waUrl(sellerPhone) : '#'} target={Boolean(ad.has_whatsapp) ? '_blank' : undefined} rel={Boolean(ad.has_whatsapp) ? 'noopener noreferrer' : undefined} className={`inline-flex items-center gap-1 text-xs font-bold transition ${Boolean(ad.has_whatsapp) ? 'text-emerald-400 hover:text-emerald-300' : 'text-slate-600 cursor-default pointer-events-none'}`}>
                       <WhatsAppIcon className="h-3.5 w-3.5" /> WhatsApp
                     </a>
-                    <a href={Boolean(ad.has_telegram) ? tgUrl(sellerPhone) : '#'} target={Boolean(ad.has_telegram) ? '_blank' : undefined} rel={Boolean(ad.has_telegram) ? 'noopener noreferrer' : undefined} className={`inline-flex items-center gap-1 text-[11px] font-bold transition ${Boolean(ad.has_telegram) ? 'text-sky-400 hover:text-sky-300' : 'text-slate-600 cursor-default pointer-events-none'}`}>
+                    <a href={Boolean(ad.has_telegram) ? tgUrl(sellerPhone) : '#'} target={Boolean(ad.has_telegram) ? '_blank' : undefined} rel={Boolean(ad.has_telegram) ? 'noopener noreferrer' : undefined} className={`inline-flex items-center gap-1 text-xs font-bold transition ${Boolean(ad.has_telegram) ? 'text-sky-400 hover:text-sky-300' : 'text-slate-600 cursor-default pointer-events-none'}`}>
                       <TelegramIcon className="h-3.5 w-3.5" /> Telegram
                     </a>
                   </div>
                 )}
                 {!isCrmPublished && sellerEmail && (
-                  <a href={`mailto:${sellerEmail}`} className="mt-1 inline-flex h-8 items-center justify-center gap-2 rounded-lg border border-white/5 bg-[#0f1a2b] px-3 text-[12px] font-semibold text-slate-300 hover:bg-[#13243c] transition">
+                  <a href={`mailto:${sellerEmail}`} className="mt-1 inline-flex h-8 items-center justify-center gap-2 rounded-lg border border-white/5 bg-[#0f1a2b] px-3 text-sm font-semibold text-slate-300 hover:bg-[#13243c] transition">
                     <Mail className="h-3 w-3" /> {sellerEmail}
                   </a>
                 )}
@@ -693,14 +693,14 @@ export default function ProductDetailsClient({ id }: { id: string }) {
             {loggedInUser?.id !== ad.seller_id && (
               isCrmPublished && sellerPhone ? (
                 <div className="mt-3 rounded-xl border border-emerald-500/20 bg-emerald-500/5 p-4 text-center">
-                  <p className="text-[12px] font-bold text-emerald-400">📞 Контактирајте го огласувачот</p>
+                  <p className="text-sm font-bold text-emerald-400">📞 Контактирајте го огласувачот</p>
                   <a href={`tel:${sellerPhone}`} className="mt-2 inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-4 py-2 text-md font-black text-white hover:bg-emerald-500 transition">
                     <Phone className="h-4 w-4" /> {sellerPhone}
                   </a>
                 </div>
               ) : (
                 <form onSubmit={onSendMessage} className="mt-3 rounded-xl border border-white/10 bg-[#101f33] p-3.5">
-                  <h2 className="flex items-center gap-2 text-[13px] font-bold text-white uppercase tracking-wider">
+                  <h2 className="flex items-center gap-2 text-base font-bold text-white uppercase tracking-wider">
                     <MessageCircle className="h-3.5 w-3.5 text-red-500" /> Порака
                   </h2>
                   <div className="mt-2.5 grid gap-2.5">
@@ -710,7 +710,7 @@ export default function ProductDetailsClient({ id }: { id: string }) {
                       value={contactMessage}
                       onChange={(event) => setContactMessage(event.target.value)}
                       placeholder={`Здраво, заинтересиран сум за огласов...`}
-                      className="min-h-20 resize-none rounded-lg border border-[#2a3f60] bg-[#0f1a2b] px-3 py-2 text-[13px] leading-snug text-white outline-none placeholder:text-slate-500 focus:border-red-500/50"
+                      className="min-h-20 resize-none rounded-lg border border-[#2a3f60] bg-[#0f1a2b] px-3 py-2 text-sm leading-snug text-white outline-none placeholder:text-slate-500 focus:border-red-500/50"
                     />
                     <button
                       type="submit"
@@ -719,7 +719,7 @@ export default function ProductDetailsClient({ id }: { id: string }) {
                     >
                       <Send className="h-3.5 w-3.5" /> {sendingMessage ? '...' : 'Испрати'}
                     </button>
-                    {contactStatus && <p className="text-center text-[11px] text-slate-400">{contactStatus}</p>}
+                    {contactStatus && <p className="text-center text-xs text-slate-400">{contactStatus}</p>}
                   </div>
                 </form>
               )
@@ -727,25 +727,25 @@ export default function ProductDetailsClient({ id }: { id: string }) {
 
             <div className="mt-3.5 space-y-2">
               <div className="grid grid-cols-2 gap-2">
-                <button type="button" onClick={onToggleFavorite} className={`inline-flex h-9 items-center justify-center gap-2 rounded-lg border text-[12px] font-bold transition ${isSaved ? 'border-red-500/40 bg-red-500/10 text-red-300' : 'border-white/10 bg-[#0f1a2b] text-white hover:bg-[#13243c]'}`}>
+                <button type="button" onClick={onToggleFavorite} className={`inline-flex h-9 items-center justify-center gap-2 rounded-lg border text-sm font-bold transition ${isSaved ? 'border-red-500/40 bg-red-500/10 text-red-300' : 'border-white/10 bg-[#0f1a2b] text-white hover:bg-[#13243c]'}`}>
                   <Bookmark className="h-3.5 w-3.5" /> {isSaved ? 'Зачувано' : 'Зачувај'}
                 </button>
-                <button type="button" onClick={onCopyLink} className={`inline-flex h-9 items-center justify-center gap-2 rounded-lg border text-[12px] font-bold transition ${copiedLink ? 'border-emerald-500/40 bg-emerald-500/10 text-emerald-300' : 'border-white/10 bg-[#0f1a2b] text-white hover:bg-[#13243c]'}`}>
+                <button type="button" onClick={onCopyLink} className={`inline-flex h-9 items-center justify-center gap-2 rounded-lg border text-sm font-bold transition ${copiedLink ? 'border-emerald-500/40 bg-emerald-500/10 text-emerald-300' : 'border-white/10 bg-[#0f1a2b] text-white hover:bg-[#13243c]'}`}>
                   <Copy className="h-3.5 w-3.5" /> {copiedLink ? 'Копирано' : 'Линк'}
                 </button>
               </div>
               <div className="grid grid-cols-2 gap-2">
-                <button type="button" onClick={onShareFacebook} className="inline-flex h-9 items-center justify-center gap-2 rounded-lg border border-white/10 bg-[#0f1a2b] text-[12px] font-bold text-white hover:bg-[#13243c]">
+                <button type="button" onClick={onShareFacebook} className="inline-flex h-9 items-center justify-center gap-2 rounded-lg border border-white/10 bg-[#0f1a2b] text-sm font-bold text-white hover:bg-[#13243c]">
                   <Share2 className="h-3.5 w-3.5" /> Сподели
                 </button>
-                <button type="button" onClick={onReport} className={`inline-flex h-9 items-center justify-center gap-2 rounded-lg border text-[12px] font-bold transition ${reported ? 'border-amber-500/40 bg-amber-500/10 text-amber-300' : 'border-white/10 bg-[#0f1a2b] text-white hover:bg-[#13243c]'}`}>
+                <button type="button" onClick={onReport} className={`inline-flex h-9 items-center justify-center gap-2 rounded-lg border text-sm font-bold transition ${reported ? 'border-amber-500/40 bg-amber-500/10 text-amber-300' : 'border-white/10 bg-[#0f1a2b] text-white hover:bg-[#13243c]'}`}>
                   <AlertTriangle className="h-3.5 w-3.5" /> {reported ? 'Пријавено' : 'Пријави'}
                 </button>
               </div>
             </div>
 
             {ad.delivery && (
-              <div className="mt-3.5 rounded-xl border border-white/5 bg-[#101f33] p-3 text-[12px] text-slate-400">
+              <div className="mt-3.5 rounded-xl border border-white/5 bg-[#101f33] p-3 text-sm text-slate-400">
                 <p className="flex items-center gap-2 font-bold text-white uppercase tracking-tighter">
                   <Truck className="h-3.5 w-3.5 text-blue-400" /> Достава
                 </p>
@@ -753,7 +753,7 @@ export default function ProductDetailsClient({ id }: { id: string }) {
               </div>
             )}
 
-            <div className="mt-3.5 rounded-xl border border-white/5 bg-[#101f33] p-3 text-[12px] text-slate-400">
+            <div className="mt-3.5 rounded-xl border border-white/5 bg-[#101f33] p-3 text-sm text-slate-400">
               <p className="flex items-center gap-2 font-bold text-white uppercase tracking-tighter">
                 <MapPin className="h-3.5 w-3.5 text-emerald-400" /> Локација
               </p>
@@ -763,7 +763,7 @@ export default function ProductDetailsClient({ id }: { id: string }) {
               </p>
             </div>
 
-            <div className="mt-3 flex items-center gap-2 text-[10px] text-slate-500 px-1">
+            <div className="mt-3 flex items-center gap-2 text-xs text-slate-500 px-1">
               <span className="inline-flex items-center gap-1">
                 <ShieldCheck className="h-3 w-3" /> Безбедна комуникација
               </span>
