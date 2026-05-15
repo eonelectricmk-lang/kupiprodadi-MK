@@ -39,7 +39,7 @@ export default function Footer() {
 
   return (
     <footer className="bg-[#050c16] border-t border-[#172334] text-slate-400 mt-auto">
-      <div className="max-w-6xl mx-auto px-4 py-6">
+      <div className="max-w-6xl mx-auto px-4 py-3">
         <div className="mb-6 grid grid-cols-1 gap-8 md:grid-cols-2 xl:grid-cols-[1.35fr_0.9fr_0.9fr_0.9fr] xl:gap-10">
 
           {/* Лого + Опис */}

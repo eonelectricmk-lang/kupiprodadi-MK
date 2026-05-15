@@ -443,7 +443,7 @@ export default function ProductDetailsClient({ id }: { id: string }) {
   const subcategoryLink = categoryTrail?.subcategory ? `/categories/${categoryTrail.subcategory.slug}` : null;
 
   return (
-    <div className="product-detail-page bg-[#050b17] py-6 text-white">
+    <div className="product-detail-page bg-[#050b17] pt-4 pb-2 text-white">
       <div className="mx-auto max-w-6xl px-4">
         <div className="mb-3 flex flex-wrap items-center gap-2 text-sm text-white">
           <Link href="/" className="text-white/70 hover:text-white">
@@ -484,7 +484,7 @@ export default function ProductDetailsClient({ id }: { id: string }) {
           </div>
         )}
 
-        <div className="grid gap-5 lg:grid-cols-[1.35fr_1fr]">
+        <div className="grid items-start gap-5 lg:grid-cols-[1.35fr_1fr]">
           <div className="min-w-0">
             <div className="overflow-hidden rounded-xl border border-white/10 bg-[#0e1828] relative">
               <img src={images[activeImage] || FALLBACK_IMAGE} alt={ad.title} className="block h-[280px] w-full object-cover sm:h-[340px] lg:h-[400px]" />
@@ -595,7 +595,7 @@ export default function ProductDetailsClient({ id }: { id: string }) {
             )}
           </div>
 
-          <div className="min-w-0 rounded-2xl border border-white/10 bg-[#0e1828] p-4">
+          <div className="min-w-0 rounded-2xl border border-white/10 bg-[#0e1828] p-3 pb-1">
             <div className="flex items-start justify-between gap-3">
               <h1 className="text-3xl font-bold leading-tight">{ad.title}</h1>
             </div>
@@ -631,7 +631,7 @@ export default function ProductDetailsClient({ id }: { id: string }) {
               )}
             </div>
 
-            <div className="mt-4 rounded-xl border border-white/5 bg-[#101f33] p-3.5">
+            <div className="mt-3 rounded-xl border border-white/5 bg-[#101f33] p-3">
               <div className="flex items-center justify-between gap-3">
                 <h2 className="text-base font-bold text-white uppercase tracking-wider">{isCrmPublished ? 'Продавач' : 'Профил'}</h2>
                 <div className="flex items-center gap-2">
@@ -699,7 +699,7 @@ export default function ProductDetailsClient({ id }: { id: string }) {
                   </a>
                 </div>
               ) : (
-                <form onSubmit={onSendMessage} className="mt-3 rounded-xl border border-white/10 bg-[#101f33] p-3.5">
+                <form onSubmit={onSendMessage} className="mt-2 rounded-xl border border-white/10 bg-[#101f33] p-3">
                   <h2 className="flex items-center gap-2 text-base font-bold text-white uppercase tracking-wider">
                     <MessageCircle className="h-3.5 w-3.5 text-red-500" /> Порака
                   </h2>
@@ -725,7 +725,7 @@ export default function ProductDetailsClient({ id }: { id: string }) {
               )
             )}
 
-            <div className="mt-3.5 space-y-2">
+            <div className="mt-2.5 space-y-1.5">
               <div className="grid grid-cols-2 gap-2">
                 <button type="button" onClick={onToggleFavorite} className={`inline-flex h-9 items-center justify-center gap-2 rounded-lg border text-sm font-bold transition ${isSaved ? 'border-red-500/40 bg-red-500/10 text-red-300' : 'border-white/10 bg-[#0f1a2b] text-white hover:bg-[#13243c]'}`}>
                   <Bookmark className="h-3.5 w-3.5" /> {isSaved ? 'Зачувано' : 'Зачувај'}
@@ -763,7 +763,7 @@ export default function ProductDetailsClient({ id }: { id: string }) {
               </p>
             </div>
 
-            <div className="mt-2 flex items-center gap-2 text-xs text-slate-500 px-1">
+            <div className="mt-1.5 flex items-center gap-2 text-xs text-slate-500 px-1">
               <span className="inline-flex items-center gap-1">
                 <ShieldCheck className="h-3 w-3" /> Безбедна комуникација
               </span>
