@@ -759,23 +759,25 @@ export default function ProductDetailsClient({ id }: { id: string }) {
             </div>
 
             {(ad.prevProduct || ad.nextProduct) && (
-              <div className="mt-6 flex items-center gap-3">
-                {ad.prevProduct ? (
-                  <Link
-                    href={`/products/${ad.prevProduct.id}`}
-                    className="flex-1 rounded-lg border border-[#223653] bg-[#0b1727] px-4 py-2.5 text-sm font-semibold text-slate-300 hover:bg-[#1d2c43] transition text-center"
-                  >
-                    ← Претходен оглас
-                  </Link>
-                ) : <div className="flex-1" />}
-                {ad.nextProduct ? (
-                  <Link
-                    href={`/products/${ad.nextProduct.id}`}
-                    className="flex-1 rounded-lg border border-[#223653] bg-[#0b1727] px-4 py-2.5 text-sm font-semibold text-slate-300 hover:bg-[#1d2c43] transition text-center"
-                  >
-                    Следен оглас →
-                  </Link>
-                ) : <div className="flex-1" />}
+              <div className="mt-6 rounded-xl border border-[#1d2c43] bg-[#0b1727] p-4">
+                <div className="flex items-center gap-3">
+                  {ad.prevProduct ? (
+                    <Link
+                      href={`/products/${ad.prevProduct.id}`}
+                      className="flex-1 rounded-lg border border-[#223653] bg-[#081223] px-4 py-2.5 text-sm font-semibold text-slate-300 hover:bg-[#1d2c43] transition text-center"
+                    >
+                      ← Претходен оглас
+                    </Link>
+                  ) : <div className="flex-1" />}
+                  {ad.nextProduct ? (
+                    <Link
+                      href={`/products/${ad.nextProduct.id}`}
+                      className="flex-1 rounded-lg border border-[#223653] bg-[#081223] px-4 py-2.5 text-sm font-semibold text-slate-300 hover:bg-[#1d2c43] transition text-center"
+                    >
+                      Следен оглас →
+                    </Link>
+                  ) : <div className="flex-1" />}
+                </div>
               </div>
             )}
 
