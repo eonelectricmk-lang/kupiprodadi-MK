@@ -692,9 +692,9 @@ export default function ProductDetailsClient({ id }: { id: string }) {
 
             {loggedInUser?.id !== ad.seller_id && (
               isCrmPublished && sellerPhone ? (
-                <div className="mt-3 rounded-xl border border-emerald-500/20 bg-emerald-500/5 p-4 text-center">
-                  <p className="text-sm font-bold text-emerald-400">📞 Контактирајте го огласувачот</p>
-                  <a href={`tel:${sellerPhone}`} className="mt-2 inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-4 py-2 text-md font-black text-white hover:bg-emerald-500 transition">
+                <div className="mt-3 rounded-xl border border-emerald-500/20 bg-emerald-500/5 p-3 text-center">
+                  <p className="text-lg font-black text-emerald-400">📞 Контактирајте го огласувачот</p>
+                  <a href={`tel:${sellerPhone}`} className="mt-1.5 inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-4 py-2 text-md font-black text-white hover:bg-emerald-500 transition">
                     <Phone className="h-4 w-4" /> {sellerPhone}
                   </a>
                 </div>
