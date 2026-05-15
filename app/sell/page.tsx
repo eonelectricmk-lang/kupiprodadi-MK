@@ -3,6 +3,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { CheckCircle2, ImagePlus, MapPin, Phone, ShieldCheck, Trash2, UploadCloud } from 'lucide-react';
+import Link from 'next/link';
 import Header from '../components/Header';
 import { Container, Button, Input } from '../components/ui';
 import { CATEGORIES } from '@/lib/categories';
@@ -35,6 +36,7 @@ type FormData = {
   hasViber: boolean;
   hasWhatsapp: boolean;
   hasTelegram: boolean;
+  tradePossible: boolean;
 };
 
 const INITIAL_FORM: FormData = {
@@ -44,7 +46,8 @@ const INITIAL_FORM: FormData = {
   condition: '',
   price: '',
   currency: '€',
-  negotiable: false,
+  negotiable: true,
+  tradePossible: false,
   description: '',
   city: '',
   neighborhood: '',
@@ -70,16 +73,30 @@ const CITIES = [
   'Прилеп',
   'Тетово',
   'Велес',
-  'Охрид',
   'Штип',
+  'Охрид',
+  'Гостивар',
   'Струмица',
   'Кавадарци',
-  'Гостивар',
   'Кочани',
   'Кичево',
   'Струга',
+  'Радовиш',
   'Гевгелија',
+  'Дебар',
+  'Крива Паланка',
+  'Свети Николе',
+  'Неготино',
+  'Делчево',
+  'Виница',
   'Ресен',
+  'Пробиштип',
+  'Берово',
+  'Кратово',
+  'Крушево',
+  'Македонски Брод',
+  'Валандово',
+  'Демир Хисар',
 ];
 const fieldClass = '!bg-[#0b1727] !border-[#223653] !text-white !placeholder:text-slate-500 focus:!border-red-500 focus:!ring-red-500/20';
 
@@ -92,10 +109,20 @@ const labelClass = 'mb-2 block text-sm font-semibold text-slate-100';
 
 export default function SellPage() {
   const router = useRouter();
+
+  useEffect(() => {
+    const user = typeof window !== 'undefined' ? JSON.parse(window.localStorage.getItem('user') || 'null') : null;
+    if (!user) {
+      router.push('/auth');
+    }
+  }, [router]);
+
   const [formData, setFormData] = useState<FormData>(INITIAL_FORM);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
   const [submitting, setSubmitting] = useState(false);
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
+  const [success, setSuccess] = useState(false);
+  const [newProductId, setNewProductId] = useState<number | null>(null);
   const [wasValidated, setWasValidated] = useState(false);
   const [editingProductId, setEditingProductId] = useState<number | null>(null);
   const [loadingEdit, setLoadingEdit] = useState(false);
@@ -177,6 +204,7 @@ export default function SellPage() {
           hasViber: Boolean(product.has_viber),
           hasWhatsapp: Boolean(product.has_whatsapp),
           hasTelegram: Boolean(product.has_telegram),
+          tradePossible: Boolean(product.trade_possible),
         });
 
         const loadedImages = Array.isArray(product.images) && product.images.length > 0
@@ -199,6 +227,19 @@ export default function SellPage() {
       cancelled = true;
     };
   }, [editingProductId]);
+
+  useEffect(() => {
+    const stored = typeof window !== 'undefined' ? JSON.parse(window.localStorage.getItem('user') || '{}') : {};
+    if (stored?.name || stored?.phone || stored?.email || stored?.location) {
+      setFormData(prev => ({
+        ...prev,
+        contactName: prev.contactName || stored.name || '',
+        phone: prev.phone || stored.phone || '',
+        email: prev.email || stored.email || '',
+        city: prev.city || stored.location || '',
+      }));
+    }
+  }, []);
 
   const selectedCategory = useMemo(
     () => categories.find((category) => category.slug === formData.category),
@@ -266,6 +307,7 @@ export default function SellPage() {
           has_viber: formData.hasViber ? 1 : 0,
           has_whatsapp: formData.hasWhatsapp ? 1 : 0,
           has_telegram: formData.hasTelegram ? 1 : 0,
+          trade_possible: formData.tradePossible ? 1 : 0,
           location: [formData.city, formData.neighborhood].filter(Boolean).join(', '),
           image_url: imagePreviews[0] || null,
           images: imagePreviews,
@@ -279,11 +321,16 @@ export default function SellPage() {
         throw new Error(error?.error || 'Огласот не беше зачуван');
       }
 
+      const result = await response.json();
+      if (!editingProductId) {
+        setSuccess(true);
+        setNewProductId(result.id);
+      }
       setStatusMessage(
-        editingProductId ? 'Огласот е успешно ажуриран.' : 'Вашиот оглас е успешно внесен. Се чека на одобрување.',
+        editingProductId ? 'Огласот е успешно ажуриран. Треба повторно да биде одобрен од admin.' : 'Вашиот оглас е успешно внесен. Ќе биде одобрен од admin во најбрз можен рок.',
       );
       if (editingProductId) {
-        router.push('/profile');
+        router.push(`/products/${editingProductId}?seller_id=${sellerId}`);
       } else {
         setFormData(INITIAL_FORM);
         setImagePreviews([]);
@@ -310,6 +357,28 @@ export default function SellPage() {
             </div>
           </div>
 
+          {success && !editingProductId ? (
+            <div className="flex flex-col items-center justify-center py-20 text-center">
+              <div className="rounded-lg border border-green-500/30 bg-green-500/10 p-8">
+                <CheckCircle2 className="mx-auto h-12 w-12 text-green-400" />
+                <h2 className="mt-4 text-xl font-bold text-white">Успешно објавен оглас!</h2>
+                <p className="mt-2 text-sm text-slate-300">Вашиот оглас е успешно внесен. Ќе биде одобрен од admin во најбрз можен рок.</p>
+                <div className="mt-6 flex flex-col items-center gap-3">
+                  {newProductId && (
+                    <Link href={`/products/${newProductId}?seller_id=${typeof window !== 'undefined' ? (JSON.parse(window.localStorage.getItem('user') || '{}')?.id || '') : ''}`} className="inline-flex items-center gap-2 rounded-lg bg-green-600 px-6 py-3 text-sm font-semibold text-white hover:bg-green-700 transition">
+                      Погледни го огласот
+                    </Link>
+                  )}
+                  <Link href="/sell" className="inline-flex items-center gap-2 rounded-lg bg-sky-600 px-6 py-3 text-sm font-semibold text-white hover:bg-sky-700 transition">
+                    Внеси нов оглас
+                  </Link>
+                  <Link href="/" className="text-sm text-sky-400 hover:text-sky-300 underline underline-offset-2">
+                    Врати се на почетна
+                  </Link>
+                </div>
+              </div>
+            </div>
+          ) : (
           <form onSubmit={handleSubmit} className="grid gap-5 lg:grid-cols-[1fr_320px]">
             <div className="space-y-5">
               <section className="rounded-lg border border-[#1d2c43] bg-[#081223] p-5">
@@ -400,21 +469,26 @@ export default function SellPage() {
                     </div>
                   </div>
 
-                  <label className="flex items-center gap-2 rounded-lg border border-[#223653] bg-[#0b1727] px-3 py-3 text-sm text-slate-200 md:col-span-2">
-                    <input
-                      type="checkbox"
-                      checked={formData.negotiable}
-                      onChange={(e) => updateField('negotiable', e.target.checked)}
-                      className="h-4 w-4 accent-red-600"
-                    />
-                    Цена по договор
-                  </label>
+                  <div className="flex flex-wrap items-center gap-3 md:col-span-2">
+                    <label className={`flex cursor-pointer items-center gap-2 rounded-lg border px-3 py-3 text-sm transition ${formData.negotiable ? 'border-orange-500 bg-orange-500/10 text-orange-200' : 'border-[#223653] bg-[#0b1727] text-slate-200'}`}>
+                      <input type="radio" name="priceType" checked={formData.negotiable} onChange={() => updateField('negotiable', true)} className="h-4 w-4 accent-orange-500" />
+                      Цена по договор
+                    </label>
+                    <label className={`flex cursor-pointer items-center gap-2 rounded-lg border px-3 py-3 text-sm transition ${!formData.negotiable ? 'border-red-500 bg-red-500/10 text-red-200' : 'border-[#223653] bg-[#0b1727] text-slate-200'}`}>
+                      <input type="radio" name="priceType" checked={!formData.negotiable} onChange={() => updateField('negotiable', false)} className="h-4 w-4 accent-red-600" />
+                      Цената е фиксна
+                    </label>
+                    <label className={`flex cursor-pointer items-center gap-2 rounded-lg border px-3 py-3 text-sm transition ${formData.tradePossible ? 'border-emerald-500 bg-emerald-500/10 text-emerald-200' : 'border-[#223653] bg-[#0b1727] text-slate-200'}`}>
+                      <input type="checkbox" checked={formData.tradePossible} onChange={(e) => updateField('tradePossible', e.target.checked)} className="h-4 w-4 accent-emerald-500" />
+                      Можна замена
+                    </label>
+                  </div>
                 </div>
               </section>
 
               <section className="rounded-lg border border-[#1d2c43] bg-[#081223] p-5">
                 <h2 className="text-lg font-bold">Слики</h2>
-                <p className="mt-1 text-sm text-slate-400">Додај до 8 слики. Првата слика ќе биде главна.</p>
+                <p className="mt-1 text-sm text-slate-400">Додај до 8 слики. Првата слика што ќе ја ставиш ќе биде главна.</p>
 
                 <label className="mt-4 flex min-h-36 cursor-pointer flex-col items-center justify-center rounded-lg border border-dashed border-[#365273] bg-[#0b1727] px-4 py-6 text-center transition hover:border-red-500/70 hover:bg-[#111f33]">
                   <UploadCloud className="h-9 w-9 text-red-400" />
@@ -570,12 +644,6 @@ export default function SellPage() {
                 </div>
               </div>
 
-              {statusMessage && (
-                <div className="rounded-lg border border-[#2a3f60] bg-[#0b1727] p-3 text-sm text-slate-200">
-                  {statusMessage}
-                </div>
-              )}
-
               <Button
                 type="submit"
                 disabled={submitting || loadingEdit}
@@ -585,6 +653,7 @@ export default function SellPage() {
               </Button>
             </aside>
           </form>
+          )}
         </Container>
       </main>
     </>

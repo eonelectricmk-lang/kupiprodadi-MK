@@ -72,7 +72,8 @@ export async function GET(request: NextRequest) {
 
     const products = db.prepare(`
       SELECT 
-        p.id, 
+        p.id,
+        p.status,
         p.title, 
         p.description, 
         p.price,
@@ -90,9 +91,14 @@ export async function GET(request: NextRequest) {
         p.contact_phone,
         p.contact_email,
         p.preferred_contact,
+        p.has_viber,
+        p.has_whatsapp,
+        p.has_telegram,
+        p.trade_possible,
         p.image_url,
         p.views,
         p.created_at,
+        p.sold_at,
         u.id as seller_id,
         u.name as seller_name,
         u.phone as seller_phone,
@@ -172,6 +178,7 @@ export async function POST(request: NextRequest) {
       has_viber,
       has_whatsapp,
       has_telegram,
+      trade_possible,
       location,
       seller_id,
       image_url,
@@ -216,11 +223,12 @@ export async function POST(request: NextRequest) {
         has_viber,
         has_whatsapp,
         has_telegram,
+        trade_possible,
         seller_id,
         image_url,
         status
       )
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `);
 
     const insertImage = db.prepare(`
@@ -233,7 +241,7 @@ export async function POST(request: NextRequest) {
         title,
         description,
         Number(price),
-        currency || 'дин',
+        currency || '€',
         normalizedCategory,
         normalizedSubcategory || null,
         condition || null,
@@ -250,6 +258,7 @@ export async function POST(request: NextRequest) {
         has_viber ? 1 : 0,
         has_whatsapp ? 1 : 0,
         has_telegram ? 1 : 0,
+        trade_possible ? 1 : 0,
         seller_id,
         primaryImage,
         'pending',

@@ -10,8 +10,11 @@ export async function GET(
     const resolvedParams = await params;
     const db = getDb();
     const includeAll = request.nextUrl.searchParams.get('all') === '1';
+    const sellerId = request.nextUrl.searchParams.get('seller_id');
+    const sellerIdNum = sellerId ? Number(sellerId) : 0;
     const product = db.prepare(`
       SELECT 
+        p.status,
         p.id, 
         p.title, 
         p.description, 
@@ -33,19 +36,22 @@ export async function GET(
         p.has_viber,
         p.has_whatsapp,
         p.has_telegram,
+        p.trade_possible,
         p.image_url,
         p.views,
         p.created_at,
+        p.sold_at,
         u.id as seller_id,
         u.name as seller_name,
         u.phone as seller_phone,
         u.email as seller_email,
         u.rating as seller_rating,
-        u.avatar_url as seller_avatar_url
+        u.avatar_url as seller_avatar_url,
+        u.is_active as seller_is_active
       FROM products p
       JOIN users u ON p.seller_id = u.id
-      WHERE p.id = ? ${includeAll ? '' : "AND p.status = 'active'"}
-    `).get(resolvedParams.id);
+      WHERE p.id = ? ${includeAll ? '' : "AND (p.status = 'active' OR (p.status = 'pending' AND p.seller_id = ?))"}
+    `).get(resolvedParams.id, ...(includeAll ? [] : [sellerIdNum]));
 
     if (!product) {
       return NextResponse.json(
@@ -89,8 +95,8 @@ export async function PATCH(
       return NextResponse.json({ error: 'Невалиден идентификатор' }, { status: 400 });
     }
 
-    const existing = db.prepare(`SELECT id, seller_id FROM products WHERE id = ?`).get(id) as
-      | { id: number; seller_id: number }
+    const existing = db.prepare(`SELECT id, seller_id, status FROM products WHERE id = ?`).get(id) as
+      | { id: number; seller_id: number; status: string }
       | undefined;
 
     if (!existing) {
@@ -149,6 +155,7 @@ export async function PATCH(
           has_viber = ?,
           has_whatsapp = ?,
           has_telegram = ?,
+          trade_possible = ?,
           image_url = ?,
           status = ?
       WHERE id = ?
@@ -165,7 +172,7 @@ export async function PATCH(
         payload.title.trim(),
         payload.description.trim(),
         Number(payload.price),
-        payload.currency || 'дин',
+        payload.currency || '€',
         normalizedCategory,
         normalizedSubcategory || null,
         payload.condition || null,
@@ -182,8 +189,9 @@ export async function PATCH(
         payload.has_viber ? 1 : 0,
         payload.has_whatsapp ? 1 : 0,
         payload.has_telegram ? 1 : 0,
+        payload.trade_possible ? 1 : 0,
         primaryImage,
-        payload.status || 'active',
+        'pending',
         id,
       );
 
@@ -212,6 +220,7 @@ export async function DELETE(
     const id = Number(resolvedParams.id);
     const db = getDb();
     const sellerId = request.nextUrl.searchParams.get('seller_id');
+    const markSold = request.nextUrl.searchParams.get('mark_sold') === '1';
 
     const existing = db.prepare(`SELECT id, seller_id FROM products WHERE id = ?`).get(id) as
       | { id: number; seller_id: number }
@@ -223,6 +232,11 @@ export async function DELETE(
 
     if (sellerId && Number(sellerId) !== existing.seller_id) {
       return NextResponse.json({ error: 'Немате дозвола за бришење' }, { status: 403 });
+    }
+
+    if (markSold) {
+      db.prepare("UPDATE products SET sold_at = datetime('now') WHERE id = ?").run(id);
+      return NextResponse.json({ message: 'Огласот е означен како продаден' }, { status: 200 });
     }
 
     const remove = db.transaction(() => {

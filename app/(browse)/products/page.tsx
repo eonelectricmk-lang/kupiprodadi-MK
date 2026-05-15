@@ -65,6 +65,7 @@ function ProductsPageContent() {
   const [perPage, setPerPage] = useState(DEFAULT_PER_PAGE);
   const [cardsPerRow, setCardsPerRow] = useState<6 | 4 | 2>(4);
   const [sortBy, setSortBy] = useState<'newest' | 'oldest' | 'price-asc' | 'price-desc' | 'title-asc'>('newest');
+  const [pageInput, setPageInput] = useState('');
 
   const category = searchParams.get('category');
   const search = searchParams.get('search');
@@ -178,75 +179,81 @@ function ProductsPageContent() {
           </p>
         </div>
 
-        {!loading && !error && products.length > 0 && (
+        {!loading && !error && (
           <div className="ml-auto flex flex-wrap items-center gap-2">
-            <select
-              value={perPage}
-              onChange={(e) => {
-                const newPerPage = Number(e.target.value);
-                setPerPage(newPerPage);
-                const newParams = new URLSearchParams(searchParams);
-                newParams.delete('page');
-                router.push(`/products?${newParams.toString()}`);
-              }}
-              className="h-9 rounded-lg border border-[#1f3250] bg-[#0f1a2b] px-2.5 text-sm text-slate-200 outline-none transition focus:border-[#2d4f7d]"
-              aria-label="Огласи по страна"
-            >
-              {PER_PAGE_OPTIONS.map((n) => (
-                <option key={n} value={n}>Прикажи по {n}</option>
+            <div className="flex items-center gap-1.5 text-xs text-slate-400">
+              <span className="whitespace-nowrap">Прикажи:</span>
+              {PER_PAGE_OPTIONS.map(n => (
+                <button
+                  key={n}
+                  onClick={() => {
+                    setPerPage(n);
+                    const newParams = new URLSearchParams(searchParams);
+                    newParams.delete('page');
+                    router.push(`/products?${newParams.toString()}`);
+                  }}
+                  className={`rounded border px-1.5 py-0.5 transition ${
+                    perPage === n
+                      ? 'border-red-500/50 bg-red-600/20 text-red-300 font-semibold'
+                      : 'border-[#223653] bg-[#0b1727] text-slate-300 hover:bg-[#1d2c43]'
+                  }`}
+                >
+                  {n}
+                </button>
               ))}
-            </select>
-            <div className="inline-flex items-center gap-1 rounded-lg border border-[#1f3250] bg-[#0f1a2b] p-1">
-            <button
-              type="button"
-              aria-label="Прикажи 6 во ред"
-              onClick={() => setCardsPerRow(6)}
-              className={`rounded p-1 transition ${cardsPerRow === 6 ? 'bg-[#162945] text-white' : 'text-slate-400 hover:text-slate-200'}`}
-            >
-              <span className="grid grid-cols-3 gap-0.5">
-                {Array.from({ length: 6 }, (_, i) => (
-                  <span key={`products-v6-${i}`} className="h-1.5 w-1.5 rounded-[2px] bg-current" />
-                ))}
-              </span>
-            </button>
-            <button
-              type="button"
-              aria-label="Прикажи 4 во ред"
-              onClick={() => setCardsPerRow(4)}
-              className={`rounded p-1 transition ${cardsPerRow === 4 ? 'bg-[#162945] text-white' : 'text-slate-400 hover:text-slate-200'}`}
-            >
-              <span className="grid grid-cols-2 gap-0.5">
-                {Array.from({ length: 4 }, (_, i) => (
-                  <span key={`products-v4-${i}`} className="h-1.5 w-1.5 rounded-[2px] bg-current" />
-                ))}
-              </span>
-            </button>
-            <button
-              type="button"
-              aria-label="Прикажи 2 во ред"
-              onClick={() => setCardsPerRow(2)}
-              className={`rounded p-1 transition ${cardsPerRow === 2 ? 'bg-[#162945] text-white' : 'text-slate-400 hover:text-slate-200'}`}
-            >
-              <span className="grid grid-cols-1 gap-0.5">
-                {Array.from({ length: 2 }, (_, i) => (
-                  <span key={`products-v2-${i}`} className="h-1.5 w-3 rounded-[2px] bg-current" />
-                ))}
-              </span>
-            </button>
             </div>
-
-            <select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value as 'newest' | 'oldest' | 'price-asc' | 'price-desc' | 'title-asc')}
-              className="h-9 rounded-lg border border-[#1f3250] bg-[#0f1a2b] px-2.5 text-sm text-slate-200 outline-none transition focus:border-[#2d4f7d]"
-              aria-label="Сортирај огласи"
-            >
-              <option value="newest">Најновите први</option>
-              <option value="oldest">Најстарите први</option>
-              <option value="price-asc">Најниска цена</option>
-              <option value="price-desc">Највисока цена</option>
-              <option value="title-asc">По име (А-Ш)</option>
-            </select>
+            {products.length > 0 && <>
+              <div className="inline-flex items-center gap-1 rounded-lg border border-[#1f3250] bg-[#0f1a2b] p-1">
+                <button
+                  type="button"
+                  aria-label="Прикажи 6 во ред"
+                  onClick={() => setCardsPerRow(6)}
+                  className={`rounded p-1 transition ${cardsPerRow === 6 ? 'bg-[#162945] text-white' : 'text-slate-400 hover:text-slate-200'}`}
+                >
+                  <span className="grid grid-cols-3 gap-0.5">
+                    {Array.from({ length: 6 }, (_, i) => (
+                      <span key={`products-v6-${i}`} className="h-1.5 w-1.5 rounded-[2px] bg-current" />
+                    ))}
+                  </span>
+                </button>
+                <button
+                  type="button"
+                  aria-label="Прикажи 4 во ред"
+                  onClick={() => setCardsPerRow(4)}
+                  className={`rounded p-1 transition ${cardsPerRow === 4 ? 'bg-[#162945] text-white' : 'text-slate-400 hover:text-slate-200'}`}
+                >
+                  <span className="grid grid-cols-2 gap-0.5">
+                    {Array.from({ length: 4 }, (_, i) => (
+                      <span key={`products-v4-${i}`} className="h-1.5 w-1.5 rounded-[2px] bg-current" />
+                    ))}
+                  </span>
+                </button>
+                <button
+                  type="button"
+                  aria-label="Прикажи 2 во ред"
+                  onClick={() => setCardsPerRow(2)}
+                  className={`rounded p-1 transition ${cardsPerRow === 2 ? 'bg-[#162945] text-white' : 'text-slate-400 hover:text-slate-200'}`}
+                >
+                  <span className="grid grid-cols-1 gap-0.5">
+                    {Array.from({ length: 2 }, (_, i) => (
+                      <span key={`products-v2-${i}`} className="h-1.5 w-3 rounded-[2px] bg-current" />
+                    ))}
+                  </span>
+                </button>
+              </div>
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value as 'newest' | 'oldest' | 'price-asc' | 'price-desc' | 'title-asc')}
+                className="h-9 rounded-lg border border-[#1f3250] bg-[#0f1a2b] px-2.5 text-sm text-slate-200 outline-none transition focus:border-[#2d4f7d]"
+                aria-label="Сортирај огласи"
+              >
+                <option value="newest">Најновите први</option>
+                <option value="oldest">Најстарите први</option>
+                <option value="price-asc">Најниска цена</option>
+                <option value="price-desc">Највисока цена</option>
+                <option value="title-asc">По име (А-Ш)</option>
+              </select>
+            </>}
           </div>
         )}
       </div>
@@ -289,52 +296,75 @@ function ProductsPageContent() {
                       badge: product.condition === 'Ново' ? 'НОВО' : null,
                     }}
                     layout={cardsPerRow === 2 ? 'list' : 'grid'}
+                    showKpId={cardsPerRow !== 6}
                   />
                 </Link>
               );
             })}
           </div>
 
-          {totalPages > 1 && (
-            <div className="mt-12 flex items-center justify-center gap-1.5">
-              <Button
-                type="button"
-                onClick={() => goToPage(currentPage - 1)}
-                disabled={currentPage === 1}
-                className="disabled:cursor-not-allowed disabled:opacity-50"
-              >
-                ← Назад
-              </Button>
-
-              {getPageNumbers(currentPage, totalPages).map((num, i) =>
-                num === '...' ? (
-                  <span key={`e-${i}`} className="px-2 text-sm text-slate-500">...</span>
-                ) : (
+          <div className="mt-4">
+            <div className="flex items-center justify-between gap-2 flex-wrap">
+              <div className="flex items-center gap-1.5 text-xs text-slate-400">
+                <span className="whitespace-nowrap">Прикажи:</span>
+                {PER_PAGE_OPTIONS.map(n => (
                   <button
-                    key={num}
-                    type="button"
-                    onClick={() => goToPage(num as number)}
-                    className={`rounded-lg border px-3 py-2 text-sm ${
-                      currentPage === num
-                        ? 'border-red-600 bg-red-600 text-white'
-                        : 'border-[#2a3f60] bg-[#122038] text-slate-200 hover:bg-[#1a2d49]'
+                    key={n}
+                    onClick={() => {
+                      setPerPage(n);
+                      const newParams = new URLSearchParams(searchParams);
+                      newParams.delete('page');
+                      router.push(`/products?${newParams.toString()}`);
+                    }}
+                    className={`rounded border px-1.5 py-0.5 transition ${
+                      perPage === n
+                        ? 'border-red-500/50 bg-red-600/20 text-red-300 font-semibold'
+                        : 'border-[#223653] bg-[#0b1727] text-slate-300 hover:bg-[#1d2c43]'
                     }`}
                   >
-                    {num}
+                    {n}
                   </button>
-                )
-              )}
-
-              <Button
-                type="button"
-                onClick={() => goToPage(currentPage + 1)}
-                disabled={currentPage === totalPages}
-                className="disabled:cursor-not-allowed disabled:opacity-50"
-              >
-                Напред →
-              </Button>
+                ))}
+              </div>
+              <div className="flex items-center gap-1.5">
+                <button
+                  onClick={() => goToPage(currentPage - 1)}
+                  disabled={currentPage === 1}
+                  className="rounded border border-[#223653] bg-[#0b1727] px-2.5 py-1 text-xs text-slate-300 hover:bg-[#1d2c43] disabled:opacity-30 disabled:cursor-not-allowed whitespace-nowrap"
+                >
+                  « Претходна
+                </button>
+                {totalPages > 1 && (() => {
+                  const PAGE_BOXES = 5;
+                  let start = Math.max(1, currentPage - 2);
+                  if (start + PAGE_BOXES - 1 > totalPages) start = Math.max(1, totalPages - PAGE_BOXES + 1);
+                  const boxes: number[] = [];
+                  for (let i = start; i < start + PAGE_BOXES && i <= totalPages; i++) boxes.push(i);
+                  return boxes.map(p => (
+                    <button
+                      key={p}
+                      onClick={() => goToPage(p)}
+                      className={`min-w-[32px] rounded border px-2 py-1 text-xs transition ${
+                        currentPage === p
+                          ? 'border-red-500/50 bg-red-600/20 text-red-300 font-semibold'
+                          : 'border-[#223653] bg-[#0b1727] text-slate-300 hover:bg-[#1d2c43]'
+                      }`}
+                    >
+                      {p}
+                    </button>
+                  ));
+                })()}
+                <button
+                  onClick={() => goToPage(currentPage + 1)}
+                  disabled={currentPage === totalPages}
+                  className="rounded border border-[#223653] bg-[#0b1727] px-2.5 py-1 text-xs text-slate-300 hover:bg-[#1d2c43] disabled:opacity-30 disabled:cursor-not-allowed whitespace-nowrap"
+                >
+                  Следна страна »
+                </button>
+              </div>
+              <div className="text-xs text-slate-500">{totalProducts} вкупно</div>
             </div>
-          )}
+          </div>
         </>
       )}
     </Container>

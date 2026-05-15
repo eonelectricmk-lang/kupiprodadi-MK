@@ -36,7 +36,11 @@ export async function PATCH(
       if (!validStatuses.includes(status)) {
         return NextResponse.json({ error: 'Невалиден статус' }, { status: 400 });
       }
-      db.prepare('UPDATE products SET status = ? WHERE id = ?').run(status, productId);
+      if (status === 'sold') {
+        db.prepare("UPDATE products SET sold_at = datetime('now') WHERE id = ?").run(productId);
+      } else {
+        db.prepare('UPDATE products SET status = ?, sold_at = NULL WHERE id = ?').run(status, productId);
+      }
     }
 
     if (images && Array.isArray(images)) {

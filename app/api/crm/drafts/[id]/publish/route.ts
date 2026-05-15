@@ -23,6 +23,9 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
 
     const rawCat = body.category || draft.category || '';
     const subcategory = body.subcategory || '';
+    if (!subcategory) {
+      return NextResponse.json({ error: 'Подкатегорија е задолжителна' }, { status: 400 });
+    }
 
     const allCats = db.prepare('SELECT name FROM categories WHERE parent_id IS NULL').all() as { name: string }[];
     const validCategoryNames = new Set(allCats.map((c: { name: string }) => c.name));
@@ -40,8 +43,8 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     const { price: priceNum, currency } = parsePrice(draft.price);
 
     const result = db.prepare(`
-      INSERT INTO products (title, description, price, currency, category, subcategory, location, seller_id, image_url, city, contact_name, contact_phone, status)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      INSERT INTO products (title, description, price, currency, category, subcategory, location, seller_id, image_url, city, contact_name, contact_phone, status, has_viber, has_whatsapp, has_telegram, negotiable)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `).run(
       draft.title,
       draft.description || '',
@@ -55,7 +58,9 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
       draft.city || '',
       draft.seller_name || '',
       draft.phone || '',
-      'active'
+      'active',
+      0, 0, 0,
+      1
     );
 
     const productId = result.lastInsertRowid;
@@ -66,7 +71,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
       ).run(productId, images[i], i);
     }
 
-    db.prepare('UPDATE crm_drafts SET status = ?, product_id = ? WHERE id = ?').run('published', productId, Number(id));
+    db.prepare('UPDATE crm_drafts SET status = ?, product_id = ?, category = ?, subcategory = ? WHERE id = ?').run('published', productId, category, subcategory, Number(id));
 
     return NextResponse.json({
       id: productId,

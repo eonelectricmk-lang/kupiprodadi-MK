@@ -25,6 +25,7 @@ import {
   UserCircle2,
 } from 'lucide-react';
 import { Header } from '@/app/components/Header';
+import AdCard from '@/app/components/AdCard';
 import { Card, Container } from '@/app/components/ui';
 import { useRouter } from 'next/navigation';
 import { useTheme } from '@/app/context/ThemeContext';
@@ -52,6 +53,10 @@ type Product = {
   views?: number;
   created_at?: string;
   status?: string;
+  has_viber?: number | boolean;
+  has_whatsapp?: number | boolean;
+  has_telegram?: number | boolean;
+  trade_possible?: number | boolean;
 };
 
 type Message = {
@@ -146,6 +151,10 @@ function MiniAdCard({
   href,
   note,
   status,
+  productId,
+  sellerName,
+  createdAt,
+  onRemove,
 }: {
   title: string;
   meta: string;
@@ -154,6 +163,10 @@ function MiniAdCard({
   href: string;
   note?: string;
   status?: string;
+  productId?: number;
+  sellerName?: string;
+  createdAt?: string;
+  onRemove?: () => void;
 }) {
   const { dark } = useTheme();
   const statusStyles: Record<string, string> = {
@@ -202,6 +215,15 @@ function MiniAdCard({
             </span>
           </div>
         )}
+        {onRemove && (
+          <button
+            type="button"
+            onClick={(e) => { e.preventDefault(); e.stopPropagation(); onRemove(); }}
+            className="absolute right-2 top-2 flex h-6 w-6 items-center justify-center rounded-full bg-red-600 text-white hover:bg-red-500 transition"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+          </button>
+        )}
       </div>
       <div className="space-y-1.5 p-3">
         <p className="line-clamp-2 text-sm font-semibold text-white">{title}</p>
@@ -209,8 +231,12 @@ function MiniAdCard({
           <span className="truncate">{meta}</span>
           <span className="shrink-0 font-bold text-red-400">{price}</span>
         </div>
+        <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-[11px] text-slate-500">
+          {productId && <span className="text-yellow-400 font-semibold">KP-{String(productId).padStart(6, '0')}</span>}
+          {sellerName && <span className="truncate">{sellerName}</span>}
+        </div>
         <div className="flex items-center justify-between gap-2 text-[11px] text-slate-500">
-          <span>{note || 'Отвори'}</span>
+          {createdAt && <span className="text-slate-400">{formatDate(createdAt)}</span>}
           <span className="text-slate-600">›</span>
         </div>
       </div>
@@ -242,12 +268,18 @@ function OwnerAdCard({
   email,
   contactPreference,
   negotiable,
+  hasViber,
+  hasWhatsapp,
+  hasTelegram,
+  tradePossible,
+  sellerId,
   onRefresh,
   onEdit,
   onDelete,
   onPromote,
 }: {
   productId?: number;
+  sellerId?: number;
   title: string;
   meta: string;
   price: string;
@@ -270,10 +302,14 @@ function OwnerAdCard({
   email?: string;
   contactPreference?: string;
   negotiable?: boolean;
-  onRefresh: () => void;
-  onEdit: () => void;
-  onDelete: () => void;
-  onPromote: () => void;
+  hasViber?: boolean;
+  hasWhatsapp?: boolean;
+  hasTelegram?: boolean;
+  tradePossible?: boolean;
+  onRefresh?: () => void;
+  onEdit?: () => void;
+  onDelete?: () => void;
+  onPromote?: () => void;
 }) {
   const { dark } = useTheme();
   const statusStyles: Record<string, string> = {
@@ -363,74 +399,115 @@ function OwnerAdCard({
           <div className="flex h-full flex-col gap-0">
             <div className="flex flex-wrap items-start justify-between gap-2.5">
               <div className="flex min-w-0 flex-wrap items-center gap-2">
-                <span className={`inline-flex items-center rounded-[8px] border px-3 py-1 text-[12px] font-medium ${dark ? 'force-dark-pill border-[#28415f] bg-[#0d1b2f] !text-slate-200' : 'border-slate-500 bg-slate-50 text-slate-900'}`}>
-                  {sellerName || 'Продавач'}
-                </span>
                 <Link href={href} className="min-w-0">
                   <p className={`line-clamp-2 text-[22px] font-black tracking-[-0.03em] transition ${dark ? '!text-white hover:!text-sky-300' : 'text-slate-900 hover:text-sky-600'}`}>
                     {title}
                   </p>
                 </Link>
               </div>
-              {typeof productId === 'number' && (
-                <span className={`inline-flex shrink-0 items-center rounded-[8px] border px-3 py-1 text-[11px] font-semibold ${dark ? 'force-dark-subtle border-[#223653] bg-[#081223] !text-slate-300' : 'border-slate-500 bg-slate-50 text-slate-900'}`}>
-                  ID: KP-{String(productId).padStart(5, '0')}
-                </span>
-              )}
+              <span className="flex shrink-0 items-center gap-1">
+                {sellerName && (
+                  <span className={`inline-flex items-center rounded-[8px] border px-3 py-1 text-[11px] font-semibold ${dark ? 'border-[#28415f] bg-[#0d1b2f] text-slate-200' : 'border-slate-500 bg-slate-50 text-slate-900'}`}>
+                    {sellerName}
+                  </span>
+                )}
+                {typeof sellerId === 'number' && (
+                  <span className={`inline-flex shrink-0 items-center rounded-[8px] border px-3 py-1 text-[11px] font-semibold ${dark ? 'border-blue-500/30 bg-blue-500/10 text-blue-400' : 'border-blue-600 bg-blue-100 text-blue-900'}`}>
+                    IDP: {sellerId}
+                  </span>
+                )}
+                {typeof productId === 'number' && (
+                  <span className={`inline-flex shrink-0 items-center rounded-[8px] border px-3 py-1 text-[11px] font-semibold ${dark ? 'force-dark-subtle border-[#223653] bg-[#081223] !text-slate-300' : 'border-slate-500 bg-slate-50 text-slate-900'}`}>
+                    ID: KP-{String(productId).padStart(5, '0')}
+                  </span>
+                )}
+              </span>
             </div>
 
-            <div className={`mt-3 flex flex-wrap items-center gap-3 text-[12px] ${dark ? '!text-slate-300' : 'text-slate-500'}`}>
-              <span className="inline-flex items-center gap-2">
+            <div className={`mt-2 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-[12px] ${dark ? '!text-slate-300' : 'text-slate-500'}`}>
+              <span className="inline-flex items-center gap-1">
                 <MapPin className={`h-4 w-4 ${dark ? '!text-slate-400' : 'text-slate-400'}`} />
-                {location || meta}
+                {location || 'Македонија'}
               </span>
-              <span className={dark ? '!text-slate-500' : 'text-slate-300'}>•</span>
-              <span className="inline-flex items-center gap-2">
+              {phone && (
+                <>
+                  <span className={dark ? '!text-slate-500' : 'text-slate-300'}>·</span>
+                  <span>{phone}</span>
+                  {Boolean(hasViber) && <span className="text-purple-400 font-semibold">Viber</span>}
+                  {Boolean(hasWhatsapp) && <span className="text-emerald-400 font-semibold">WA</span>}
+                  {Boolean(hasTelegram) && <span className="text-sky-400 font-semibold">TG</span>}
+                </>
+              )}
+              <span className={dark ? '!text-slate-500' : 'text-slate-300'}>·</span>
+              <span className="inline-flex items-center gap-1">
                 <CalendarDays className={`h-4 w-4 ${dark ? '!text-slate-400' : 'text-slate-400'}`} />
                 {formatDate(createdAt)}
               </span>
             </div>
 
-            <p className={`mt-3 line-clamp-2 max-w-3xl text-[13px] leading-5 ${dark ? '!text-slate-300' : 'text-slate-700'}`}>
+            <div className={`mt-2 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-[12px] ${dark ? 'text-slate-400' : 'text-slate-500'}`}>
+              {category && (
+                <span className="truncate max-w-[200px]">{category}{subcategory ? ` / ${subcategory}` : ''}</span>
+              )}
+              {condition && <><span className="text-slate-500">·</span><span>{condition}</span></>}
+              {delivery && <><span className="text-slate-500">·</span><span>{delivery}</span></>}
+              {Boolean(negotiable) && (
+                <><span className="text-slate-500">·</span><span className="text-orange-300 font-semibold">Цена по договор</span></>
+              )}
+              {Boolean(tradePossible) && (
+                <><span className="text-slate-500">·</span><span className="text-emerald-300 font-semibold">Можна замена</span></>
+              )}
+            </div>
+            <p className={`mt-2 mb-3 min-h-[100px] break-words rounded-lg border px-3 py-2 text-[13px] leading-5 ${dark ? 'border-[#1d2c43] bg-[#0a1628] !text-slate-300' : 'border-slate-400 bg-slate-50 text-slate-700'}`}>
               {description || 'Нема внесен опис за овој оглас.'}
             </p>
 
-            <div className={`mt-auto -translate-y-1 border-t pt-1.5 ${dark ? 'border-[#223653]' : 'border-slate-500'}`}>
-              <div className="flex items-center gap-2 overflow-x-auto xl:overflow-visible">
-                <button
-                  type="button"
-                  onClick={onEdit}
-                  className={`inline-flex shrink-0 items-center justify-center gap-1.5 rounded-[10px] border px-2.5 py-1.5 text-[11px] font-semibold transition ${dark ? 'force-dark-pill border-[#2b3f5f] bg-[#0b1727] text-slate-100 hover:bg-[#122038] hover:text-white' : 'border-slate-600 bg-white text-slate-900 hover:bg-slate-50 hover:text-black'}`}
-                >
-                  <PencilLine className="h-3.5 w-3.5" />
-                  Измени
-                </button>
-                <button
-                  type="button"
-                  onClick={onRefresh}
-                  className={`inline-flex shrink-0 items-center justify-center gap-1.5 rounded-[10px] border px-2.5 py-1.5 text-[11px] font-semibold transition ${dark ? 'border-sky-500/35 bg-sky-500/10 text-sky-300 hover:bg-sky-500/15' : 'border-sky-600 bg-sky-100 text-sky-900 hover:bg-sky-200'}`}
-                >
-                  <RefreshCw className="h-3.5 w-3.5" />
-                  Обнови
-                </button>
-                <button
-                  type="button"
-                  onClick={onPromote}
-                  className={`inline-flex shrink-0 items-center justify-center gap-1.5 rounded-[10px] border px-2.5 py-1.5 text-[11px] font-semibold transition ${dark ? 'border-amber-500/35 bg-amber-500/10 text-amber-300 hover:bg-amber-500/15' : 'border-amber-600 bg-amber-100 text-amber-900 hover:bg-amber-200'}`}
-                >
-                  <Sparkles className="h-3.5 w-3.5" />
-                  Промовирај
-                </button>
-                <button
-                  type="button"
-                  onClick={onDelete}
-                  className={`inline-flex shrink-0 items-center justify-center gap-1.5 rounded-[10px] border px-2.5 py-1.5 text-[11px] font-semibold transition ${dark ? 'border-rose-500/35 bg-rose-500/10 text-rose-300 hover:bg-rose-500/15' : 'border-rose-600 bg-rose-100 text-rose-900 hover:bg-rose-200'}`}
-                >
-                  <Trash2 className="h-3.5 w-3.5" />
-                  Избриши
-                </button>
+            {(onEdit || onRefresh || onPromote || onDelete) && (
+              <div className={`mt-auto border-t pt-1.5 ${dark ? 'border-[#223653]' : 'border-slate-500'}`}>
+                <div className="flex items-center gap-2 overflow-x-auto xl:overflow-visible">
+                  {onEdit && (
+                    <button
+                      type="button"
+                      onClick={onEdit}
+                      className={`inline-flex shrink-0 items-center justify-center gap-1.5 rounded-[10px] border px-2.5 py-1.5 text-[11px] font-semibold transition ${dark ? 'force-dark-pill border-[#2b3f5f] bg-[#0b1727] text-slate-100 hover:bg-[#122038] hover:text-white' : 'border-slate-600 bg-white text-slate-900 hover:bg-slate-50 hover:text-black'}`}
+                    >
+                      <PencilLine className="h-3.5 w-3.5" />
+                      Измени
+                    </button>
+                  )}
+                  {onRefresh && (
+                    <button
+                      type="button"
+                      onClick={onRefresh}
+                      className={`inline-flex shrink-0 items-center justify-center gap-1.5 rounded-[10px] border px-2.5 py-1.5 text-[11px] font-semibold transition ${dark ? 'border-sky-500/35 bg-sky-500/10 text-sky-300 hover:bg-sky-500/15' : 'border-sky-600 bg-sky-100 text-sky-900 hover:bg-sky-200'}`}
+                    >
+                      <RefreshCw className="h-3.5 w-3.5" />
+                      Обнови
+                    </button>
+                  )}
+                  {onPromote && (
+                    <button
+                      type="button"
+                      onClick={onPromote}
+                      className={`inline-flex shrink-0 items-center justify-center gap-1.5 rounded-[10px] border px-2.5 py-1.5 text-[11px] font-semibold transition ${dark ? 'border-amber-500/35 bg-amber-500/10 text-amber-300 hover:bg-amber-500/15' : 'border-amber-600 bg-amber-100 text-amber-900 hover:bg-amber-200'}`}
+                    >
+                      <Sparkles className="h-3.5 w-3.5" />
+                      Промовирај
+                    </button>
+                  )}
+                  {onDelete && (
+                    <button
+                      type="button"
+                      onClick={onDelete}
+                      className={`inline-flex shrink-0 items-center justify-center gap-1.5 rounded-[10px] border px-2.5 py-1.5 text-[11px] font-semibold transition ${dark ? 'border-rose-500/35 bg-rose-500/10 text-rose-300 hover:bg-rose-500/15' : 'border-rose-600 bg-rose-100 text-rose-900 hover:bg-rose-200'}`}
+                    >
+                      <Trash2 className="h-3.5 w-3.5" />
+                      Избриши
+                    </button>
+                  )}
+                </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
 
@@ -497,6 +574,7 @@ function OwnerAdCard({
               Детална статистика
             </button>
           </div>
+
         </div>
       </div>
     </div>
@@ -563,6 +641,39 @@ function TabButton({
   );
 }
 
+const CITIES = [
+  'Скопје',
+  'Битола',
+  'Куманово',
+  'Прилеп',
+  'Тетово',
+  'Велес',
+  'Штип',
+  'Охрид',
+  'Гостивар',
+  'Струмица',
+  'Кавадарци',
+  'Кочани',
+  'Кичево',
+  'Струга',
+  'Радовиш',
+  'Гевгелија',
+  'Дебар',
+  'Крива Паланка',
+  'Свети Николе',
+  'Неготино',
+  'Делчево',
+  'Виница',
+  'Ресен',
+  'Пробиштип',
+  'Берово',
+  'Кратово',
+  'Крушево',
+  'Македонски Брод',
+  'Валандово',
+  'Демир Хисар',
+];
+
 export default function ProfilePage() {
   const router = useRouter();
   const { dark } = useTheme();
@@ -571,12 +682,17 @@ export default function ProfilePage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [myProducts, setMyProducts] = useState<Product[]>([]);
   const [favorites, setFavorites] = useState<Product[]>([]);
+  const [savedSort, setSavedSort] = useState<'newest' | 'oldest' | 'price-asc' | 'price-desc'>('newest');
+  const [savedCardsPerRow, setSavedCardsPerRow] = useState<6 | 4 | 2>(4);
   const [messages, setMessages] = useState<Message[]>([]);
   const [messageFilter, setMessageFilter] = useState<'all' | 'received' | 'sent'>('all');
   const [sellingOrders, setSellingOrders] = useState<SellingOrder[]>([]);
   const [recentViews, setRecentViews] = useState<RecentView[]>([]);
   const [activeTab, setActiveTab] = useState<TabKey>('ads');
   const [loading, setLoading] = useState(true);
+  const [deleteTarget, setDeleteTarget] = useState<number | null>(null);
+  const [editLocation, setEditLocation] = useState('');
+  const [savingProfile, setSavingProfile] = useState(false);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -594,6 +710,7 @@ export default function ProfilePage() {
     }
 
     setUser(userData);
+    setEditLocation(userData.location || '');
     setAvatarUrl(userData.avatar_url || null);
     setRecentViews(readRecentViews());
 
@@ -725,13 +842,27 @@ export default function ProfilePage() {
 
   const maxRecentViews = Math.max(...recentViewsByDay.map((day) => day.count), 1);
 
+  const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'pending'>('all');
+
   const sortedMyProducts = useMemo(
     () =>
-      [...myProducts].sort(
-        (a, b) => new Date(b.created_at || 0).getTime() - new Date(a.created_at || 0).getTime(),
-      ),
-    [myProducts],
+      [...myProducts]
+        .filter((p) => statusFilter === 'all' || p.status === statusFilter)
+        .sort(
+          (a, b) => new Date(b.created_at || 0).getTime() - new Date(a.created_at || 0).getTime(),
+        ),
+    [myProducts, statusFilter],
   );
+
+  const sortedSaved = useMemo(() => {
+    const next = [...favorites];
+    switch (savedSort) {
+      case 'oldest': return next.sort((a: any, b: any) => new Date(a.created_at || 0).getTime() - new Date(b.created_at || 0).getTime());
+      case 'price-asc': return next.sort((a: any, b: any) => a.price - b.price);
+      case 'price-desc': return next.sort((a: any, b: any) => b.price - a.price);
+      default: return next.sort((a: any, b: any) => new Date(b.created_at || 0).getTime() - new Date(a.created_at || 0).getTime());
+    }
+  }, [favorites, savedSort]);
 
   const messageCountsByProduct = useMemo(() => {
     return messages.reduce<Record<number, number>>((acc, message) => {
@@ -769,11 +900,56 @@ export default function ProfilePage() {
   };
 
   const deleteProduct = async (productId: number) => {
-    const confirmed = window.confirm('Сигурен ли си дека сакаш да го избришеш огласот?');
-    if (!confirmed) return;
+    setDeleteTarget(productId);
+  };
+
+  const removeFavorite = async (productId: number) => {
+    if (!user?.id) return;
+    try {
+      const res = await fetch('/api/favorites', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ user_id: user.id, product_id: productId }),
+      });
+      if (res.ok) {
+        setFavorites((prev) => prev.filter((p: any) => (p.product_id || p.id) !== productId));
+      }
+    } catch { /* ignore */ }
+  };
+
+  const saveProfile = async () => {
+    if (!user?.id) return;
+    setSavingProfile(true);
+    try {
+      const res = await fetch('/api/profile', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ user_id: user.id, location: editLocation.trim() || null }),
+      });
+      const data = await res.json();
+      if (res.ok && data.user) {
+        setUser(data.user);
+        localStorage.setItem('user', JSON.stringify(data.user));
+      } else {
+        alert(data.error || 'Грешка при зачувување');
+      }
+    } catch {
+      alert('Грешка при зачувување');
+    } finally {
+      setSavingProfile(false);
+    }
+  };
+
+  const confirmDelete = async (markSold: boolean) => {
+    const productId = deleteTarget;
+    if (!productId) return;
+    setDeleteTarget(null);
 
     try {
-      const response = await fetch(`/api/products/${productId}?seller_id=${user?.id}`, {
+      const url = markSold
+        ? `/api/products/${productId}?seller_id=${user?.id}&mark_sold=1`
+        : `/api/products/${productId}?seller_id=${user?.id}`;
+      const response = await fetch(url, {
         method: 'DELETE',
       });
 
@@ -855,8 +1031,8 @@ export default function ProfilePage() {
                         <PenSquare className="h-3.5 w-3.5" />
                         Активни огласи {activeAds}
                       </span>
-                      <span className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-[10px] font-semibold ${dark ? 'border-amber-500/30 bg-amber-500/10 text-amber-300' : 'border-amber-700 bg-amber-100 text-amber-900'}`}>
-                        ID #{user.id}
+                      <span className={`inline-flex items-center rounded-full border-2 px-2.5 py-0.5 text-[10px] font-bold ${dark ? 'border-blue-400/50 bg-blue-500/20 text-blue-300' : 'border-blue-600 bg-blue-100 text-blue-900'}`}>
+                        IDP: {user.id}
                       </span>
                     </div>
 
@@ -914,16 +1090,35 @@ export default function ProfilePage() {
                     <p className={`text-[13px] sm:text-sm ${dark ? 'text-slate-400' : 'text-slate-600'}`}>Компактна листа со активни, во преглед и архивирани огласи.</p>
                   </div>
                 </div>
-                <Link
-                  href="/sell"
-                  className={`inline-flex shrink-0 items-center gap-1.5 rounded-lg border px-3 py-1.5 text-[11px] font-semibold transition sm:text-xs ${
-                    dark
-                      ? 'border-[#223653] bg-[#081223] text-slate-300 hover:bg-[#122038] hover:text-white'
-                      : 'border-slate-300 bg-white text-slate-700 hover:bg-slate-50 hover:text-slate-900'
-                  }`}
-                >
-                  Нов оглас <ArrowRight className="h-3.5 w-3.5" />
-                </Link>
+                <div className="flex items-center gap-2">
+                  <div className="flex gap-1.5">
+                    {(['all', 'active', 'pending'] as const).map((f) => (
+                      <button
+                        key={f}
+                        onClick={() => setStatusFilter(f)}
+                        className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition ${
+                          statusFilter === f
+                            ? 'bg-red-600 text-white'
+                            : dark
+                              ? 'bg-[#0b1727] text-slate-400 hover:bg-[#122038] hover:text-white'
+                              : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                        }`}
+                      >
+                        {f === 'all' ? 'Сите' : f === 'active' ? 'Активни' : 'Во преглед'}
+                      </button>
+                    ))}
+                  </div>
+                  <Link
+                    href="/sell"
+                    className={`inline-flex shrink-0 items-center gap-1.5 rounded-lg border px-3 py-1.5 text-[11px] font-semibold transition sm:text-xs ${
+                      dark
+                        ? 'border-[#223653] bg-[#081223] text-slate-300 hover:bg-[#122038] hover:text-white'
+                        : 'border-slate-300 bg-white text-slate-700 hover:bg-slate-50 hover:text-slate-900'
+                    }`}
+                  >
+                    Нов оглас <ArrowRight className="h-3.5 w-3.5" />
+                  </Link>
+                </div>
               </div>
 
               {myProducts.length === 0 ? (
@@ -938,11 +1133,12 @@ export default function ProfilePage() {
                 />
               ) : (
                 <div className="space-y-3">
-                  {sortedMyProducts.slice(0, 9).map((product) => (
+                  {sortedMyProducts.slice(0, 50).map((product) => (
                     <OwnerAdCard
                       key={product.id}
                       productId={product.id}
-                      href={`/products/${product.id}`}
+                      sellerId={user?.id}
+                      href={`/products/${product.id}?seller_id=${user?.id || ''}`}
                       title={product.title}
                       meta={`${product.location || 'Македонија'} · ${formatDate(product.created_at)}`}
                       price={`${product.price.toLocaleString()} ${product.currency || '€'}`}
@@ -956,6 +1152,17 @@ export default function ProfilePage() {
                       status={product.status}
                       sellerName={user.name}
                       negotiable={product.negotiable}
+                      category={product.category}
+                      subcategory={product.subcategory}
+                      condition={product.condition}
+                      delivery={product.delivery}
+                      phone={product.contact_phone}
+                      email={product.contact_email}
+                      contactPreference={product.preferred_contact}
+                      hasViber={Boolean(product.has_viber)}
+                      hasWhatsapp={Boolean(product.has_whatsapp)}
+                      hasTelegram={Boolean(product.has_telegram)}
+                      tradePossible={Boolean(product.trade_possible)}
                       onRefresh={() => refreshProduct(product.id)}
                       onEdit={() => editProduct(product.id)}
                       onDelete={() => deleteProduct(product.id)}
@@ -974,7 +1181,50 @@ export default function ProfilePage() {
                   <h2 className="text-[17px] font-bold sm:text-xl">Зачувани огласи</h2>
                   <p className="mt-1 text-[13px] text-slate-400 sm:text-sm">Брз пристап до огласите што ги следиш.</p>
                 </div>
-                <span className="shrink-0 text-sm text-slate-400">{favorites.length} ставки</span>
+                <div className="flex items-center gap-2">
+                  <div className="inline-flex items-center gap-1 rounded-lg border border-[#1f3250] bg-[#0f1a2b] p-1">
+                    <button
+                      type="button"
+                      onClick={() => setSavedCardsPerRow(6)}
+                      className={`rounded p-1 transition ${savedCardsPerRow === 6 ? 'bg-[#162945] text-white' : 'text-slate-400 hover:text-slate-200'}`}
+                    >
+                      <span className="grid grid-cols-3 gap-0.5">
+                        {Array.from({ length: 6 }, (_, i) => <span key={`sv6-${i}`} className="h-1.5 w-1.5 rounded-[2px] bg-current" />)}
+                      </span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setSavedCardsPerRow(4)}
+                      className={`rounded p-1 transition ${savedCardsPerRow === 4 ? 'bg-[#162945] text-white' : 'text-slate-400 hover:text-slate-200'}`}
+                    >
+                      <span className="grid grid-cols-2 gap-0.5">
+                        {Array.from({ length: 4 }, (_, i) => <span key={`sv4-${i}`} className="h-1.5 w-1.5 rounded-[2px] bg-current" />)}
+                      </span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setSavedCardsPerRow(2)}
+                      className={`rounded p-1 transition ${savedCardsPerRow === 2 ? 'bg-[#162945] text-white' : 'text-slate-400 hover:text-slate-200'}`}
+                    >
+                      <span className="grid grid-cols-1 gap-0.5">
+                        {Array.from({ length: 2 }, (_, i) => <span key={`sv2-${i}`} className="h-1.5 w-3 rounded-[2px] bg-current" />)}
+                      </span>
+                    </button>
+                  </div>
+                  <select
+                    value={savedSort}
+                    onChange={(e) => setSavedSort(e.target.value as 'newest' | 'oldest' | 'price-asc' | 'price-desc')}
+                    className={`h-8 rounded-lg border px-2 text-xs outline-none ${
+                      dark ? 'border-[#1f3250] bg-[#0f1a2b] text-slate-200' : 'border-slate-400 bg-white text-slate-900'
+                    }`}
+                  >
+                    <option value="newest">Најнови</option>
+                    <option value="oldest">Најстари</option>
+                    <option value="price-asc">Цена растечка</option>
+                    <option value="price-desc">Цена опаѓачка</option>
+                  </select>
+                  <span className="shrink-0 text-sm text-slate-400">{favorites.length} ставки</span>
+                </div>
               </div>
 
               {favorites.length === 0 ? (
@@ -983,17 +1233,27 @@ export default function ProfilePage() {
                   description="Кога ќе зачуваш оглас, тој ќе се појави тука за брз пристап."
                 />
               ) : (
-                <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-                  {favorites.slice(0, 9).map((product) => (
-                    <MiniAdCard
-                      key={product.id}
-                      href={`/products/${product.id}`}
-                      title={product.title}
-                      meta={product.location || 'Македонија'}
-                      price={`${product.price.toLocaleString()} ${product.currency || '€'}`}
-                      image={product.image_url || product.images?.[0]}
-                      note="Зачуван"
-                    />
+                <div className={`grid gap-3 ${savedCardsPerRow === 6 ? 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6' : savedCardsPerRow === 2 ? 'grid-cols-1 sm:grid-cols-2' : 'grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'}`}>
+                  {sortedSaved.slice(0, 9).map((product: any) => (
+                    <Link key={product.product_id || product.id} href={`/products/${product.product_id || product.id}`}>
+                      <AdCard
+                        ad={{
+                          id: product.product_id || product.id,
+                          title: product.title,
+                          price: product.price,
+                          currency: product.currency || '€',
+                          image_url: product.image_url,
+                          location: product.location || 'Македонија',
+                          description: product.description,
+                          postedAt: product.created_at,
+                          isVerified: false,
+                          badge: null,
+                        }}
+                        layout={savedCardsPerRow === 2 ? 'list' : 'grid'}
+                        showKpId={savedCardsPerRow !== 6}
+                        onRemove={() => removeFavorite(product.product_id || product.id)}
+                      />
+                    </Link>
                   ))}
                 </div>
               )}
@@ -1008,8 +1268,8 @@ export default function ProfilePage() {
                   <h2 className="text-[17px] font-bold sm:text-xl">Основни податоци</h2>
                     <p className="mt-1 text-[13px] text-slate-400 sm:text-sm">Профил, контакт и јавен идентитет.</p>
                   </div>
-                  <span className="shrink-0 rounded-full border border-amber-500/30 bg-amber-500/10 px-2.5 py-0.5 text-[11px] text-amber-300">
-                    ID #{user.id}
+                  <span className="shrink-0 rounded-full border-2 border-blue-400/50 bg-blue-500/20 px-2.5 py-0.5 text-[11px] font-bold text-blue-300">
+                    IDP: {user.id}
                   </span>
                 </div>
 
@@ -1017,7 +1277,28 @@ export default function ProfilePage() {
                   <InfoRow label="Име" value={user.name} />
                   <InfoRow label="Е-пошта" value={user.email} />
                   <InfoRow label="Телефон" value={user.phone || 'Не е внесен'} />
-                  <InfoRow label="Локација" value={locationLabel} />
+                  <div className="flex items-center justify-between gap-3 rounded-xl bg-[#081223] px-3.5 py-2.5">
+                    <span className="text-slate-400">Локација</span>
+                    <div className="flex items-center gap-2">
+                      <select
+                        value={editLocation}
+                        onChange={(e) => setEditLocation(e.target.value)}
+                        className="w-44 rounded-lg border border-[#223653] bg-[#0b1727] px-3 py-1.5 text-sm text-white outline-none focus:border-sky-500/50"
+                      >
+                        <option value="">Цела Македонија</option>
+                        {CITIES.map((city) => (
+                          <option key={city} value={city}>{city}</option>
+                        ))}
+                      </select>
+                      <button
+                        onClick={saveProfile}
+                        disabled={savingProfile}
+                        className="rounded-lg bg-red-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-red-700 disabled:opacity-50"
+                      >
+                        {savingProfile ? 'Зачувува...' : 'Зачувај'}
+                      </button>
+                    </div>
+                  </div>
                   <InfoRow label="Член од" value={joinedLabel} />
                 </div>
               </Card>
@@ -1163,6 +1444,20 @@ export default function ProfilePage() {
           )}
         </div>
       </Container>
+
+      {deleteTarget !== null && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
+          <div className="mx-4 w-full max-w-sm rounded-xl border border-[#1d2c43] bg-[#0b1727] p-6">
+            <p className="mb-1 text-base font-semibold text-white">Избриши оглас</p>
+            <p className="mb-5 text-sm text-slate-400">Возилото е продадено, или сакам да го избришам?</p>
+            <div className="flex flex-col gap-2">
+              <button onClick={() => confirmDelete(true)} className="w-full rounded-lg bg-amber-700 px-4 py-2.5 text-sm font-semibold text-white hover:bg-amber-600">Возилото е продадено</button>
+              <button onClick={() => confirmDelete(false)} className="w-full rounded-lg bg-red-700 px-4 py-2.5 text-sm font-semibold text-white hover:bg-red-600">Сакам да го избришам</button>
+              <button onClick={() => setDeleteTarget(null)} className="w-full rounded-lg bg-slate-700 px-4 py-2.5 text-sm text-slate-300 hover:bg-slate-600">Откажи</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

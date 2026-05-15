@@ -21,6 +21,7 @@ export const CATEGORIES: Category[] = [
       { name: 'Мотоцикли', slug: 'motocikli' },
       { name: 'Велосипеди', slug: 'velosipedi' },
       { name: 'Резервни делови', slug: 'rezervni-delovi' },
+      { name: 'Друг вид', slug: 'drug-vid-motorni-vozila' },
     ],
   },
   {
@@ -32,6 +33,7 @@ export const CATEGORIES: Category[] = [
       { name: 'Станови', slug: 'stanovi' },
       { name: 'Земјиште', slug: 'zemjiste' },
       { name: 'Гаражи', slug: 'garazi' },
+      { name: 'Друг вид', slug: 'drug-vid-nedviznosti' },
     ],
   },
   {
@@ -43,6 +45,7 @@ export const CATEGORIES: Category[] = [
       { name: 'Кујнски прибор', slug: 'kujnski' },
       { name: 'Бела техника', slug: 'bela-tehnika' },
       { name: 'Градински алати', slug: 'gradinski-alati' },
+      { name: 'Друг вид', slug: 'drug-vid-dom-gradina' },
     ],
   },
   {
@@ -54,6 +57,7 @@ export const CATEGORIES: Category[] = [
       { name: 'Облека за жени', slug: 'obleka-zeni' },
       { name: 'Обувки', slug: 'obuvki' },
       { name: 'Аксесоари', slug: 'aksesoari' },
+      { name: 'Друг вид', slug: 'drug-vid-moda-obleka' },
     ],
   },
   {
@@ -65,6 +69,7 @@ export const CATEGORIES: Category[] = [
       { name: 'Таблети', slug: 'tableti' },
       { name: 'Слушалки', slug: 'slusalki' },
       { name: 'Полначи и кабли', slug: 'polnaci-kabli' },
+      { name: 'Друг вид', slug: 'drug-vid-mobilni-telefoni' },
     ],
   },
   {
@@ -76,6 +81,7 @@ export const CATEGORIES: Category[] = [
       { name: 'Десктоп компјутери', slug: 'desktop-kompjuteri' },
       { name: 'Монитори', slug: 'monitori' },
       { name: 'Периферни уреди', slug: 'periferni-uredi' },
+      { name: 'Друг вид', slug: 'drug-vid-kompjuteri' },
     ],
   },
   {
@@ -87,6 +93,7 @@ export const CATEGORIES: Category[] = [
       { name: 'Видео камери', slug: 'video-kameri' },
       { name: 'Фотоапарати', slug: 'fotoaparati' },
       { name: 'Проектори', slug: 'projektori' },
+      { name: 'Друг вид', slug: 'drug-vid-tv-video-foto' },
     ],
   },
   {
@@ -98,6 +105,7 @@ export const CATEGORIES: Category[] = [
       { name: 'Клавијатури', slug: 'klavijature' },
       { name: 'Тапани', slug: 'tapani' },
       { name: 'Звучна опрема', slug: 'zvucna-oprema' },
+      { name: 'Друг вид', slug: 'drug-vid-muzicki-instrumenti' },
     ],
   },
   {
@@ -109,6 +117,7 @@ export const CATEGORIES: Category[] = [
       { name: 'Прстени', slug: 'prsteni' },
       { name: 'Огрлици', slug: 'ogrlici' },
       { name: 'Наушници', slug: 'naushnici' },
+      { name: 'Друг вид', slug: 'drug-vid-casovnici-nakit' },
     ],
   },
   {
@@ -120,6 +129,7 @@ export const CATEGORIES: Category[] = [
       { name: 'Детска облека', slug: 'detska-obleka' },
       { name: 'Играчки', slug: 'igracki' },
       { name: 'Детски мебел', slug: 'detski-mebel' },
+      { name: 'Друг вид', slug: 'drug-vid-bebi-deca' },
     ],
   },
   {
@@ -131,6 +141,7 @@ export const CATEGORIES: Category[] = [
       { name: 'Здравствена опрема', slug: 'zdravstvena-oprema' },
       { name: 'Фитнес опрема', slug: 'fitnes' },
       { name: 'Парфеми и масла', slug: 'parfemi-masla' },
+      { name: 'Друг вид', slug: 'drug-vid-zdravje-ubavina' },
     ],
   },
   {
@@ -142,6 +153,7 @@ export const CATEGORIES: Category[] = [
       { name: 'DVD филмови', slug: 'dvd-filmovi' },
       { name: 'Винилни плочи', slug: 'vinilni-ploci' },
       { name: 'VHS касети', slug: 'vhs-kaseti' },
+      { name: 'Друг вид', slug: 'drug-vid-muzika-filmovi-medija' },
     ],
   },
   {
@@ -153,6 +165,7 @@ export const CATEGORIES: Category[] = [
       { name: 'Образовни книги', slug: 'obrazovni-knigi' },
       { name: 'Научна фантастика', slug: 'naucna-fantastika' },
       { name: 'Поезија', slug: 'poezija' },
+      { name: 'Друг вид', slug: 'drug-vid-knigi-literatura' },
     ],
   },
   {
@@ -164,6 +177,7 @@ export const CATEGORIES: Category[] = [
       { name: 'Тетратки', slug: 'tetratki' },
       { name: 'Хартија', slug: 'hartija' },
       { name: 'Школски торби', slug: 'skolski-torbi' },
+      { name: 'Друг вид', slug: 'drug-vid-kancelarijski-skolski' },
     ],
   },
   {
@@ -175,6 +189,7 @@ export const CATEGORIES: Category[] = [
       { name: 'Колекционерски предмети', slug: 'kolekcionerski-predmeti' },
       { name: 'Хоби материјали', slug: 'hobi-materijali' },
       { name: 'Домашни миленици', slug: 'domashni-milenici' },
+      { name: 'Друг вид', slug: 'drug-vid-hobi-zivotni' },
     ],
   },
   {
@@ -186,6 +201,7 @@ export const CATEGORIES: Category[] = [
       { name: 'Фитнес опрема', slug: 'fitnes-oprema' },
       { name: 'Наутичка опрема', slug: 'nauticka-oprema' },
       { name: 'Планинска опрема', slug: 'planinska-oprema' },
+      { name: 'Друг вид', slug: 'drug-vid-sportska-oprema' },
     ],
   },
   {
@@ -197,6 +213,7 @@ export const CATEGORIES: Category[] = [
       { name: 'Уметнички слики', slug: 'umetnicki-sliki' },
       { name: 'Колекционерски монети', slug: 'kolekcionerski-moneti' },
       { name: 'Статуи и скулптури', slug: 'statui-skulpturi' },
+      { name: 'Друг вид', slug: 'drug-vid-antikvar-umetnost' },
     ],
   },
   {
@@ -208,6 +225,7 @@ export const CATEGORIES: Category[] = [
       { name: 'Алати', slug: 'alati' },
       { name: 'Работна опрема', slug: 'rabotna-oprema' },
       { name: 'Бизнис услуги', slug: 'biznis-uslugi' },
+      { name: 'Друг вид', slug: 'drug-vid-biznis-masini-alati' },
     ],
   },
   {
@@ -219,6 +237,7 @@ export const CATEGORIES: Category[] = [
       { name: 'Хранливи суплементи', slug: 'hranlivi-suplemeti' },
       { name: 'Готови јадења', slug: 'gotovi-jadenja' },
       { name: 'Кулинарски рецепти', slug: 'kulinarski-recepti' },
+      { name: 'Друг вид', slug: 'drug-vid-hrana-gotvenje' },
     ],
   },
   {
@@ -230,6 +249,7 @@ export const CATEGORIES: Category[] = [
       { name: 'Трговски производи', slug: 'trgovski-proizvodi' },
       { name: 'Комерцијална опрема', slug: 'komercijalna-oprema' },
       { name: 'Франшиза', slug: 'franshiza' },
+      { name: 'Друг вид', slug: 'drug-vid-prodavnici-trgovija' },
     ],
   },
   {
@@ -241,6 +261,7 @@ export const CATEGORIES: Category[] = [
       { name: 'Одржување на дом', slug: 'odrzuvanje-dom' },
       { name: 'Транспорт услуги', slug: 'transport-uslugi' },
       { name: 'Компјутерски услуги', slug: 'kompjuterski-uslugi' },
+      { name: 'Друг вид', slug: 'drug-vid-uslugi-servis' },
     ],
   },
   {
@@ -252,6 +273,7 @@ export const CATEGORIES: Category[] = [
       { name: 'Скратено работно време', slug: 'skrateno-vreme' },
       { name: 'Практикантура', slug: 'praktikatura' },
       { name: 'Волонтерство', slug: 'volontiranje' },
+      { name: 'Друг вид', slug: 'drug-vid-vrabotuvanje' },
     ],
   },
   {
@@ -263,6 +285,7 @@ export const CATEGORIES: Category[] = [
       { name: 'Театар', slug: 'teatar' },
       { name: 'Ноќни клубови', slug: 'nocni-klubovi' },
       { name: 'Изложби', slug: 'izlozbi' },
+      { name: 'Друг вид', slug: 'drug-vid-nastani-nocen-zivot' },
     ],
   },
   {
@@ -274,6 +297,7 @@ export const CATEGORIES: Category[] = [
       { name: 'Хотели', slug: 'hoteli' },
       { name: 'Туристички пакети', slug: 'turisticki-paketi' },
       { name: 'Изнајмување возила', slug: 'iznajmuvanje-vozila' },
+      { name: 'Друг вид', slug: 'drug-vid-patuvanja-turizam' },
     ],
   },
   {
@@ -285,6 +309,7 @@ export const CATEGORIES: Category[] = [
       { name: 'Познанство', slug: 'poznanstvo' },
       { name: 'Врски', slug: 'vrski' },
       { name: 'Сместување', slug: 'smestuvanje' },
+      { name: 'Друг вид', slug: 'drug-vid-lichni-kontakti' },
     ],
   },
   {
@@ -296,6 +321,7 @@ export const CATEGORIES: Category[] = [
       { name: 'Некласифицирано', slug: 'neklasificirano' },
       { name: 'Други услуги', slug: 'drugi-uslugi' },
       { name: 'Издавање', slug: 'izdavanje' },
+      { name: 'Друг вид', slug: 'drug-vid-ostatno' },
     ],
   },
 ];

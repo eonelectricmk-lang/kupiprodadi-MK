@@ -17,6 +17,7 @@ interface AdCardItem {
   isVerified?: boolean;
   verified?: boolean;
   badge?: string | null;
+  sold_at?: string | null;
 }
 
 interface AdCardProps {
@@ -34,6 +35,16 @@ interface AdCardProps {
   verified?: boolean;
   isVerified?: boolean;
   badge?: string | null;
+  sold_at?: string | null;
+  showKpId?: boolean;
+  onRemove?: () => void;
+}
+
+function formatDate(value?: string) {
+  if (!value) return '';
+  const date = new Date(value);
+  if (isNaN(date.getTime())) return '';
+  return new Intl.DateTimeFormat('mk-MK', { day: '2-digit', month: '2-digit', year: 'numeric' }).format(date);
 }
 
 const FALLBACK_IMAGE = 'https://picsum.photos/640/480?grayscale&blur=1';
@@ -53,6 +64,9 @@ export function AdCard({
   verified,
   isVerified,
   badge,
+  sold_at,
+  showKpId = true,
+  onRemove,
 }: AdCardProps) {
   const card = ad || {
     id: id || 0,
@@ -67,11 +81,13 @@ export function AdCard({
     verified,
     isVerified,
     badge,
+    sold_at,
   };
 
   const resolvedImage = card.image || card.image_url || FALLBACK_IMAGE;
   const resolvedVerified = card.isVerified ?? card.verified ?? false;
-  const postedLabel = card.postedAt || 'Денес 22:43';
+  const postedLabel = formatDate(card.postedAt) || 'Денес';
+  const shortLocation = (card.location || '').split(/[,\/]/)[0]?.trim() || 'Македонија';
   const [imageSrc, setImageSrc] = useState(resolvedImage);
   const [isSaved, setIsSaved] = useState(false);
   const [togglingFavorite, setTogglingFavorite] = useState(false);
@@ -132,14 +148,19 @@ export function AdCard({
               className="h-full w-full object-cover transition duration-300 hover:scale-105"
               onError={() => setImageSrc(FALLBACK_IMAGE)}
             />
-            {card.badge && (
-              <span className="absolute left-2 top-2 rounded bg-red-600 px-1.5 py-0.5 text-[10px] font-semibold text-white">
-                {card.badge}
-              </span>
-            )}
+        {card.badge && (
+          <span className="absolute left-2 top-2 rounded bg-red-600 px-1.5 py-0.5 text-[10px] font-semibold text-white">
+            {card.badge}
+          </span>
+        )}
+        {card.sold_at && (
+          <div className="absolute inset-0 flex items-center justify-center bg-black/40">
+            <span className="-rotate-12 rounded border-2 border-red-500 bg-red-500/10 px-1.5 py-0.5 text-[10px] font-black text-red-500 leading-tight">ПРОДАДЕНО !</span>
           </div>
+        )}
+      </div>
 
-          <div className="min-w-0 flex-1">
+      <div className="min-w-0 flex-1">
             <div className="flex items-start justify-between gap-2">
               <h3 className="line-clamp-2 text-base font-semibold leading-[1.2] text-white">{card.title}</h3>
               <button
@@ -161,7 +182,7 @@ export function AdCard({
                 <MapPin className="h-3.5 w-3.5" />
                 {card.location || 'Македонија'}
               </span>
-              <span className="ml-auto text-slate-400">ID: KP-{card.id.toString().padStart(6, '0')}</span>
+              <span className="ml-auto text-yellow-400">ID: KP-{card.id.toString().padStart(6, '0')}</span>
             </p>
 
             <p className="mt-2 line-clamp-2 text-xs leading-5 text-slate-300">
@@ -176,6 +197,15 @@ export function AdCard({
                   <span title="Проверен продавач" className="inline-flex items-center text-green-400">
                     <ShieldCheck className="h-4 w-4" />
                   </span>
+                )}
+                {onRemove && (
+                  <button
+                    type="button"
+                    onClick={(e) => { e.preventDefault(); e.stopPropagation(); onRemove(); }}
+                    className="flex h-6 w-6 items-center justify-center rounded-full bg-red-600 text-white hover:bg-red-500 transition"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+                  </button>
                 )}
               </div>
             </div>
@@ -199,6 +229,11 @@ export function AdCard({
             {card.badge}
           </span>
         )}
+        {card.sold_at && (
+          <div className="absolute inset-0 flex items-center justify-center bg-black/40">
+            <span className="-rotate-12 rounded border-2 border-red-500 bg-red-500/10 px-2 py-1 text-sm font-black text-red-500 sm:text-base leading-tight">ПРОДАДЕНО !</span>
+          </div>
+        )}
         <button
           type="button"
           onClick={onToggleFavorite}
@@ -214,27 +249,36 @@ export function AdCard({
       </div>
 
       <div className="flex h-[98px] flex-col px-3 pb-3 pt-2.5">
-        <div className="flex items-center justify-between">
-          <p className="flex items-center gap-1 text-[11px] text-slate-400">
-            <span className="flex items-center gap-1">
-              <MapPin className="h-3.5 w-3.5" />
-              {card.location || 'Македонија'}
-            </span>
+        <div className="flex items-center justify-between gap-1">
+          <p className="flex items-center gap-1 truncate text-[11px] text-slate-400">
+            <MapPin className="h-3.5 w-3.5 shrink-0" />
+            <span className="truncate">{shortLocation}</span>
           </p>
-          <div className="flex items-center gap-2">
-            <span className="text-[10px] font-medium text-slate-400">ID: KP-{card.id.toString().padStart(6, '0')}</span>
+          <div className="flex shrink-0 items-center gap-1">
+            {showKpId && (
+              <span className="text-[10px] font-medium text-yellow-400">KP-{card.id.toString().padStart(6, '0')}</span>
+            )}
             {resolvedVerified && (
-              <span title="Проверен продавач" className="inline-flex shrink-0 items-center text-green-400">
+              <span title="Проверен продавач" className="text-green-400">
                 <ShieldCheck className="h-3.5 w-3.5" />
               </span>
             )}
           </div>
         </div>
-        <h3 className="line-clamp-2 min-h-[34px] text-[15px] font-semibold leading-[1.2] text-white">{card.title}</h3>
+        <h3 className="mt-0.5 line-clamp-2 text-[14px] font-semibold leading-[1.2] text-white">{card.title}</h3>
         <div className="mt-auto flex items-end justify-between gap-1 pt-0">
           <p className="whitespace-nowrap text-base font-bold leading-none text-red-500">{card.price.toLocaleString()} <span className="text-white">{card.currency || '€'}</span></p>
           <div className="flex shrink-0 items-center gap-1">
-            <p className="text-[10px] text-slate-500">{postedLabel}</p>
+            <p className="shrink-0 text-[10px] text-slate-500">{postedLabel}</p>
+            {onRemove && (
+              <button
+                type="button"
+                onClick={(e) => { e.preventDefault(); e.stopPropagation(); onRemove(); }}
+                className="flex h-5 w-5 items-center justify-center rounded-full bg-red-600 text-white hover:bg-red-500 transition"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-2.5 w-2.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+              </button>
+            )}
           </div>
         </div>
       </div>

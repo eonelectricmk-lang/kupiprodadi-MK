@@ -45,6 +45,25 @@ export function seedDefaultCategories(database: any) {
   transaction();
 }
 
+export function addMissingSubcategories(database: any) {
+  const parents = database.prepare('SELECT id, name, slug AS parentSlug FROM categories WHERE parent_id IS NULL').all() as Array<{ id: number; name: string; parentSlug: string }>;
+  const subInsert = database.prepare('INSERT INTO categories (parent_id, name, slug, icon, sort_order, is_active) VALUES (?, ?, ?, NULL, ?, 1)');
+  const maxSort = database.prepare('SELECT COALESCE(MAX(sort_order), -1) + 1 AS next FROM categories WHERE parent_id = ?');
+
+  const transaction = database.transaction(() => {
+    for (const parent of parents) {
+      const qualSlug = `drug-vid-${parent.parentSlug}`;
+      const existing = database.prepare('SELECT id FROM categories WHERE parent_id = ? AND slug = ?').get(parent.id, qualSlug);
+      if (!existing) {
+        const nextSort = (maxSort.get(parent.id) as { next: number }).next;
+        subInsert.run(parent.id, 'Друг вид', qualSlug, nextSort);
+      }
+    }
+  });
+
+  transaction();
+}
+
 export function migrateCategorySlugs(database: any) {
   const updateCategorySlug = database.prepare('UPDATE categories SET slug = ? WHERE slug = ?');
   const updateProductCategory = database.prepare('UPDATE products SET category = ? WHERE category = ?');

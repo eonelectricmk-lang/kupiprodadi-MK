@@ -7,8 +7,22 @@ export async function GET(request: NextRequest) {
   const status = request.nextUrl.searchParams.get('status') || '';
 
   if (status === 'published') {
+    const expired = db.prepare("SELECT id FROM products WHERE sold_at IS NOT NULL AND sold_at < datetime('now', '-5 days')").all() as { id: number }[];
+    if (expired.length > 0) {
+      const ids = expired.map(r => r.id);
+      const removeExpired = db.transaction(() => {
+        for (const pid of ids) {
+          db.prepare('DELETE FROM crm_drafts WHERE product_id = ?').run(pid);
+          db.prepare('DELETE FROM product_images WHERE product_id = ?').run(pid);
+          db.prepare('DELETE FROM cart WHERE product_id = ?').run(pid);
+          db.prepare('DELETE FROM products WHERE id = ?').run(pid);
+        }
+      });
+      removeExpired();
+    }
     const drafts = db.prepare(`
       SELECT d.*,
+        COALESCE(p.category, d.category) as category,
         COALESCE(p.status, (
           SELECT p2.status FROM products p2
           JOIN users u ON u.id = p2.seller_id
@@ -22,7 +36,9 @@ export async function GET(request: NextRequest) {
           WHERE u.email = 'kupiprodadi@system.mk'
           AND LOWER(TRIM(p2.title)) = LOWER(TRIM(d.title))
           LIMIT 1
-        )) as product_id
+        )) as product_id,
+        p.sold_at as sold_at,
+        COALESCE(p.subcategory, d.subcategory, '') as subcategory
       FROM crm_drafts d
       LEFT JOIN products p ON p.id = d.product_id
       WHERE d.status = 'published'

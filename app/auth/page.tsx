@@ -13,7 +13,7 @@ export default function AuthPage() {
   const router = useRouter();
   const [isLogin, setIsLogin] = useState(true);
   const { dark } = useTheme();
-  const [loggedUser, setLoggedUser] = useState<{ name: string; email: string; avatar_url?: string } | null>(null);
+  const [loggedUser, setLoggedUser] = useState<{ id?: number; name: string; email: string; avatar_url?: string } | null>(null);
 
   useEffect(() => {
     const stored = localStorage.getItem('user');
@@ -94,7 +94,12 @@ export default function AuthPage() {
                     <h2 className={`mt-4 text-2xl font-black tracking-tight sm:text-3xl ${dark ? 'text-white' : 'text-slate-900'}`}>
                       {loggedUser.name}
                     </h2>
-                    <p className={`mt-1 text-sm ${dark ? 'text-slate-400' : 'text-slate-600'}`}>
+                    {loggedUser.id && (
+                      <span className="mt-1 inline-flex items-center rounded-full border-2 border-blue-400/50 bg-blue-500/20 px-3 py-0.5 text-xs font-bold text-blue-300">
+                        IDP: {loggedUser.id}
+                      </span>
+                    )}
+                    <p className={`mt-2 text-sm ${dark ? 'text-slate-400' : 'text-slate-600'}`}>
                       {loggedUser.email}
                     </p>
                     <p className={`mt-2 text-sm font-medium ${dark ? 'text-emerald-400' : 'text-emerald-700'}`}>

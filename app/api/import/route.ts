@@ -49,7 +49,7 @@ export async function POST(request: NextRequest) {
         title,
         description || '',
         Number(price) || 0,
-        'дин',
+        '€',
         categoryName,
         resolvedLocation,
         systemUser.id,

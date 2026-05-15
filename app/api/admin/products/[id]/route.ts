@@ -10,7 +10,8 @@ export async function PATCH(request: NextRequest, context: { params: Promise<{ i
     const db = getDb();
     const params = await context.params;
     const id = Number(params.id);
-    const { status, has_viber, has_whatsapp } = await request.json();
+    const body = await request.json();
+    const { status, has_viber, has_whatsapp, trade_possible } = body;
 
     if (status !== undefined) {
       if (!ALLOWED.has(status)) {
@@ -24,6 +25,19 @@ export async function PATCH(request: NextRequest, context: { params: Promise<{ i
     }
     if (has_whatsapp !== undefined) {
       db.prepare(`UPDATE products SET has_whatsapp = ? WHERE id = ?`).run(has_whatsapp ? 1 : 0, id);
+    }
+    if (trade_possible !== undefined) {
+      db.prepare(`UPDATE products SET trade_possible = ? WHERE id = ?`).run(trade_possible ? 1 : 0, id);
+    }
+    if (body.negotiable !== undefined) {
+      db.prepare(`UPDATE products SET negotiable = ? WHERE id = ?`).run(body.negotiable ? 1 : 0, id);
+    }
+
+    const editableFields = ['title', 'description', 'price', 'city', 'category', 'subcategory', 'condition', 'delivery', 'contact_name', 'contact_phone', 'contact_email'];
+    for (const field of editableFields) {
+      if (body[field] !== undefined) {
+        db.prepare(`UPDATE products SET ${field} = ? WHERE id = ?`).run(body[field], id);
+      }
     }
 
     return NextResponse.json({ message: 'Ажурирано' });

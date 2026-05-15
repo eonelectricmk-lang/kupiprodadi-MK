@@ -24,6 +24,8 @@ export async function GET(request: NextRequest) {
         p.location,
         p.image_url,
         p.category,
+        p.created_at,
+        p.seller_id,
         u.name as seller_name
       FROM favorites f
       JOIN products p ON f.product_id = p.id

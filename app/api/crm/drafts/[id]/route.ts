@@ -16,7 +16,7 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
   const { id } = await params;
   try {
     const body = await request.json();
-    const allowed = ['title', 'description', 'price', 'city', 'category', 'seller_name', 'phone', 'images', 'notes', 'status'];
+    const allowed = ['title', 'description', 'price', 'city', 'category', 'subcategory', 'seller_name', 'phone', 'images', 'notes', 'status'];
     const sets: string[] = [];
     const vals: any[] = [];
 

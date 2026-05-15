@@ -8,7 +8,14 @@ export async function GET(request: NextRequest) {
     const db = getDb();
     const status = request.nextUrl.searchParams.get('status');
     const sort = request.nextUrl.searchParams.get('sort') || 'newest';
-    const where = status ? 'WHERE p.status = ?' : '';
+    const source = request.nextUrl.searchParams.get('source');
+    let where = status ? 'WHERE p.status = ?' : '';
+    const params: any[] = status ? [status] : [];
+    if (source === 'crm') {
+      where = status ? `${where} AND cd.id IS NOT NULL` : 'WHERE cd.id IS NOT NULL';
+    } else if (source === 'regular') {
+      where = status ? `${where} AND cd.id IS NULL` : 'WHERE cd.id IS NULL';
+    }
 
     let orderBy = 'p.created_at DESC';
     switch (sort) {
@@ -38,14 +45,21 @@ export async function GET(request: NextRequest) {
         p.contact_email,
         p.delivery,
         p.condition,
+        p.negotiable,
+        p.trade_possible,
+        p.has_viber,
+        p.has_whatsapp,
+        p.has_telegram,
         u.id as seller_id,
         u.name as seller_name,
-        u.email as seller_email
+        u.email as seller_email,
+        cd.id as crm_draft_id
       FROM products p
       JOIN users u ON u.id = p.seller_id
+      LEFT JOIN crm_drafts cd ON cd.product_id = p.id
       ${where}
       ORDER BY ${orderBy}
-    `).all(...(status ? [status] : []));
+    `).all(...params);
     const productIds = rows.map((product: any) => product.id);
     const imagesByProduct = new Map<number, string[]>();
 
@@ -68,6 +82,7 @@ export async function GET(request: NextRequest) {
     const products = rows.map((product: any) => ({
       ...product,
       images: imagesByProduct.get(product.id) || (product.image_url ? [product.image_url] : []),
+      source: product.crm_draft_id ? 'crm' : 'regular',
     }));
 
     return NextResponse.json({ products });

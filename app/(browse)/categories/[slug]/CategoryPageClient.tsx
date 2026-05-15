@@ -31,9 +31,8 @@ type Product = {
   images?: string[];
   seller_rating?: number;
   created_at?: string;
+  sold_at?: string | null;
 };
-
-const ITEMS_PER_PAGE = 12;
 
 function formatFallbackName(slug: string) {
   return slug
@@ -53,6 +52,7 @@ export default function CategoryPageClient({ slug, initialCategoryName }: { slug
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalProducts, setTotalProducts] = useState(0);
+  const [perPage, setPerPage] = useState(30);
   const [categoryName, setCategoryName] = useState(initialCategoryName || '');
 
   const search = searchParams.get('search');
@@ -111,8 +111,8 @@ export default function CategoryPageClient({ slug, initialCategoryName }: { slug
 
       try {
         const apiParams = new URLSearchParams();
-        apiParams.set('limit', String(ITEMS_PER_PAGE));
-        apiParams.set('offset', String((pageNumber - 1) * ITEMS_PER_PAGE));
+        apiParams.set('limit', String(perPage));
+        apiParams.set('offset', String((pageNumber - 1) * perPage));
 
         if (matchedCategory?.type === 'subcategory') {
           apiParams.set('sub', matchedCategory.slug);
@@ -139,7 +139,7 @@ export default function CategoryPageClient({ slug, initialCategoryName }: { slug
 
         setProducts(nextProducts);
         setTotalProducts(total);
-        setTotalPages(Math.max(Math.ceil(total / ITEMS_PER_PAGE), 1));
+        setTotalPages(Math.max(Math.ceil(total / perPage), 1));
         setCurrentPage(pageNumber);
       } catch (fetchError) {
         if ((fetchError as Error).name !== 'AbortError') {
@@ -158,7 +158,7 @@ export default function CategoryPageClient({ slug, initialCategoryName }: { slug
     fetchProducts();
 
     return () => controller.abort();
-  }, [matchedCategory, normalizedSlug, search, minPrice, maxPrice, page]);
+  }, [matchedCategory, normalizedSlug, search, minPrice, maxPrice, page, perPage]);
 
   const removeFilter = (filterType: string) => {
     const newParams = new URLSearchParams(searchParams);
@@ -293,6 +293,7 @@ export default function CategoryPageClient({ slug, initialCategoryName }: { slug
                       postedAt: product.created_at,
                       isVerified: Number(product.seller_rating || 0) >= 4.7,
                       badge: null,
+                      sold_at: product.sold_at,
                     }}
                   />
                 </Link>
@@ -300,43 +301,63 @@ export default function CategoryPageClient({ slug, initialCategoryName }: { slug
             })}
           </div>
 
-          {totalPages > 1 && (
-            <div className="mt-12 flex justify-center gap-2">
-              <Button
-                onClick={() => goToPage(currentPage - 1)}
-                disabled={currentPage === 1}
-                className="disabled:cursor-not-allowed disabled:opacity-50"
-              >
-                ← Назад
-              </Button>
-
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map((num) => (
+          <div className="mt-8">
+            <div className="flex items-center justify-between gap-2 flex-wrap">
+              <div className="flex items-center gap-1.5 text-xs text-slate-400">
+                <span className="whitespace-nowrap">Прикажи:</span>
+                {[30, 50, 70, 100].map(n => (
+                  <button
+                    key={n}
+                    onClick={() => { setPerPage(n); goToPage(1); }}
+                    className={`rounded border px-1.5 py-0.5 transition ${
+                      perPage === n
+                        ? 'border-red-500/50 bg-red-600/20 text-red-300 font-semibold'
+                        : 'border-[#223653] bg-[#0b1727] text-slate-300 hover:bg-[#1d2c43]'
+                    }`}
+                  >
+                    {n}
+                  </button>
+                ))}
+              </div>
+              <div className="flex items-center gap-1.5">
                 <button
-                  key={num}
-                  onClick={() => goToPage(num)}
-                  className={`rounded-lg border px-4 py-2 ${
-                    currentPage === num
-                      ? 'border-red-600 bg-red-600 text-white'
-                      : 'border-[#2a3f60] bg-[#122038] text-slate-200 hover:bg-[#1a2d49]'
-                  }`}
+                  onClick={() => goToPage(currentPage - 1)}
+                  disabled={currentPage === 1}
+                  className="rounded border border-[#223653] bg-[#0b1727] px-2.5 py-1 text-xs text-slate-300 hover:bg-[#1d2c43] disabled:opacity-30 disabled:cursor-not-allowed whitespace-nowrap"
                 >
-                  {num}
+                  « Претходна
                 </button>
-              ))}
-
-              <Button
-                onClick={() => goToPage(currentPage + 1)}
-                disabled={currentPage === totalPages}
-                className="disabled:cursor-not-allowed disabled:opacity-50"
-              >
-                Напред →
-              </Button>
+                {totalPages > 1 && (() => {
+                  const PAGE_BOXES = 5;
+                  let start = Math.max(1, currentPage - 2);
+                  if (start + PAGE_BOXES - 1 > totalPages) start = Math.max(1, totalPages - PAGE_BOXES + 1);
+                  const boxes: number[] = [];
+                  for (let i = start; i < start + PAGE_BOXES && i <= totalPages; i++) boxes.push(i);
+                  return boxes.map(p => (
+                    <button
+                      key={p}
+                      onClick={() => goToPage(p)}
+                      className={`min-w-[32px] rounded border px-2 py-1 text-xs transition ${
+                        currentPage === p
+                          ? 'border-red-500/50 bg-red-600/20 text-red-300 font-semibold'
+                          : 'border-[#223653] bg-[#0b1727] text-slate-300 hover:bg-[#1d2c43]'
+                      }`}
+                    >
+                      {p}
+                    </button>
+                  ));
+                })()}
+                <button
+                  onClick={() => goToPage(currentPage + 1)}
+                  disabled={currentPage === totalPages}
+                  className="rounded border border-[#223653] bg-[#0b1727] px-2.5 py-1 text-xs text-slate-300 hover:bg-[#1d2c43] disabled:opacity-30 disabled:cursor-not-allowed whitespace-nowrap"
+                >
+                  Следна страна »
+                </button>
+              </div>
+              <div className="text-xs text-slate-500">{totalProducts.toLocaleString('mk-MK')} вкупно</div>
             </div>
-          )}
-
-          <p className="mt-4 text-center text-xs text-slate-500">
-            Вкупно {totalProducts.toLocaleString('mk-MK')} резултати
-          </p>
+          </div>
         </>
       )}
     </Container>

@@ -23,6 +23,7 @@ type ProductCard = {
   seller_rating?: number;
   created_at?: string;
   category: string;
+  sold_at?: string | null;
 };
 
 export default function Home() {
@@ -135,6 +136,7 @@ export default function Home() {
                     postedAt: ad.created_at,
                     isVerified: Number(ad.seller_rating || 0) >= 4.7,
                     badge: null,
+                    sold_at: ad.sold_at,
                   }}
                 />
               </Link>

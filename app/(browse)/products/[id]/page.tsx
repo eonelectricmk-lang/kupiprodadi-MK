@@ -15,18 +15,21 @@ function buildDescription(title: string, description?: string, categoryLabel?: s
   return combined.length > 160 ? `${combined.slice(0, 157)}...` : combined;
 }
 
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+export async function generateMetadata({ params, searchParams }: PageProps & { searchParams: Promise<{ seller_id?: string }> }): Promise<Metadata> {
   const resolvedParams = await params;
+  const resolvedSearch = await searchParams;
   const id = Number(resolvedParams.id);
   const db = getDb();
+  const sellerId = resolvedSearch.seller_id ? Number(resolvedSearch.seller_id) : 0;
 
   const product = db.prepare(`
-    SELECT id, title, description, category, subcategory, image_url
+    SELECT id, status, title, description, category, subcategory, image_url
     FROM products
-    WHERE id = ? AND status = 'active'
-  `).get(id) as
+    WHERE id = ? AND (status = 'active' OR (status = 'pending' AND seller_id = ?))
+  `).get(id, sellerId) as
     | {
         id: number;
+        status: string;
         title: string;
         description: string;
         category: string;
@@ -83,8 +86,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     title,
     description,
     robots: {
-      index: true,
-      follow: true,
+      index: product.status === 'active',
+      follow: product.status === 'active',
     },
     alternates: {
       canonical: `/products/${resolvedParams.id}`,

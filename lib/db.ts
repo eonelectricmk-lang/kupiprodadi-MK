@@ -1,5 +1,5 @@
 import path from 'path';
-import { migrateCategorySlugs, seedDefaultCategories } from '@/lib/category-store';
+import { migrateCategorySlugs, seedDefaultCategories, addMissingSubcategories } from '@/lib/category-store';
 import { seedDefaultBanners } from '@/lib/banner-store';
 import { seedHomepageSections } from '@/lib/homepage-sections';
 
@@ -52,7 +52,7 @@ function initializeDb() {
         title TEXT NOT NULL,
         description TEXT NOT NULL,
         price REAL NOT NULL,
-        currency TEXT DEFAULT 'дин',
+        currency TEXT DEFAULT '€',
         category TEXT NOT NULL,
         location TEXT NOT NULL,
         seller_id INTEGER NOT NULL,
@@ -209,6 +209,17 @@ function initializeDb() {
         data TEXT NOT NULL,
         updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
       );
+
+      CREATE TABLE IF NOT EXISTS reports (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        product_id INTEGER NOT NULL,
+        reporter_id INTEGER,
+        reason TEXT NOT NULL DEFAULT '',
+        status TEXT NOT NULL DEFAULT 'new',
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE,
+        FOREIGN KEY (reporter_id) REFERENCES users(id) ON DELETE SET NULL
+      );
     `);
 
     const productColumns: Array<[string, string]> = [
@@ -226,6 +237,7 @@ function initializeDb() {
       ['has_viber', 'BOOLEAN DEFAULT 0'],
       ['has_whatsapp', 'BOOLEAN DEFAULT 0'],
       ['has_telegram', 'BOOLEAN DEFAULT 0'],
+      ['trade_possible', 'BOOLEAN DEFAULT 0'],
     ];
 
     productColumns.forEach(([column, definition]) => {
@@ -235,9 +247,12 @@ function initializeDb() {
     addColumnIfMissing(db, 'users', 'role', "TEXT DEFAULT 'user'");
     addColumnIfMissing(db, 'users', 'is_active', 'BOOLEAN DEFAULT 1');
     addColumnIfMissing(db, 'users', 'avatar_url', 'TEXT');
+    addColumnIfMissing(db, 'products', 'sold_at', 'DATETIME DEFAULT NULL');
     addColumnIfMissing(db, 'crm_drafts', 'product_id', 'INTEGER DEFAULT NULL');
+    addColumnIfMissing(db, 'crm_drafts', 'subcategory', 'TEXT');
     seedDefaultCategories(db);
     migrateCategorySlugs(db);
+    addMissingSubcategories(db);
     seedDefaultBanners(db);
     seedHomepageSections(db);
 
