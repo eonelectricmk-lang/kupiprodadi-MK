@@ -751,6 +751,9 @@ export default function ProductDetailsClient({ id }: { id: string }) {
       {showReportModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60" onClick={() => setShowReportModal(false)}>
           <div className="mx-4 w-full max-w-md rounded-xl border border-[#1d2c43] bg-[#0b1727] p-6 shadow-2xl" onClick={e => e.stopPropagation()}>
+            <div className="mb-4 rounded-lg border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-xs leading-5 text-amber-200">
+              kupiprodadi.mk нема своја курирска служба, не посредува при плаќање и не комуницира со корисниците за вашите објави. Чувајте се од измами!
+            </div>
             <h3 className="text-lg font-bold text-white">Пријавете злоупотреба</h3>
             <p className="mt-1 text-sm text-slate-400">Овој оглас ќе биде прегледан од администратор.</p>
 
