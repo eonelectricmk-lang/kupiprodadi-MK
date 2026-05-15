@@ -595,7 +595,7 @@ export default function ProductDetailsClient({ id }: { id: string }) {
             )}
           </div>
 
-          <div className="min-w-0 rounded-2xl border border-white/10 bg-[#0e1828] p-5">
+          <div className="min-w-0 rounded-2xl border border-white/10 bg-[#0e1828] p-4">
             <div className="flex items-start justify-between gap-3">
               <h1 className="text-3xl font-bold leading-tight">{ad.title}</h1>
             </div>
@@ -745,25 +745,25 @@ export default function ProductDetailsClient({ id }: { id: string }) {
             </div>
 
             {ad.delivery && (
-              <div className="mt-3.5 rounded-xl border border-white/5 bg-[#101f33] p-3 text-sm text-slate-400">
+              <div className="mt-2 rounded-xl border border-white/5 bg-[#101f33] py-2 px-3 text-sm text-slate-400">
                 <p className="flex items-center gap-2 font-bold text-white uppercase tracking-tighter">
                   <Truck className="h-3.5 w-3.5 text-blue-400" /> Достава
                 </p>
-                <p className="mt-1">{ad.delivery}</p>
+                <p className="mt-0.5">{ad.delivery}</p>
               </div>
             )}
 
-            <div className="mt-3.5 rounded-xl border border-white/5 bg-[#101f33] p-3 text-sm text-slate-400">
+            <div className="mt-2 rounded-xl border border-white/5 bg-[#101f33] py-2 px-3 text-sm text-slate-400">
               <p className="flex items-center gap-2 font-bold text-white uppercase tracking-tighter">
                 <MapPin className="h-3.5 w-3.5 text-emerald-400" /> Локација
               </p>
-              <p className="mt-1">
+              <p className="mt-0.5">
                 {ad.city || ad.location || 'Македонија'}
                 {ad.neighborhood ? `, ${ad.neighborhood}` : ''}
               </p>
             </div>
 
-            <div className="mt-3 flex items-center gap-2 text-xs text-slate-500 px-1">
+            <div className="mt-2 flex items-center gap-2 text-xs text-slate-500 px-1">
               <span className="inline-flex items-center gap-1">
                 <ShieldCheck className="h-3 w-3" /> Безбедна комуникација
               </span>
