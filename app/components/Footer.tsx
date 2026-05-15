@@ -38,7 +38,7 @@ export default function Footer() {
   }, []);
 
   return (
-    <footer className="bg-[#050c16] border-t border-[#172334] text-slate-400 mt-auto">
+    <footer className="bg-[#050c16] border-t border-[#2a3f55] text-slate-400 mt-auto">
       <div className="max-w-6xl mx-auto px-4 py-3">
         <div className="mb-6 grid grid-cols-1 gap-8 md:grid-cols-2 xl:grid-cols-[1.35fr_0.9fr_0.9fr_0.9fr] xl:gap-10">
 
@@ -70,7 +70,7 @@ export default function Footer() {
               </a>
             </div>
             {isExploreOpen && (
-              <div className="mt-5 rounded-2xl border border-[#223653] bg-[#0b1727] p-4">
+              <div className="mt-5 rounded-2xl border border-[#2a3f55] bg-[#0b1727] p-4">
                 <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">Мрежи, канали и групи</p>
                 <div className="mt-3 flex flex-wrap gap-2">
                   <a href={socialLinks[0].href} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full border border-[#314661] bg-[#081223] px-3 py-1.5 text-xs text-slate-200 hover:text-white transition">
@@ -172,7 +172,7 @@ export default function Footer() {
         </div>
 
         {/* Bottom bar */}
-        <div className="border-t border-[#172334] pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm">
+        <div className="border-t border-[#2a3f55] pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm">
           <p>© 2026 КупиПродади. Сите права задржани.</p>
           <div className="flex gap-6">
             <Link href="/privacy" className="hover:text-white transition">Приватност</Link>

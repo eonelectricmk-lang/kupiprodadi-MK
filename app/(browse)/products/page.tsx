@@ -195,7 +195,7 @@ function ProductsPageContent() {
                   className={`rounded border px-1.5 py-0.5 transition ${
                     perPage === n
                       ? 'border-red-500/50 bg-red-600/20 text-red-300 font-semibold'
-                      : 'border-[#223653] bg-[#0b1727] text-slate-300 hover:bg-[#1d2c43]'
+                      : 'border-[#2a3f55] bg-[#0b1727] text-slate-300 hover:bg-[#1d2c43]'
                   }`}
                 >
                   {n}
@@ -259,7 +259,7 @@ function ProductsPageContent() {
       </div>
 
       {loading ? (
-        <div className="rounded-lg border border-[#1d2c43] bg-[#081223] py-12 text-center">
+        <div className="rounded-lg border border-[#2a3f55] bg-[#081223] py-12 text-center">
           <p className="text-slate-400">Вчитување огласи...</p>
         </div>
       ) : error ? (
@@ -267,7 +267,7 @@ function ProductsPageContent() {
           {error}
         </div>
       ) : products.length === 0 ? (
-        <div className="rounded-lg border border-[#1d2c43] bg-[#081223] py-12 text-center">
+        <div className="rounded-lg border border-[#2a3f55] bg-[#081223] py-12 text-center">
           <p className="text-slate-300">Нема огласи кои одговараат на вашите критериуми.</p>
           <Link href="/sell" className="mt-4 inline-flex rounded-lg bg-red-600 px-4 py-2 text-sm font-bold text-white hover:bg-red-700">
             Објави прв оглас
@@ -319,7 +319,7 @@ function ProductsPageContent() {
                     className={`rounded border px-1.5 py-0.5 transition ${
                       perPage === n
                         ? 'border-red-500/50 bg-red-600/20 text-red-300 font-semibold'
-                        : 'border-[#223653] bg-[#0b1727] text-slate-300 hover:bg-[#1d2c43]'
+                        : 'border-[#2a3f55] bg-[#0b1727] text-slate-300 hover:bg-[#1d2c43]'
                     }`}
                   >
                     {n}
@@ -330,7 +330,7 @@ function ProductsPageContent() {
                 <button
                   onClick={() => goToPage(currentPage - 1)}
                   disabled={currentPage === 1}
-                  className="rounded border border-[#223653] bg-[#0b1727] px-2.5 py-1 text-xs text-slate-300 hover:bg-[#1d2c43] disabled:opacity-30 disabled:cursor-not-allowed whitespace-nowrap"
+                  className="rounded border border-[#2a3f55] bg-[#0b1727] px-2.5 py-1 text-xs text-slate-300 hover:bg-[#1d2c43] disabled:opacity-30 disabled:cursor-not-allowed whitespace-nowrap"
                 >
                   « Претходна
                 </button>
@@ -347,7 +347,7 @@ function ProductsPageContent() {
                       className={`min-w-[32px] rounded border px-2 py-1 text-xs transition ${
                         currentPage === p
                           ? 'border-red-500/50 bg-red-600/20 text-red-300 font-semibold'
-                          : 'border-[#223653] bg-[#0b1727] text-slate-300 hover:bg-[#1d2c43]'
+                          : 'border-[#2a3f55] bg-[#0b1727] text-slate-300 hover:bg-[#1d2c43]'
                       }`}
                     >
                       {p}
@@ -357,7 +357,7 @@ function ProductsPageContent() {
                 <button
                   onClick={() => goToPage(currentPage + 1)}
                   disabled={currentPage === totalPages}
-                  className="rounded border border-[#223653] bg-[#0b1727] px-2.5 py-1 text-xs text-slate-300 hover:bg-[#1d2c43] disabled:opacity-30 disabled:cursor-not-allowed whitespace-nowrap"
+                  className="rounded border border-[#2a3f55] bg-[#0b1727] px-2.5 py-1 text-xs text-slate-300 hover:bg-[#1d2c43] disabled:opacity-30 disabled:cursor-not-allowed whitespace-nowrap"
                 >
                   Следна страна »
                 </button>

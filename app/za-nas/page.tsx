@@ -22,7 +22,7 @@ export default function ZaNasPage() {
                 { icon: Users, color: 'text-green-400', title: 'Заедница', text: 'Повеќе од 10.000 активни корисници ширум Македонија секој ден.' },
                 { icon: BadgeCheck, color: 'text-red-400', title: 'Бесплатно', text: 'Огласувањето е целосно бесплатно. Без скриени трошоци.' },
               ].map(({ icon: Icon, color, title, text }) => (
-                <div key={title} className="rounded-xl border border-[#1d2c43] bg-[#081223] p-6">
+                <div key={title} className="rounded-xl border border-[#2a3f55] bg-[#081223] p-6">
                   <Icon className={`h-8 w-8 mb-3 ${color}`} />
                   <h2 className="text-lg font-bold mb-2">{title}</h2>
                   <p className="text-slate-400 text-sm">{text}</p>
@@ -30,7 +30,7 @@ export default function ZaNasPage() {
               ))}
             </div>
 
-            <div className="rounded-xl border border-[#1d2c43] bg-[#081223] p-8 mb-8">
+            <div className="rounded-xl border border-[#2a3f55] bg-[#081223] p-8 mb-8">
               <h2 className="text-2xl font-bold mb-4">Нашата мисија</h2>
               <p className="text-slate-300 leading-relaxed mb-4">
                 КупиПродади е создадена со цел да им овозможи на граѓаните на Македонија едноставен и безбеден начин за купување и продавање на производи локално.
@@ -43,7 +43,7 @@ export default function ZaNasPage() {
               </p>
             </div>
 
-            <div className="rounded-xl border border-[#1d2c43] bg-[#081223] p-8">
+            <div className="rounded-xl border border-[#2a3f55] bg-[#081223] p-8">
               <h2 className="text-2xl font-bold mb-4">Контактирај не</h2>
               <p className="text-slate-300 mb-2">📧 info@kupiprodadi.mk</p>
               <p className="text-slate-300 mb-2">📍 Скопје, Македонија</p>

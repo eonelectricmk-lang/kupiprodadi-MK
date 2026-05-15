@@ -143,7 +143,7 @@ export default function Home() {
         <section>
           <div
             id="hero-banner"
-            className="relative h-[230px] overflow-hidden rounded-2xl border border-[#1d2c43] bg-[#07101c] md:h-[280px]"
+            className="relative h-[230px] overflow-hidden rounded-2xl border border-[#2a3f55] bg-[#07101c] md:h-[280px]"
           >
             <div
               className="absolute inset-0 flex transition-transform duration-700 ease-in-out"
@@ -292,7 +292,7 @@ export default function Home() {
             })}
           </div>
         ) : (
-          <div className="rounded-2xl border border-[#1d2c43] bg-[#0f1a2b] p-8 text-center text-slate-300">
+          <div className="rounded-2xl border border-[#2a3f55] bg-[#0f1a2b] p-8 text-center text-slate-300">
             <p className="text-lg font-semibold text-white">Нема активни огласи</p>
             <p className="mt-2 text-sm text-slate-400">Кога ќе има огласи во базата, тие автоматски ќе се прикажат тука.</p>
           </div>

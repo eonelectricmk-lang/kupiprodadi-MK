@@ -17,7 +17,7 @@ export default function CategoryCard({ icon: Icon, iconClassName, title, count, 
     <Link
       href={href}
       className={`group flex items-center gap-2 rounded-xl border-2 px-2 py-1.5 transition hover:-translate-y-0.5 ${
-        dark ? 'border-[#1d2c43] bg-[#0f1a2b] hover:border-[#2d4f7d] hover:bg-[#122038]' : 'border-gray-300 bg-white hover:border-gray-400 hover:bg-gray-50'
+        dark ? 'border-[#2a3f55] bg-[#0f1a2b] hover:border-[#2d4f7d] hover:bg-[#122038]' : 'border-gray-300 bg-white hover:border-gray-400 hover:bg-gray-50'
       }`}
     >
       <div className={`rounded-xl p-1.25 ${dark ? 'bg-[#0b1321]' : 'bg-gray-100'}`}>

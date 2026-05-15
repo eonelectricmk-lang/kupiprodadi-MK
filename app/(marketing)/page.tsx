@@ -59,7 +59,7 @@ export default function Home() {
       <Header />
 
       <section className="mx-auto max-w-6xl px-4 py-10">
-        <div className="overflow-hidden rounded-3xl border border-[#1d2c43] bg-[radial-gradient(circle_at_top_left,_rgba(220,38,38,0.18),_transparent_38%),linear-gradient(135deg,_#07101c_0%,_#0b1322_100%)] p-8 md:p-12">
+        <div className="overflow-hidden rounded-3xl border border-[#2a3f55] bg-[radial-gradient(circle_at_top_left,_rgba(220,38,38,0.18),_transparent_38%),linear-gradient(135deg,_#07101c_0%,_#0b1322_100%)] p-8 md:p-12">
           <div className="max-w-2xl">
             <p className="mb-3 inline-flex rounded-full border border-red-500/25 bg-red-500/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-red-200">
               Kupi Prodadi
@@ -148,17 +148,17 @@ export default function Home() {
       <section className="bg-[#07101c] py-14">
         <Container>
           <div className="grid gap-8 md:grid-cols-3">
-            <div className="rounded-2xl border border-[#1d2c43] bg-[#0b1322] p-6">
+            <div className="rounded-2xl border border-[#2a3f55] bg-[#0b1322] p-6">
               <ShieldCheck className="h-8 w-8 text-emerald-400" />
               <h3 className="mt-4 text-lg font-bold">Безбедна трансакција</h3>
               <p className="mt-2 text-sm leading-6 text-slate-400">Структурата е поставена да ги користи истите категории и огласи насекаде.</p>
             </div>
-            <div className="rounded-2xl border border-[#1d2c43] bg-[#0b1322] p-6">
+            <div className="rounded-2xl border border-[#2a3f55] bg-[#0b1322] p-6">
               <Zap className="h-8 w-8 text-amber-400" />
               <h3 className="mt-4 text-lg font-bold">Брзо и едноставно</h3>
               <p className="mt-2 text-sm leading-6 text-slate-400">Нови записи од admin се прикажуваат веднаш по refresh, без рачно дуплирање.</p>
             </div>
-            <div className="rounded-2xl border border-[#1d2c43] bg-[#0b1322] p-6">
+            <div className="rounded-2xl border border-[#2a3f55] bg-[#0b1322] p-6">
               <MessageCircle className="h-8 w-8 text-sky-400" />
               <h3 className="mt-4 text-lg font-bold">Директна комуникација</h3>
               <p className="mt-2 text-sm leading-6 text-slate-400">Истите live податоци се користат за преглед, линкови и search flow.</p>

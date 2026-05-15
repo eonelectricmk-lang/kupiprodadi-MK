@@ -71,9 +71,9 @@ export default function KakoDaObjawamPage() {
 
             <div className="space-y-4 mb-12">
               {STEPS.map(({ icon: Icon, color, num, title, text }) => (
-                <div key={num} className="flex gap-5 rounded-xl border border-[#1d2c43] bg-[#081223] p-6">
+                <div key={num} className="flex gap-5 rounded-xl border border-[#2a3f55] bg-[#081223] p-6">
                   <div className="flex-shrink-0">
-                    <div className="w-12 h-12 rounded-full bg-[#0f1a2b] border border-[#1d2c43] flex items-center justify-center">
+                    <div className="w-12 h-12 rounded-full bg-[#0f1a2b] border border-[#2a3f55] flex items-center justify-center">
                       <Icon className={`h-6 w-6 ${color}`} />
                     </div>
                   </div>
@@ -86,7 +86,7 @@ export default function KakoDaObjawamPage() {
               ))}
             </div>
 
-            <div className="rounded-xl border border-[#1d2c43] bg-[#081223] p-8 mb-8">
+            <div className="rounded-xl border border-[#2a3f55] bg-[#081223] p-8 mb-8">
               <h2 className="text-xl font-bold mb-4">💡 Совети за подобар оглас</h2>
               <ul className="space-y-3">
                 {TIPS.map((tip) => (

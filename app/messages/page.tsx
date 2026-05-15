@@ -151,11 +151,11 @@ export default function MessagesPage() {
             <section
               className={`force-light-hero rounded-[28px] border p-6 shadow-2xl sm:p-8 ${
                 dark
-                  ? 'border-[#1d2c43] bg-gradient-to-br from-[#081223] via-[#0b1423] to-[#07101c] shadow-black/20'
+                  ? 'border-[#2a3f55] bg-gradient-to-br from-[#081223] via-[#0b1423] to-[#07101c] shadow-black/20'
                   : 'border-slate-200 bg-gradient-to-br from-[#0b1321] via-[#0f1b2b] to-[#081223] shadow-slate-300/40'
               }`}
             >
-              <div className={`inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold ${dark ? 'border border-[#223653] bg-[#0b1727] text-slate-300' : 'border border-slate-200 bg-white text-slate-800'}`}>
+              <div className={`inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold ${dark ? 'border border-[#2a3f55] bg-[#0b1727] text-slate-300' : 'border border-slate-200 bg-white text-slate-800'}`}>
                 <ShieldCheck className="h-4 w-4 text-emerald-400" />
                 Контактирај го админот
               </div>
@@ -165,7 +165,7 @@ export default function MessagesPage() {
                 Ако имаш прашање, забелешка, сугестија, предлог за нова категорија, интерес за соработка или технички проблем, прати ни порака и ќе ти одговориме што е можно побрзо.
               </p>
 
-              <div className={`mt-6 space-y-3 rounded-2xl border p-5 ${dark ? 'border-[#1f3047] bg-[#0b1727]' : 'border-slate-200 bg-white/95 text-slate-900 shadow-sm'}`}>
+              <div className={`mt-6 space-y-3 rounded-2xl border p-5 ${dark ? 'border-[#2a3f55] bg-[#0b1727]' : 'border-slate-200 bg-white/95 text-slate-900 shadow-sm'}`}>
                 <p className={`text-sm font-semibold ${dark ? 'text-white' : 'text-slate-900'}`}>Најчести причини за контакт</p>
                 <ul className={`space-y-2 text-sm leading-6 ${dark ? 'text-slate-400' : 'text-slate-700'}`}>
                   <li>• Пријава на сомнителен оглас, профил или злоупотреба</li>
@@ -177,7 +177,7 @@ export default function MessagesPage() {
                 </ul>
               </div>
 
-              <div className={`mt-6 rounded-2xl border p-4 ${dark ? 'border-[#1f3047] bg-black/20' : 'border-slate-200 bg-white/95 text-slate-900 shadow-sm'}`}>
+              <div className={`mt-6 rounded-2xl border p-4 ${dark ? 'border-[#2a3f55] bg-black/20' : 'border-slate-200 bg-white/95 text-slate-900 shadow-sm'}`}>
                 <p className={`text-sm font-semibold ${dark ? 'text-white' : 'text-slate-900'}`}>Корисни линкови</p>
                 <div className="mt-3 flex flex-wrap gap-2">
                   {helperLinks.map((link) => (
@@ -186,7 +186,7 @@ export default function MessagesPage() {
                       href={link.href}
                       className={`rounded-full border px-3 py-1.5 text-xs font-medium transition ${
                         dark
-                          ? 'border-[#223653] bg-[#0b1727] text-slate-300 hover:text-white'
+                          ? 'border-[#2a3f55] bg-[#0b1727] text-slate-300 hover:text-white'
                           : 'border-slate-300 bg-white text-slate-700 hover:text-slate-900'
                       }`}
                     >
@@ -200,11 +200,11 @@ export default function MessagesPage() {
             <section
               className={`overflow-hidden rounded-[28px] border shadow-2xl ${
                 dark
-                  ? 'border-[#1d2c43] bg-[#0b1423] shadow-black/20'
+                  ? 'border-[#2a3f55] bg-[#0b1423] shadow-black/20'
                   : 'border-slate-200 bg-white shadow-slate-300/40'
               }`}
             >
-              <div className={`force-light-hero border-b px-5 py-4 sm:px-8 ${dark ? 'border-[#1d2c43] bg-[#08101c]' : 'border-slate-200 bg-[#0b1321]'}`}>
+              <div className={`force-light-hero border-b px-5 py-4 sm:px-8 ${dark ? 'border-[#2a3f55] bg-[#08101c]' : 'border-slate-200 bg-[#0b1321]'}`}>
                 <h2 className="text-2xl font-black tracking-tight text-white sm:text-3xl">Испрати порака</h2>
                 <p className={`mt-2 text-sm leading-6 ${dark ? 'text-slate-400' : 'text-slate-300'}`}>
                   Формата оди директно до администрацијата. Може да ни пишеш за огласи, категории, соработка, технички проблеми, сугестии и сè што е поврзано со KupiProdadi.
@@ -238,7 +238,7 @@ export default function MessagesPage() {
                           placeholder="Твоето име"
                           className={`w-full rounded-xl py-3 pl-11 pr-4 outline-none transition focus:ring-2 ${
                             dark
-                              ? 'border border-[#223653] bg-[#081223] text-white placeholder:text-slate-500 focus:border-[#2d4f7d] focus:ring-[#2d4f7d]/30'
+                              ? 'border border-[#2a3f55] bg-[#081223] text-white placeholder:text-slate-500 focus:border-[#2d4f7d] focus:ring-[#2d4f7d]/30'
                               : 'border border-slate-300 bg-white text-slate-900 placeholder:text-slate-400 focus:border-slate-400 focus:ring-slate-200'
                           }`}
                         />
@@ -259,7 +259,7 @@ export default function MessagesPage() {
                             placeholder="ime@primer.mk"
                             className={`w-full rounded-xl py-3 pl-11 pr-4 outline-none transition focus:ring-2 ${
                               dark
-                                ? 'border border-[#223653] bg-[#081223] text-white placeholder:text-slate-500 focus:border-[#2d4f7d] focus:ring-[#2d4f7d]/30'
+                                ? 'border border-[#2a3f55] bg-[#081223] text-white placeholder:text-slate-500 focus:border-[#2d4f7d] focus:ring-[#2d4f7d]/30'
                                 : 'border border-slate-300 bg-white text-slate-900 placeholder:text-slate-400 focus:border-slate-400 focus:ring-slate-200'
                             }`}
                           />
@@ -278,7 +278,7 @@ export default function MessagesPage() {
                             placeholder="+389 7x xxx xxx"
                             className={`w-full rounded-xl py-3 pl-11 pr-4 outline-none transition focus:ring-2 ${
                               dark
-                                ? 'border border-[#223653] bg-[#081223] text-white placeholder:text-slate-500 focus:border-[#2d4f7d] focus:ring-[#2d4f7d]/30'
+                                ? 'border border-[#2a3f55] bg-[#081223] text-white placeholder:text-slate-500 focus:border-[#2d4f7d] focus:ring-[#2d4f7d]/30'
                                 : 'border border-slate-300 bg-white text-slate-900 placeholder:text-slate-400 focus:border-slate-400 focus:ring-slate-200'
                             }`}
                           />
@@ -296,7 +296,7 @@ export default function MessagesPage() {
                           onChange={handleChange}
                           className={`w-full appearance-none rounded-xl px-4 py-3 outline-none transition focus:ring-2 ${
                             dark
-                              ? 'border border-[#223653] bg-[#081223] text-white focus:border-[#2d4f7d] focus:ring-[#2d4f7d]/30'
+                              ? 'border border-[#2a3f55] bg-[#081223] text-white focus:border-[#2d4f7d] focus:ring-[#2d4f7d]/30'
                               : 'border border-slate-300 bg-white text-slate-900 focus:border-slate-400 focus:ring-slate-200'
                           }`}
                         >
@@ -322,7 +322,7 @@ export default function MessagesPage() {
                           placeholder="Опиши го проблемот или прашањето што е можно појасно..."
                           className={`w-full resize-none rounded-xl py-3 pl-11 pr-4 outline-none transition focus:ring-2 ${
                             dark
-                              ? 'border border-[#223653] bg-[#081223] text-white placeholder:text-slate-500 focus:border-[#2d4f7d] focus:ring-[#2d4f7d]/30'
+                              ? 'border border-[#2a3f55] bg-[#081223] text-white placeholder:text-slate-500 focus:border-[#2d4f7d] focus:ring-[#2d4f7d]/30'
                               : 'border border-slate-300 bg-white text-slate-900 placeholder:text-slate-400 focus:border-slate-400 focus:ring-slate-200'
                           }`}
                         />
@@ -341,7 +341,7 @@ export default function MessagesPage() {
                         placeholder="Внеси го резултатот"
                         className={`w-40 rounded-xl px-4 py-3 outline-none transition focus:ring-2 ${
                           dark
-                            ? 'border border-[#223653] bg-[#081223] text-white placeholder:text-slate-500 focus:border-[#2d4f7d] focus:ring-[#2d4f7d]/30'
+                            ? 'border border-[#2a3f55] bg-[#081223] text-white placeholder:text-slate-500 focus:border-[#2d4f7d] focus:ring-[#2d4f7d]/30'
                             : 'border border-slate-300 bg-white text-slate-900 placeholder:text-slate-400 focus:border-slate-400 focus:ring-slate-200'
                         }`}
                       />

@@ -75,7 +75,7 @@ export default function AuthForm({ type }: { type: AuthType }) {
           required
           className={
             dark
-              ? '!border-[#223653] !bg-[#081223] !text-white placeholder:!text-slate-500 focus:!border-[#2d4f7d] focus:!ring-[#2d4f7d]/30'
+              ? '!border-[#2a3f55] !bg-[#081223] !text-white placeholder:!text-slate-500 focus:!border-[#2d4f7d] focus:!ring-[#2d4f7d]/30'
               : '!border-slate-300 !bg-white !text-slate-900 placeholder:!text-slate-400 focus:!border-slate-400 focus:!ring-slate-200'
           }
         />
@@ -92,7 +92,7 @@ export default function AuthForm({ type }: { type: AuthType }) {
           required
           className={
             dark
-              ? '!border-[#223653] !bg-[#081223] !text-white placeholder:!text-slate-500 focus:!border-[#2d4f7d] focus:!ring-[#2d4f7d]/30'
+              ? '!border-[#2a3f55] !bg-[#081223] !text-white placeholder:!text-slate-500 focus:!border-[#2d4f7d] focus:!ring-[#2d4f7d]/30'
               : '!border-slate-300 !bg-white !text-slate-900 placeholder:!text-slate-400 focus:!border-slate-400 focus:!ring-slate-200'
           }
         />
@@ -111,7 +111,7 @@ export default function AuthForm({ type }: { type: AuthType }) {
               required
               className={
                 dark
-                  ? '!border-[#223653] !bg-[#081223] !text-white placeholder:!text-slate-500 focus:!border-[#2d4f7d] focus:!ring-[#2d4f7d]/30'
+                  ? '!border-[#2a3f55] !bg-[#081223] !text-white placeholder:!text-slate-500 focus:!border-[#2d4f7d] focus:!ring-[#2d4f7d]/30'
                   : '!border-slate-300 !bg-white !text-slate-900 placeholder:!text-slate-400 focus:!border-slate-400 focus:!ring-slate-200'
               }
             />
@@ -127,7 +127,7 @@ export default function AuthForm({ type }: { type: AuthType }) {
               onChange={handleChange}
               className={
                 dark
-                  ? '!border-[#223653] !bg-[#081223] !text-white placeholder:!text-slate-500 focus:!border-[#2d4f7d] focus:!ring-[#2d4f7d]/30'
+                  ? '!border-[#2a3f55] !bg-[#081223] !text-white placeholder:!text-slate-500 focus:!border-[#2d4f7d] focus:!ring-[#2d4f7d]/30'
                   : '!border-slate-300 !bg-white !text-slate-900 placeholder:!text-slate-400 focus:!border-slate-400 focus:!ring-slate-200'
               }
             />

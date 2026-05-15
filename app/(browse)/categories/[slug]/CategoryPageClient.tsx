@@ -312,7 +312,7 @@ export default function CategoryPageClient({ slug, initialCategoryName }: { slug
                     className={`rounded border px-1.5 py-0.5 transition ${
                       perPage === n
                         ? 'border-red-500/50 bg-red-600/20 text-red-300 font-semibold'
-                        : 'border-[#223653] bg-[#0b1727] text-slate-300 hover:bg-[#1d2c43]'
+                        : 'border-[#2a3f55] bg-[#0b1727] text-slate-300 hover:bg-[#1d2c43]'
                     }`}
                   >
                     {n}
@@ -323,7 +323,7 @@ export default function CategoryPageClient({ slug, initialCategoryName }: { slug
                 <button
                   onClick={() => goToPage(currentPage - 1)}
                   disabled={currentPage === 1}
-                  className="rounded border border-[#223653] bg-[#0b1727] px-2.5 py-1 text-xs text-slate-300 hover:bg-[#1d2c43] disabled:opacity-30 disabled:cursor-not-allowed whitespace-nowrap"
+                  className="rounded border border-[#2a3f55] bg-[#0b1727] px-2.5 py-1 text-xs text-slate-300 hover:bg-[#1d2c43] disabled:opacity-30 disabled:cursor-not-allowed whitespace-nowrap"
                 >
                   « Претходна
                 </button>
@@ -340,7 +340,7 @@ export default function CategoryPageClient({ slug, initialCategoryName }: { slug
                       className={`min-w-[32px] rounded border px-2 py-1 text-xs transition ${
                         currentPage === p
                           ? 'border-red-500/50 bg-red-600/20 text-red-300 font-semibold'
-                          : 'border-[#223653] bg-[#0b1727] text-slate-300 hover:bg-[#1d2c43]'
+                          : 'border-[#2a3f55] bg-[#0b1727] text-slate-300 hover:bg-[#1d2c43]'
                       }`}
                     >
                       {p}
@@ -350,7 +350,7 @@ export default function CategoryPageClient({ slug, initialCategoryName }: { slug
                 <button
                   onClick={() => goToPage(currentPage + 1)}
                   disabled={currentPage === totalPages}
-                  className="rounded border border-[#223653] bg-[#0b1727] px-2.5 py-1 text-xs text-slate-300 hover:bg-[#1d2c43] disabled:opacity-30 disabled:cursor-not-allowed whitespace-nowrap"
+                  className="rounded border border-[#2a3f55] bg-[#0b1727] px-2.5 py-1 text-xs text-slate-300 hover:bg-[#1d2c43] disabled:opacity-30 disabled:cursor-not-allowed whitespace-nowrap"
                 >
                   Следна страна »
                 </button>

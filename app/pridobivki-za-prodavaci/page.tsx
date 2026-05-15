@@ -65,7 +65,7 @@ export default function PridobivkiZaProdavaciPage() {
         <Container>
           <div className="mx-auto max-w-5xl">
             <div className="mb-10">
-              <div className="inline-flex items-center gap-2 rounded-full border border-[#1d2c43] bg-[#081223] px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-slate-300">
+              <div className="inline-flex items-center gap-2 rounded-full border border-[#2a3f55] bg-[#081223] px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-slate-300">
                 <ShieldCheck className="h-4 w-4 text-emerald-400" />
                 За продавачи
               </div>
@@ -77,7 +77,7 @@ export default function PridobivkiZaProdavaciPage() {
 
             <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
               {BENEFITS.map(({ icon: Icon, color, title, text }) => (
-                <div key={title} className="rounded-2xl border border-[#1d2c43] bg-[#081223] p-6">
+                <div key={title} className="rounded-2xl border border-[#2a3f55] bg-[#081223] p-6">
                   <Icon className={`mb-3 h-7 w-7 ${color}`} />
                   <h2 className="text-lg font-bold">{title}</h2>
                   <p className="mt-2 text-sm leading-6 text-slate-400">{text}</p>
@@ -86,7 +86,7 @@ export default function PridobivkiZaProdavaciPage() {
             </div>
 
             <div className="mt-8 grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
-              <section className="rounded-2xl border border-[#1d2c43] bg-[#081223] p-7">
+              <section className="rounded-2xl border border-[#2a3f55] bg-[#081223] p-7">
                 <h2 className="text-2xl font-bold">Што добиваш со профил на KupiProdadi?</h2>
                 <p className="mt-4 text-sm leading-7 text-slate-300">
                   Наместо секој оглас да биде изолиран, профилот ти помага да создадеш континуитет. Купувачот гледа дека си активен, може полесно да ти пише, да ги следи твоите други огласи и побрзо да донесе одлука за купување.
@@ -96,7 +96,7 @@ export default function PridobivkiZaProdavaciPage() {
                 </p>
               </section>
 
-              <section className="rounded-2xl border border-[#1d2c43] bg-[#081223] p-7">
+              <section className="rounded-2xl border border-[#2a3f55] bg-[#081223] p-7">
                 <h2 className="text-2xl font-bold">Како изгледа добар почеток?</h2>
                 <ul className="mt-5 space-y-3 text-sm leading-6 text-slate-300">
                   {SELLER_STEPS.map((step) => (
@@ -109,7 +109,7 @@ export default function PridobivkiZaProdavaciPage() {
               </section>
             </div>
 
-            <div className="mt-8 rounded-2xl border border-[#1d2c43] bg-[#081223] p-7">
+            <div className="mt-8 rounded-2xl border border-[#2a3f55] bg-[#081223] p-7">
               <h2 className="text-2xl font-bold">Почни денес</h2>
               <p className="mt-3 max-w-3xl text-sm leading-7 text-slate-300">
                 Ако сакаш поорганизирано продавање, повеќе доверба и подобар контакт со купувачите, креирај профил и постави ги твоите огласи на едно професионално место.
@@ -123,7 +123,7 @@ export default function PridobivkiZaProdavaciPage() {
                 </Link>
                 <Link
                   href="/sell"
-                  className="inline-flex rounded-xl border border-[#223653] bg-[#0b1423] px-5 py-3 text-sm font-semibold text-slate-200 transition hover:text-white"
+                  className="inline-flex rounded-xl border border-[#2a3f55] bg-[#0b1423] px-5 py-3 text-sm font-semibold text-slate-200 transition hover:text-white"
                 >
                   Објави оглас
                 </Link>

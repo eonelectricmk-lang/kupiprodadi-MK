@@ -542,7 +542,7 @@ export default function ProductDetailsClient({ id }: { id: string }) {
                     ← Претходен
                   </Link>
                 ) : (
-                  <span className="flex-1 rounded-lg border border-[#223653]/30 bg-[#081223]/50 px-3 py-2 text-sm font-semibold text-slate-600 text-center cursor-not-allowed">
+                  <span className="flex-1 rounded-lg border border-[#2a3f55]/30 bg-[#081223]/50 px-3 py-2 text-sm font-semibold text-slate-600 text-center cursor-not-allowed">
                     ← Претходен
                   </span>
                 )}
@@ -554,7 +554,7 @@ export default function ProductDetailsClient({ id }: { id: string }) {
                     Следен →
                   </Link>
                 ) : (
-                  <span className="flex-1 rounded-lg border border-[#223653]/30 bg-[#081223]/50 px-3 py-2 text-sm font-semibold text-slate-600 text-center cursor-not-allowed">
+                  <span className="flex-1 rounded-lg border border-[#2a3f55]/30 bg-[#081223]/50 px-3 py-2 text-sm font-semibold text-slate-600 text-center cursor-not-allowed">
                     Следен →
                   </span>
                 )}
@@ -794,7 +794,7 @@ export default function ProductDetailsClient({ id }: { id: string }) {
                   onChange={e => setReportReason(e.target.value)}
                   placeholder="Кратко објаснување зошто го пријавувате овој оглас..."
                   rows={4}
-                  className="mt-1 w-full rounded-lg border border-[#223653] bg-[#081223] px-3 py-2 text-sm text-white outline-none focus:border-sky-500/50 resize-none"
+                  className="mt-1 w-full rounded-lg border border-[#2a3f55] bg-[#081223] px-3 py-2 text-sm text-white outline-none focus:border-sky-500/50 resize-none"
                 />
               </div>
             </div>

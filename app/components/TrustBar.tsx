@@ -26,7 +26,7 @@ export default function TrustBar({ items = DEFAULT_TRUST_ITEMS }: TrustBarProps)
   const { dark } = useTheme();
 
   return (
-    <div className={`overflow-hidden rounded-2xl border-2 ${dark ? 'border-[#1d2c43]' : 'border-gray-300'}`}>
+    <div className={`overflow-hidden rounded-2xl border-2 ${dark ? 'border-[#2a3f55]' : 'border-gray-300'}`}>
       <div className={`grid grid-cols-2 divide-x-2 divide-y-2 md:grid-cols-4 md:divide-y-0 ${dark ? 'divide-[#1d2c43]' : 'divide-gray-300'}`}>
         {items.map((item) => {
           const Icon = TRUST_ICONS[item.icon] || ShieldCheck;

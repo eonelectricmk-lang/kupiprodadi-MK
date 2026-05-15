@@ -79,7 +79,7 @@ export default function KontaktPage() {
                       required
                       type="text"
                       placeholder="Марко Марковски"
-                      className="w-full bg-[#081223] border border-[#1d2c43] rounded-xl pl-10 pr-4 py-3 text-white placeholder-slate-600 focus:outline-none focus:border-blue-500 transition"
+                      className="w-full bg-[#081223] border border-[#2a3f55] rounded-xl pl-10 pr-4 py-3 text-white placeholder-slate-600 focus:outline-none focus:border-blue-500 transition"
                     />
                   </div>
                 </div>
@@ -93,7 +93,7 @@ export default function KontaktPage() {
                       required
                       type="email"
                       placeholder="ime@primer.mk"
-                      className="w-full bg-[#081223] border border-[#1d2c43] rounded-xl pl-10 pr-4 py-3 text-white placeholder-slate-600 focus:outline-none focus:border-blue-500 transition"
+                      className="w-full bg-[#081223] border border-[#2a3f55] rounded-xl pl-10 pr-4 py-3 text-white placeholder-slate-600 focus:outline-none focus:border-blue-500 transition"
                     />
                   </div>
                 </div>
@@ -107,7 +107,7 @@ export default function KontaktPage() {
                       required
                       value={predmet}
                       onChange={e => setPredmet(e.target.value)}
-                      className="w-full bg-[#081223] border border-[#1d2c43] rounded-xl px-4 py-3 text-white appearance-none focus:outline-none focus:border-blue-500 transition"
+                      className="w-full bg-[#081223] border border-[#2a3f55] rounded-xl px-4 py-3 text-white appearance-none focus:outline-none focus:border-blue-500 transition"
                     >
                       {PREDMETI.map(p => (
                         <option key={p} value={p} disabled={p === 'Одбери'}>{p}</option>
@@ -124,7 +124,7 @@ export default function KontaktPage() {
                     <input
                       type="tel"
                       placeholder="+389 70 000 000"
-                      className="w-full bg-[#081223] border border-[#1d2c43] rounded-xl pl-10 pr-4 py-3 text-white placeholder-slate-600 focus:outline-none focus:border-blue-500 transition"
+                      className="w-full bg-[#081223] border border-[#2a3f55] rounded-xl pl-10 pr-4 py-3 text-white placeholder-slate-600 focus:outline-none focus:border-blue-500 transition"
                     />
                   </div>
                 </div>
@@ -138,7 +138,7 @@ export default function KontaktPage() {
                       required
                       rows={5}
                       placeholder="Опишете го Вашето прашање или проблем..."
-                      className="w-full bg-[#081223] border border-[#1d2c43] rounded-xl pl-10 pr-4 py-3 text-white placeholder-slate-600 focus:outline-none focus:border-blue-500 transition resize-none"
+                      className="w-full bg-[#081223] border border-[#2a3f55] rounded-xl pl-10 pr-4 py-3 text-white placeholder-slate-600 focus:outline-none focus:border-blue-500 transition resize-none"
                     />
                   </div>
                 </div>
@@ -154,7 +154,7 @@ export default function KontaktPage() {
                     value={captchaVal}
                     onChange={e => setCaptchaVal(e.target.value)}
                     placeholder="Вашиот одговор"
-                    className="w-32 bg-[#081223] border border-[#1d2c43] rounded-xl px-4 py-3 text-white placeholder-slate-600 focus:outline-none focus:border-blue-500 transition"
+                    className="w-32 bg-[#081223] border border-[#2a3f55] rounded-xl px-4 py-3 text-white placeholder-slate-600 focus:outline-none focus:border-blue-500 transition"
                   />
                 </div>
 

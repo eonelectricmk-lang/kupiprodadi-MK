@@ -307,10 +307,10 @@ function CrmDraftsTab() {
   };
 
   return (
-    <div className="rounded-xl border border-[#1d2c43] bg-[#081223] p-5">
+    <div className="rounded-xl border border-[#2a3f55] bg-[#081223] p-5">
       <div className="mb-4 flex items-center justify-between">
         <h2 className="text-lg font-bold text-amber-400">📋 Преземени огласи</h2>
-        <input value={searchQuery} onChange={e => setSearchQuery(e.target.value)} placeholder="🔍 Пребарај..." className="w-72 rounded border border-[#223653] bg-[#0b1727] px-3 py-1.5 text-sm text-white placeholder:text-slate-500" />
+        <input value={searchQuery} onChange={e => setSearchQuery(e.target.value)} placeholder="🔍 Пребарај..." className="w-72 rounded border border-[#2a3f55] bg-[#0b1727] px-3 py-1.5 text-sm text-white placeholder:text-slate-500" />
       </div>
       {drafts.length === 0 && !searchQuery && <p className="text-sm text-slate-400">Нема преземени огласи. Испрати преку extension-от.</p>}
       <div className="space-y-3">
@@ -323,24 +323,24 @@ function CrmDraftsTab() {
           const editing = editId === draft.id;
           const ef = editForm;
           return (
-          <div key={draft.id} className="rounded-lg border-2 border-[#223653] bg-[#0b1727] px-4 py-3">
+          <div key={draft.id} className="rounded-lg border-2 border-[#2a3f55] bg-[#0b1727] px-4 py-3">
             {editing ? (
               <div className="space-y-3">
                 <div className="flex items-center gap-2">
-                  <input value={ef.title} onChange={e => setEditForm(p => ({ ...p, title: e.target.value }))} className="flex-1 rounded border border-[#223653] bg-[#0b1727] px-2 py-1 text-sm text-white" />
+                  <input value={ef.title} onChange={e => setEditForm(p => ({ ...p, title: e.target.value }))} className="flex-1 rounded border border-[#2a3f55] bg-[#0b1727] px-2 py-1 text-sm text-white" />
                 </div>
                 <div className="grid grid-cols-2 gap-2">
-                  <input value={ef.price} onChange={e => setEditForm(p => ({ ...p, price: e.target.value }))} className="rounded border border-[#223653] bg-[#0b1727] px-2 py-1 text-sm text-white" placeholder="Цена" />
-                  <input value={ef.city} onChange={e => setEditForm(p => ({ ...p, city: e.target.value }))} className="rounded border border-[#223653] bg-[#0b1727] px-2 py-1 text-sm text-white" placeholder="Град" />
-                  <input value={ef.seller_name} onChange={e => setEditForm(p => ({ ...p, seller_name: e.target.value }))} className="rounded border border-[#223653] bg-[#0b1727] px-2 py-1 text-sm text-white" placeholder="Продавач" />
-                  <input value={ef.phone} onChange={e => setEditForm(p => ({ ...p, phone: e.target.value }))} className="rounded border border-[#223653] bg-[#0b1727] px-2 py-1 text-sm text-white" placeholder="Телефон" />
+                  <input value={ef.price} onChange={e => setEditForm(p => ({ ...p, price: e.target.value }))} className="rounded border border-[#2a3f55] bg-[#0b1727] px-2 py-1 text-sm text-white" placeholder="Цена" />
+                  <input value={ef.city} onChange={e => setEditForm(p => ({ ...p, city: e.target.value }))} className="rounded border border-[#2a3f55] bg-[#0b1727] px-2 py-1 text-sm text-white" placeholder="Град" />
+                  <input value={ef.seller_name} onChange={e => setEditForm(p => ({ ...p, seller_name: e.target.value }))} className="rounded border border-[#2a3f55] bg-[#0b1727] px-2 py-1 text-sm text-white" placeholder="Продавач" />
+                  <input value={ef.phone} onChange={e => setEditForm(p => ({ ...p, phone: e.target.value }))} className="rounded border border-[#2a3f55] bg-[#0b1727] px-2 py-1 text-sm text-white" placeholder="Телефон" />
                 </div>
-                <textarea value={ef.description} onChange={e => setEditForm(p => ({ ...p, description: e.target.value }))} rows={3} className="w-full rounded border border-[#223653] bg-[#0b1727] px-2 py-1 text-sm text-white" placeholder="Опис" />
+                <textarea value={ef.description} onChange={e => setEditForm(p => ({ ...p, description: e.target.value }))} rows={3} className="w-full rounded border border-[#2a3f55] bg-[#0b1727] px-2 py-1 text-sm text-white" placeholder="Опис" />
                 {(JSON.parse(ef.images || '[]') as string[]).length > 0 && (
                   <div className="flex flex-wrap gap-2">
                     {(JSON.parse(ef.images || '[]') as string[]).map((url, i) => (
                       <div key={i} className="relative group">
-                        <img src={url} className="h-20 w-20 rounded object-cover border border-[#223653]" />
+                        <img src={url} className="h-20 w-20 rounded object-cover border border-[#2a3f55]" />
                         <button onClick={() => removeEditableImage(i)} className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-red-600 text-white text-xs leading-none hover:bg-red-500">✕</button>
                       </div>
                     ))}
@@ -383,11 +383,11 @@ function CrmDraftsTab() {
                   </div>
                   <div className="flex shrink-0 flex-col items-end gap-1.5">
                     <div className="flex items-center gap-1">
-                      <select value={ec.category} onChange={e => setEditCat(p => ({ ...p, [draft.id]: { ...p[draft.id], category: e.target.value, subcategory: '' } }))} className="rounded border border-[#223653] bg-[#0b1727] px-2 py-1 text-sm text-white w-[130px]">
+                      <select value={ec.category} onChange={e => setEditCat(p => ({ ...p, [draft.id]: { ...p[draft.id], category: e.target.value, subcategory: '' } }))} className="rounded border border-[#2a3f55] bg-[#0b1727] px-2 py-1 text-sm text-white w-[130px]">
                         <option value="">Категорија</option>
                         {catOpts.map(c => <option key={c.slug} value={c.name}>{c.name}</option>)}
                       </select>
-                      <select value={ec.subcategory} onChange={e => setEditCat(p => ({ ...p, [draft.id]: { ...p[draft.id], subcategory: e.target.value } }))} className="rounded border border-[#223653] bg-[#0b1727] px-2 py-1 text-sm text-white w-[130px]">
+                      <select value={ec.subcategory} onChange={e => setEditCat(p => ({ ...p, [draft.id]: { ...p[draft.id], subcategory: e.target.value } }))} className="rounded border border-[#2a3f55] bg-[#0b1727] px-2 py-1 text-sm text-white w-[130px]">
                         <option value="">Подкатегорија</option>
                         {catOpts.find(c => c.name === ec.category)?.subcategories.map(sc => (
                           <option key={sc.slug} value={sc.slug}>{sc.name}</option>
@@ -403,13 +403,13 @@ function CrmDraftsTab() {
                     </div>
                   </div>
                 </div>
-                <div className="overflow-hidden rounded-lg border border-[#223653] bg-[#081223] p-3">
+                <div className="overflow-hidden rounded-lg border border-[#2a3f55] bg-[#081223] p-3">
                   <p className="break-all whitespace-pre-wrap text-sm leading-6 text-slate-200">{draft.description}</p>
                 </div>
                 {draftImages(draft).length > 0 && (
                   <div className="mt-2 flex gap-2">
                     {draftImages(draft).slice(0, 5).map((url, i) => (
-                      <img key={i} src={url} className="h-24 w-24 rounded object-cover border border-[#223653]" />
+                      <img key={i} src={url} className="h-24 w-24 rounded object-cover border border-[#2a3f55]" />
                     ))}
                   </div>
                 )}
@@ -566,10 +566,10 @@ function CrmPublishedTab() {
   };
 
   return (
-    <div className="rounded-xl border border-[#1d2c43] bg-[#081223] p-5">
+    <div className="rounded-xl border border-[#2a3f55] bg-[#081223] p-5">
       <div className="mb-4 flex items-center justify-between">
         <h2 className="text-lg font-bold text-emerald-400">✅ Објавени огласи</h2>
-        <input value={searchPublished} onChange={e => setSearchPublished(e.target.value)} placeholder="🔍 Пребарај..." className="w-72 rounded border border-[#223653] bg-[#0b1727] px-3 py-1.5 text-sm text-white placeholder:text-slate-500" />
+        <input value={searchPublished} onChange={e => setSearchPublished(e.target.value)} placeholder="🔍 Пребарај..." className="w-72 rounded border border-[#2a3f55] bg-[#0b1727] px-3 py-1.5 text-sm text-white placeholder:text-slate-500" />
       </div>
       {published.length === 0 && !searchPublished && <p className="text-sm text-slate-400">Нема објавени огласи.</p>}
       <div className="space-y-4">
@@ -586,32 +586,32 @@ function CrmPublishedTab() {
             {editing ? (
               <div className="space-y-3">
                 <div className="flex items-center gap-2">
-                  <input value={ef.title} onChange={e => setEditForm(p => ({ ...p, title: e.target.value }))} className="flex-1 rounded border border-[#223653] bg-[#0b1727] px-2 py-1 text-sm text-white" />
+                  <input value={ef.title} onChange={e => setEditForm(p => ({ ...p, title: e.target.value }))} className="flex-1 rounded border border-[#2a3f55] bg-[#0b1727] px-2 py-1 text-sm text-white" />
                 </div>
                 <div className="grid grid-cols-2 gap-2">
-                  <input value={ef.price} onChange={e => setEditForm(p => ({ ...p, price: e.target.value }))} className="rounded border border-[#223653] bg-[#0b1727] px-2 py-1 text-sm text-white" placeholder="Цена" />
-                  <input value={ef.city} onChange={e => setEditForm(p => ({ ...p, city: e.target.value }))} className="rounded border border-[#223653] bg-[#0b1727] px-2 py-1 text-sm text-white" placeholder="Град" />
-                  <input value={ef.seller_name} onChange={e => setEditForm(p => ({ ...p, seller_name: e.target.value }))} className="rounded border border-[#223653] bg-[#0b1727] px-2 py-1 text-sm text-white" placeholder="Продавач" />
-                  <input value={ef.phone} onChange={e => setEditForm(p => ({ ...p, phone: e.target.value }))} className="rounded border border-[#223653] bg-[#0b1727] px-2 py-1 text-sm text-white" placeholder="Телефон" />
+                  <input value={ef.price} onChange={e => setEditForm(p => ({ ...p, price: e.target.value }))} className="rounded border border-[#2a3f55] bg-[#0b1727] px-2 py-1 text-sm text-white" placeholder="Цена" />
+                  <input value={ef.city} onChange={e => setEditForm(p => ({ ...p, city: e.target.value }))} className="rounded border border-[#2a3f55] bg-[#0b1727] px-2 py-1 text-sm text-white" placeholder="Град" />
+                  <input value={ef.seller_name} onChange={e => setEditForm(p => ({ ...p, seller_name: e.target.value }))} className="rounded border border-[#2a3f55] bg-[#0b1727] px-2 py-1 text-sm text-white" placeholder="Продавач" />
+                  <input value={ef.phone} onChange={e => setEditForm(p => ({ ...p, phone: e.target.value }))} className="rounded border border-[#2a3f55] bg-[#0b1727] px-2 py-1 text-sm text-white" placeholder="Телефон" />
                 </div>
                 <div className="grid grid-cols-2 gap-2">
-                  <select value={ef.category} onChange={e => setEditForm(p => ({ ...p, category: e.target.value, subcategory: '' }))} className="rounded border border-[#223653] bg-[#0b1727] px-2 py-1 text-sm text-white">
+                  <select value={ef.category} onChange={e => setEditForm(p => ({ ...p, category: e.target.value, subcategory: '' }))} className="rounded border border-[#2a3f55] bg-[#0b1727] px-2 py-1 text-sm text-white">
                     <option value="">Категорија</option>
                     {catOpts.map(c => <option key={c.slug} value={c.name}>{c.name}</option>)}
                   </select>
-                  <select value={ef.subcategory} onChange={e => setEditForm(p => ({ ...p, subcategory: e.target.value }))} className="rounded border border-[#223653] bg-[#0b1727] px-2 py-1 text-sm text-white">
+                  <select value={ef.subcategory} onChange={e => setEditForm(p => ({ ...p, subcategory: e.target.value }))} className="rounded border border-[#2a3f55] bg-[#0b1727] px-2 py-1 text-sm text-white">
                     <option value="">Подкатегорија</option>
                     {catOpts.find(c => c.name === ef.category)?.subcategories.map(sc => (
                       <option key={sc.slug} value={sc.slug}>{sc.name}</option>
                     ))}
                   </select>
                 </div>
-                <textarea value={ef.description} onChange={e => setEditForm(p => ({ ...p, description: e.target.value }))} rows={3} className="w-full rounded border border-[#223653] bg-[#0b1727] px-2 py-1 text-sm text-white" placeholder="Опис" />
+                <textarea value={ef.description} onChange={e => setEditForm(p => ({ ...p, description: e.target.value }))} rows={3} className="w-full rounded border border-[#2a3f55] bg-[#0b1727] px-2 py-1 text-sm text-white" placeholder="Опис" />
                 {(JSON.parse(ef.images || '[]') as string[]).length > 0 && (
                   <div className="flex flex-wrap gap-2">
                     {(JSON.parse(ef.images || '[]') as string[]).map((url, i) => (
                       <div key={i} className="relative group">
-                        <img src={url} className="h-20 w-20 rounded object-cover border border-[#223653]" />
+                        <img src={url} className="h-20 w-20 rounded object-cover border border-[#2a3f55]" />
                         <button onClick={() => removeEditableImage(i)} className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-red-600 text-white text-xs leading-none hover:bg-red-500">✕</button>
                       </div>
                     ))}
@@ -688,7 +688,7 @@ function CrmPublishedTab() {
                   </div>
                 </div>
                 {draft.description && (
-                  <div className="overflow-hidden rounded-lg border border-[#223653] bg-[#081223] p-3">
+                  <div className="overflow-hidden rounded-lg border border-[#2a3f55] bg-[#081223] p-3">
                     <p className="break-all whitespace-pre-wrap text-sm leading-6 text-slate-200">{draft.description}</p>
                   </div>
                 )}
@@ -696,7 +696,7 @@ function CrmPublishedTab() {
                   <div className="mt-2 flex gap-2">
                     {draftImages(draft).slice(0, 5).map((url, i) => (
                       <div key={i} className="relative">
-                        <img src={url} className="h-24 w-24 rounded object-cover border border-[#223653]" />
+                        <img src={url} className="h-24 w-24 rounded object-cover border border-[#2a3f55]" />
                         {draft.sold_at && (
                           <div className="absolute inset-0 flex items-center justify-center rounded bg-black/50">
                             <span className="-rotate-12 rounded border-2 border-red-500 bg-red-500/10 px-2 py-1 text-xs font-black text-red-500 leading-tight">ПРОДАДЕНО!</span>
@@ -779,11 +779,11 @@ function ReportsTab() {
   };
 
   if (loading) {
-    return <div className="rounded-xl border border-[#1d2c43] bg-[#081223] p-5"><p className="text-slate-400">Се вчитува...</p></div>;
+    return <div className="rounded-xl border border-[#2a3f55] bg-[#081223] p-5"><p className="text-slate-400">Се вчитува...</p></div>;
   }
 
   return (
-    <div className="rounded-xl border border-[#1d2c43] bg-[#081223] p-5">
+    <div className="rounded-xl border border-[#2a3f55] bg-[#081223] p-5">
       <div className="mb-4 flex items-center justify-between">
         <h2 className="text-lg font-bold text-amber-400">⚠️ Пријави злоупотреба</h2>
         <span className="text-sm text-slate-400">{reports.length} вкупно</span>
@@ -793,7 +793,7 @@ function ReportsTab() {
 
       <div className="space-y-3">
         {reports.map((report) => (
-          <div key={report.id} className={`rounded-lg border-2 px-4 py-3 ${report.status === 'new' ? 'border-red-800/60 bg-red-900/10' : 'border-[#223653] bg-[#0b1727] opacity-60'}`}>
+          <div key={report.id} className={`rounded-lg border-2 px-4 py-3 ${report.status === 'new' ? 'border-red-800/60 bg-red-900/10' : 'border-[#2a3f55] bg-[#0b1727] opacity-60'}`}>
             <div className="flex flex-col gap-2 lg:flex-row lg:items-start lg:justify-between">
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2 flex-wrap">
@@ -1536,7 +1536,7 @@ function AdminPageContent() {
           )}
 
           {!me?.authenticated && me?.setupRequired && (
-            <form onSubmit={submitSetup} className="max-w-xl space-y-4 rounded-xl border border-[#1d2c43] bg-[#081223] p-6">
+            <form onSubmit={submitSetup} className="max-w-xl space-y-4 rounded-xl border border-[#2a3f55] bg-[#081223] p-6">
               <h2 className="text-xl font-bold">Постави прв admin</h2>
               <div className="space-y-2">
                 <label className="block text-sm font-semibold text-slate-200">Admin име</label>
@@ -1559,7 +1559,7 @@ function AdminPageContent() {
           )}
 
           {!me?.authenticated && !me?.setupRequired && (
-            <form onSubmit={submitLogin} className="max-w-xl space-y-4 rounded-xl border border-[#1d2c43] bg-[#081223] p-6">
+            <form onSubmit={submitLogin} className="max-w-xl space-y-4 rounded-xl border border-[#2a3f55] bg-[#081223] p-6">
               <h2 className="text-xl font-bold">Admin најава</h2>
               <div className="space-y-2">
                 <label className="block text-sm font-semibold text-slate-200">Admin email</label>
@@ -1588,7 +1588,7 @@ function AdminPageContent() {
               </div>
 
               {activeTab === 'products' && (
-                <section className="rounded-xl border border-[#1d2c43] bg-[#081223] p-5">
+                <section className="rounded-xl border border-[#2a3f55] bg-[#081223] p-5">
                   <div className="mb-4 flex items-center justify-between gap-4">
                     <h2 className="text-xl font-bold">Одобрување огласи</h2>
                     <div className="flex gap-2">
@@ -1596,12 +1596,12 @@ function AdminPageContent() {
                         value={productSearch}
                         onChange={e => setProductSearch(e.target.value)}
                         placeholder="🔍 Пребарај..."
-                        className="w-56 rounded border border-[#223653] bg-[#0b1727] px-3 py-1.5 text-sm text-white placeholder:text-slate-500"
+                        className="w-56 rounded border border-[#2a3f55] bg-[#0b1727] px-3 py-1.5 text-sm text-white placeholder:text-slate-500"
                       />
                       <select
                         value={productSort}
                         onChange={(e) => setProductSort(e.target.value as 'newest' | 'oldest' | 'price_asc' | 'price_desc' | 'title_asc')}
-                        className="rounded-lg border border-[#223653] bg-[#0b1727] px-3 py-2 text-sm text-white"
+                        className="rounded-lg border border-[#2a3f55] bg-[#0b1727] px-3 py-2 text-sm text-white"
                       >
                         <option value="newest">Најнови</option>
                         <option value="oldest">Најстари</option>
@@ -1612,7 +1612,7 @@ function AdminPageContent() {
                       <select
                         value={statusFilter}
                         onChange={(e) => setStatusFilter(e.target.value)}
-                        className="rounded-lg border border-[#223653] bg-[#0b1727] px-3 py-2 text-sm text-white"
+                        className="rounded-lg border border-[#2a3f55] bg-[#0b1727] px-3 py-2 text-sm text-white"
                       >
                         <option value="">Сите</option>
                         <option value="pending">Pending</option>
@@ -1622,7 +1622,7 @@ function AdminPageContent() {
                       <select
                         value={productSource}
                         onChange={(e) => setProductSource(e.target.value as typeof productSource)}
-                        className="rounded-lg border border-[#223653] bg-[#0b1727] px-3 py-2 text-sm text-white"
+                        className="rounded-lg border border-[#2a3f55] bg-[#0b1727] px-3 py-2 text-sm text-white"
                       >
                         <option value="all">Сите извори</option>
                         <option value="regular">Обични</option>
@@ -1655,36 +1655,36 @@ function AdminPageContent() {
                         {editingProductId === product.id ? (
                           <div className="space-y-3">
                             <div className="grid grid-cols-2 gap-2">
-                              <input value={editingProductForm.title} onChange={e => setEditingProductForm(p => ({ ...p, title: e.target.value }))} className="col-span-2 rounded border border-[#223653] bg-[#0b1727] px-2 py-1 text-sm text-white" placeholder="Наслов" />
-                              <input value={editingProductForm.price} onChange={e => setEditingProductForm(p => ({ ...p, price: e.target.value }))} className="rounded border border-[#223653] bg-[#0b1727] px-2 py-1 text-sm text-white" placeholder="Цена" />
-                              <input value={editingProductForm.city} onChange={e => setEditingProductForm(p => ({ ...p, city: e.target.value }))} className="rounded border border-[#223653] bg-[#0b1727] px-2 py-1 text-sm text-white" placeholder="Град" />
-                              <select value={editingProductForm.category} onChange={e => setEditingProductForm(p => ({ ...p, category: e.target.value, subcategory: '' }))} className="rounded border border-[#223653] bg-[#0b1727] px-2 py-1 text-sm text-white">
+                              <input value={editingProductForm.title} onChange={e => setEditingProductForm(p => ({ ...p, title: e.target.value }))} className="col-span-2 rounded border border-[#2a3f55] bg-[#0b1727] px-2 py-1 text-sm text-white" placeholder="Наслов" />
+                              <input value={editingProductForm.price} onChange={e => setEditingProductForm(p => ({ ...p, price: e.target.value }))} className="rounded border border-[#2a3f55] bg-[#0b1727] px-2 py-1 text-sm text-white" placeholder="Цена" />
+                              <input value={editingProductForm.city} onChange={e => setEditingProductForm(p => ({ ...p, city: e.target.value }))} className="rounded border border-[#2a3f55] bg-[#0b1727] px-2 py-1 text-sm text-white" placeholder="Град" />
+                              <select value={editingProductForm.category} onChange={e => setEditingProductForm(p => ({ ...p, category: e.target.value, subcategory: '' }))} className="rounded border border-[#2a3f55] bg-[#0b1727] px-2 py-1 text-sm text-white">
                                 <option value="">Категорија</option>
                                 {categories.map(c => <option key={c.slug} value={c.name}>{c.name}</option>)}
                               </select>
-                              <select value={editingProductForm.subcategory} onChange={e => setEditingProductForm(p => ({ ...p, subcategory: e.target.value }))} className="rounded border border-[#223653] bg-[#0b1727] px-2 py-1 text-sm text-white">
+                              <select value={editingProductForm.subcategory} onChange={e => setEditingProductForm(p => ({ ...p, subcategory: e.target.value }))} className="rounded border border-[#2a3f55] bg-[#0b1727] px-2 py-1 text-sm text-white">
                                 <option value="">Подкатегорија</option>
                                 {categories.find(c => c.name === editingProductForm.category)?.subcategories.map(sc => (
                                   <option key={sc.slug} value={sc.slug}>{sc.name}</option>
                                 ))}
                               </select>
-                              <select value={editingProductForm.condition} onChange={e => setEditingProductForm(p => ({ ...p, condition: e.target.value }))} className="rounded border border-[#223653] bg-[#0b1727] px-2 py-1 text-sm text-white">
+                              <select value={editingProductForm.condition} onChange={e => setEditingProductForm(p => ({ ...p, condition: e.target.value }))} className="rounded border border-[#2a3f55] bg-[#0b1727] px-2 py-1 text-sm text-white">
                                 <option value="Многу добро">Многу добро</option>
                                 {['Ново', 'Нова', 'Како ново', 'Добро', 'Половна', 'Користено', 'За делови'].map(c => (
                                   <option key={c} value={c}>{c}</option>
                                 ))}
                               </select>
-                              <select value={editingProductForm.delivery} onChange={e => setEditingProductForm(p => ({ ...p, delivery: e.target.value }))} className="rounded border border-[#223653] bg-[#0b1727] px-2 py-1 text-sm text-white">
+                              <select value={editingProductForm.delivery} onChange={e => setEditingProductForm(p => ({ ...p, delivery: e.target.value }))} className="rounded border border-[#2a3f55] bg-[#0b1727] px-2 py-1 text-sm text-white">
                                 <option value="По договор">По договор</option>
                                 {['Лично преземање', 'Карго', 'Достава во град'].map(d => (
                                   <option key={d} value={d}>{d}</option>
                                 ))}
                               </select>
-                              <input value={editingProductForm.contact_name} onChange={e => setEditingProductForm(p => ({ ...p, contact_name: e.target.value }))} className="rounded border border-[#223653] bg-[#0b1727] px-2 py-1 text-sm text-white" placeholder="Контакт име" />
-                              <input value={editingProductForm.contact_phone} onChange={e => setEditingProductForm(p => ({ ...p, contact_phone: e.target.value }))} className="rounded border border-[#223653] bg-[#0b1727] px-2 py-1 text-sm text-white" placeholder="Контакт телефон" />
-                              <input value={editingProductForm.contact_email} onChange={e => setEditingProductForm(p => ({ ...p, contact_email: e.target.value }))} className="col-span-2 rounded border border-[#223653] bg-[#0b1727] px-2 py-1 text-sm text-white" placeholder="Контакт емаил" />
+                              <input value={editingProductForm.contact_name} onChange={e => setEditingProductForm(p => ({ ...p, contact_name: e.target.value }))} className="rounded border border-[#2a3f55] bg-[#0b1727] px-2 py-1 text-sm text-white" placeholder="Контакт име" />
+                              <input value={editingProductForm.contact_phone} onChange={e => setEditingProductForm(p => ({ ...p, contact_phone: e.target.value }))} className="rounded border border-[#2a3f55] bg-[#0b1727] px-2 py-1 text-sm text-white" placeholder="Контакт телефон" />
+                              <input value={editingProductForm.contact_email} onChange={e => setEditingProductForm(p => ({ ...p, contact_email: e.target.value }))} className="col-span-2 rounded border border-[#2a3f55] bg-[#0b1727] px-2 py-1 text-sm text-white" placeholder="Контакт емаил" />
                             </div>
-                            <textarea value={editingProductForm.description} onChange={e => setEditingProductForm(p => ({ ...p, description: e.target.value }))} rows={4} className="w-full rounded border border-[#223653] bg-[#0b1727] px-2 py-1 text-sm text-white" placeholder="Опис" />
+                            <textarea value={editingProductForm.description} onChange={e => setEditingProductForm(p => ({ ...p, description: e.target.value }))} rows={4} className="w-full rounded border border-[#2a3f55] bg-[#0b1727] px-2 py-1 text-sm text-white" placeholder="Опис" />
                             <div className="flex flex-wrap items-center gap-2">
                               <label className="flex items-center gap-1.5 text-sm text-slate-300">
                                 <input type="checkbox" checked={editingProductForm.negotiable === '1'} onChange={e => setEditingProductForm(p => ({ ...p, negotiable: e.target.checked ? '1' : '0' }))} />
@@ -1749,7 +1749,7 @@ function AdminPageContent() {
                             </div>
 
                             {product.description && (
-                              <div className="overflow-hidden rounded-lg border border-[#223653] bg-[#081223] p-4">
+                              <div className="overflow-hidden rounded-lg border border-[#2a3f55] bg-[#081223] p-4">
                                 <p className="break-all whitespace-pre-wrap text-sm leading-6 text-slate-200">{product.description}</p>
                               </div>
                             )}
@@ -1761,7 +1761,7 @@ function AdminPageContent() {
                                     <img
                                       src={image}
                                       alt={`${product.title} ${index + 1}`}
-                                      className="h-28 w-36 rounded-lg border border-[#223653] bg-[#081223] object-cover"
+                                      className="h-28 w-36 rounded-lg border border-[#2a3f55] bg-[#081223] object-cover"
                                     />
                                   </a>
                                 ))}
@@ -1802,7 +1802,7 @@ function AdminPageContent() {
                                   className={`rounded border px-1.5 py-0.5 transition ${
                                     adminPerPage === n
                                       ? 'border-red-500/50 bg-red-600/20 text-red-300 font-semibold'
-                                      : 'border-[#223653] bg-[#0b1727] text-slate-300 hover:bg-[#1d2c43]'
+                                      : 'border-[#2a3f55] bg-[#0b1727] text-slate-300 hover:bg-[#1d2c43]'
                                   }`}
                                 >
                                   {n}
@@ -1813,7 +1813,7 @@ function AdminPageContent() {
                               <button
                                 onClick={() => setAdminPage(p => Math.max(1, p - 1))}
                                 disabled={adminPage === 1}
-                                className="rounded border border-[#223653] bg-[#0b1727] px-2.5 py-1 text-xs text-slate-300 hover:bg-[#1d2c43] disabled:opacity-30 disabled:cursor-not-allowed whitespace-nowrap"
+                                className="rounded border border-[#2a3f55] bg-[#0b1727] px-2.5 py-1 text-xs text-slate-300 hover:bg-[#1d2c43] disabled:opacity-30 disabled:cursor-not-allowed whitespace-nowrap"
                               >
                                 « Претходна
                               </button>
@@ -1830,7 +1830,7 @@ function AdminPageContent() {
                                     className={`min-w-[32px] rounded border px-2 py-1 text-xs transition ${
                                       adminPage === p
                                         ? 'border-red-500/50 bg-red-600/20 text-red-300 font-semibold'
-                                        : 'border-[#223653] bg-[#0b1727] text-slate-300 hover:bg-[#1d2c43]'
+                                        : 'border-[#2a3f55] bg-[#0b1727] text-slate-300 hover:bg-[#1d2c43]'
                                     }`}
                                   >
                                     {p}
@@ -1840,7 +1840,7 @@ function AdminPageContent() {
                               <button
                                 onClick={() => setAdminPage(p => Math.min(totalPages, p + 1))}
                                 disabled={adminPage === totalPages}
-                                className="rounded border border-[#223653] bg-[#0b1727] px-2.5 py-1 text-xs text-slate-300 hover:bg-[#1d2c43] disabled:opacity-30 disabled:cursor-not-allowed whitespace-nowrap"
+                                className="rounded border border-[#2a3f55] bg-[#0b1727] px-2.5 py-1 text-xs text-slate-300 hover:bg-[#1d2c43] disabled:opacity-30 disabled:cursor-not-allowed whitespace-nowrap"
                               >
                                 Следна страна »
                               </button>
@@ -1857,21 +1857,21 @@ function AdminPageContent() {
               {activeTab === 'users' && (
                 <section className="space-y-5">
                   <div className="grid gap-4 md:grid-cols-3">
-                    <div className="rounded-xl border border-[#1d2c43] bg-[#081223] p-5">
+                    <div className="rounded-xl border border-[#2a3f55] bg-[#081223] p-5">
                       <p className="text-sm font-medium text-slate-400">Вкупно корисници</p>
                       <p className="mt-3 text-3xl font-bold text-white">{userCounts.total}</p>
                     </div>
-                    <div className="rounded-xl border border-[#1d2c43] bg-[#081223] p-5">
+                    <div className="rounded-xl border border-[#2a3f55] bg-[#081223] p-5">
                       <p className="text-sm font-medium text-slate-400">Активни профили</p>
                       <p className="mt-3 text-3xl font-bold text-emerald-400">{userCounts.active}</p>
                     </div>
-                    <div className="rounded-xl border border-[#1d2c43] bg-[#081223] p-5">
+                    <div className="rounded-xl border border-[#2a3f55] bg-[#081223] p-5">
                       <p className="text-sm font-medium text-slate-400">Деактивирани профили</p>
                       <p className="mt-3 text-3xl font-bold text-rose-400">{userCounts.inactive}</p>
                     </div>
                   </div>
 
-                  <div className="rounded-xl border border-[#1d2c43] bg-[#081223] p-5">
+                  <div className="rounded-xl border border-[#2a3f55] bg-[#081223] p-5">
                     <div className="flex flex-col gap-3 xl:flex-row xl:items-end xl:justify-between">
                       <div>
                         <h2 className="text-xl font-bold">Корисници</h2>
@@ -1889,7 +1889,7 @@ function AdminPageContent() {
                             onChange={(e) => setUserSearch(e.target.value)}
                             className={`admin-dark-input h-10 !py-2 ${
                               dark
-                                ? '!bg-[#0b1727] !border-[#223653] !text-white placeholder:!text-slate-500'
+                                ? '!bg-[#0b1727] !border-[#2a3f55] !text-white placeholder:!text-slate-500'
                                 : '!bg-white !border-[#4b5d78] !text-slate-900 placeholder:!text-slate-500'
                             }`}
                           />
@@ -1899,7 +1899,7 @@ function AdminPageContent() {
                           <select
                             value={userSort}
                             onChange={(e) => setUserSort(e.target.value as 'newest' | 'oldest' | 'rating_high' | 'rating_low' | 'ads_high' | 'ads_low')}
-                            className="h-11 w-full rounded-lg border border-[#223653] bg-[#0b1727] px-3 text-sm text-white"
+                            className="h-11 w-full rounded-lg border border-[#2a3f55] bg-[#0b1727] px-3 text-sm text-white"
                           >
                             <option value="newest">Најново регистрирани</option>
                             <option value="oldest">Најстари профили</option>
@@ -1914,7 +1914,7 @@ function AdminPageContent() {
                           <select
                             value={userStatusFilter}
                             onChange={(e) => setUserStatusFilter(e.target.value as 'all' | 'active' | 'inactive')}
-                            className="h-11 w-full rounded-lg border border-[#223653] bg-[#0b1727] px-3 text-sm text-white"
+                            className="h-11 w-full rounded-lg border border-[#2a3f55] bg-[#0b1727] px-3 text-sm text-white"
                           >
                             <option value="all">Сите корисници</option>
                             <option value="active">Само активни</option>
@@ -1962,7 +1962,7 @@ function AdminPageContent() {
                             onChange={(e) => setAdminMessageText(e.target.value)}
                             placeholder="Напиши предупредување, информација, барање за корекција или порака поврзана со профилот."
                             rows={5}
-                            className="w-full rounded-lg border border-[#223653] bg-[#0b1727] px-4 py-3 text-sm text-white outline-none transition placeholder:text-slate-500 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20"
+                            className="w-full rounded-lg border border-[#2a3f55] bg-[#0b1727] px-4 py-3 text-sm text-white outline-none transition placeholder:text-slate-500 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20"
                           />
                         </div>
 
@@ -1975,7 +1975,7 @@ function AdminPageContent() {
                     )}
 
                     <div className="mt-5 space-y-3">
-                      <div className="flex flex-col gap-3 rounded-xl border border-[#223653] bg-[#0b1727] px-4 py-3 lg:flex-row lg:items-center lg:justify-between">
+                      <div className="flex flex-col gap-3 rounded-xl border border-[#2a3f55] bg-[#0b1727] px-4 py-3 lg:flex-row lg:items-center lg:justify-between">
                         <div className="flex items-center gap-3">
                           <label className="flex items-center gap-3 text-sm font-semibold text-slate-200">
                             <input
@@ -2056,17 +2056,17 @@ function AdminPageContent() {
                               </div>
 
                               <div className="grid gap-2 text-sm text-slate-300 sm:grid-cols-2">
-                                <div className="rounded-lg border border-[#1d2c43] bg-[#081223] px-3 py-2">
+                                <div className="rounded-lg border border-[#2a3f55] bg-[#081223] px-3 py-2">
                                   <p className="text-xs uppercase tracking-wide text-slate-500">Регистрација</p>
                                   <p className="mt-1 font-medium text-white">{new Date(user.created_at).toLocaleString('mk-MK')}</p>
                                 </div>
-                                <div className="rounded-lg border border-[#1d2c43] bg-[#081223] px-3 py-2">
+                                <div className="rounded-lg border border-[#2a3f55] bg-[#081223] px-3 py-2">
                                   <p className="text-xs uppercase tracking-wide text-slate-500">Огласи</p>
                                   <p className="mt-1 font-medium text-white">{user.ads_count}</p>
                                 </div>
                               </div>
 
-                              <div className="rounded-lg border border-[#1d2c43] bg-[#081223] px-3 py-2 text-sm">
+                              <div className="rounded-lg border border-[#2a3f55] bg-[#081223] px-3 py-2 text-sm">
                                 <p className="text-xs uppercase tracking-wide text-slate-500">Рејтинг</p>
                                 <p className="mt-1 font-medium text-white">
                                   {(user.rating ?? 5).toFixed(1)} / 5
@@ -2147,18 +2147,18 @@ function AdminPageContent() {
 
                               <div className="mt-4 space-y-3">
                                 {auditLoading ? (
-                                  <div className="rounded-xl border border-[#223653] bg-[#0b1727] px-5 py-8 text-center text-sm text-slate-300">
+                                  <div className="rounded-xl border border-[#2a3f55] bg-[#0b1727] px-5 py-8 text-center text-sm text-slate-300">
                                     Се вчитуваат пораките...
                                   </div>
                                 ) : auditMessages.length === 0 ? (
-                                  <div className="rounded-xl border border-dashed border-[#223653] bg-[#0b1727] px-5 py-8 text-center text-sm text-slate-400">
+                                  <div className="rounded-xl border border-dashed border-[#2a3f55] bg-[#0b1727] px-5 py-8 text-center text-sm text-slate-400">
                                     Овој корисник сè уште нема пораки за преглед.
                                   </div>
                                 ) : (
                                   auditMessages.map((item) => {
                                     const isOutgoing = item.sender_id === auditUser.id;
                                     return (
-                                      <div key={item.id} className="rounded-xl border border-[#223653] bg-[#0b1727] px-4 py-3">
+                                      <div key={item.id} className="rounded-xl border border-[#2a3f55] bg-[#0b1727] px-4 py-3">
                                         <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
                                           <div>
                                             <p className="text-sm font-semibold text-white">
@@ -2187,7 +2187,7 @@ function AdminPageContent() {
                       ))}
 
                       {users.length === 0 && (
-                        <div className="rounded-xl border border-dashed border-[#223653] bg-[#0b1727] px-5 py-10 text-center text-sm text-slate-400">
+                        <div className="rounded-xl border border-dashed border-[#2a3f55] bg-[#0b1727] px-5 py-10 text-center text-sm text-slate-400">
                           Нема корисници што одговараат на пребарувањето или филтерот.
                         </div>
                       )}
@@ -2199,7 +2199,7 @@ function AdminPageContent() {
               {activeTab === 'categories' && (
                 <section className="grid gap-5 lg:grid-cols-[360px_1fr]">
                   <div className="space-y-5">
-                    <form onSubmit={submitCategory} className="rounded-xl border border-[#1d2c43] bg-[#081223] p-5 space-y-3">
+                    <form onSubmit={submitCategory} className="rounded-xl border border-[#2a3f55] bg-[#081223] p-5 space-y-3">
                       <div>
                         <h2 className="text-lg font-bold">{editingCategoryId ? 'Уреди категорија' : 'Нова категорија'}</h2>
                         {editingCategoryId && <p className="mt-1 text-xs text-slate-400">Кога ќе го смениш slug-от, системот ќе ги префрли и огласите што ја користат оваа категорија.</p>}
@@ -2225,7 +2225,7 @@ function AdminPageContent() {
                         <select
                           value={categoryForm.icon}
                           onChange={(e) => setCategoryForm((prev) => ({ ...prev, icon: e.target.value }))}
-                          className="h-11 w-full rounded-lg border border-[#223653] bg-[#0b1727] px-3 text-sm text-white"
+                          className="h-11 w-full rounded-lg border border-[#2a3f55] bg-[#0b1727] px-3 text-sm text-white"
                         >
                           <option value="layout-grid">Основна икона</option>
                           {CATEGORY_ICON_OPTIONS.map((option) => (
@@ -2235,7 +2235,7 @@ function AdminPageContent() {
                         <p className="text-xs text-slate-400">Избери ја иконата што најмногу одговара на категоријата.</p>
                       </div>
                       {editingCategoryId && (
-                        <label className="flex items-center gap-3 rounded-lg border border-[#223653] bg-[#0b1727] px-4 py-3 text-sm text-slate-200">
+                        <label className="flex items-center gap-3 rounded-lg border border-[#2a3f55] bg-[#0b1727] px-4 py-3 text-sm text-slate-200">
                           <input
                             type="checkbox"
                             checked={categoryForm.isActive}
@@ -2256,7 +2256,7 @@ function AdminPageContent() {
                       </div>
                     </form>
 
-                    <form onSubmit={submitSubcategory} className="rounded-xl border border-[#1d2c43] bg-[#081223] p-5 space-y-3">
+                    <form onSubmit={submitSubcategory} className="rounded-xl border border-[#2a3f55] bg-[#081223] p-5 space-y-3">
                       <div>
                         <h2 className="text-lg font-bold">{editingSubcategoryId ? 'Уреди подкатегорија' : 'Нова подкатегорија'}</h2>
                         {editingSubcategoryId && <p className="mt-1 text-xs text-slate-400">Slug промената ќе се префрли и на огласите што ја користат оваа подкатегорија.</p>}
@@ -2265,7 +2265,7 @@ function AdminPageContent() {
                         value={subcategoryForm.parentId}
                         onChange={(e) => setSubcategoryForm((prev) => ({ ...prev, parentId: e.target.value }))}
                         disabled={Boolean(editingSubcategoryId)}
-                        className="h-11 w-full rounded-lg border border-[#223653] bg-[#0b1727] px-3 text-sm text-white disabled:cursor-not-allowed disabled:opacity-60"
+                        className="h-11 w-full rounded-lg border border-[#2a3f55] bg-[#0b1727] px-3 text-sm text-white disabled:cursor-not-allowed disabled:opacity-60"
                       >
                         <option value="">Избери parent категорија</option>
                         {categories.map((category) => (
@@ -2292,7 +2292,7 @@ function AdminPageContent() {
                         <p className="text-xs text-slate-400">Исто како категоријата, ова е URL името за подкатегоријата.</p>
                       </div>
                       {editingSubcategoryId && (
-                        <label className="flex items-center gap-3 rounded-lg border border-[#223653] bg-[#0b1727] px-4 py-3 text-sm text-slate-200">
+                        <label className="flex items-center gap-3 rounded-lg border border-[#2a3f55] bg-[#0b1727] px-4 py-3 text-sm text-slate-200">
                           <input
                             type="checkbox"
                             checked={subcategoryForm.isActive}
@@ -2314,13 +2314,13 @@ function AdminPageContent() {
                     </form>
                   </div>
 
-                  <div className="rounded-xl border border-[#1d2c43] bg-[#081223] p-5">
+                  <div className="rounded-xl border border-[#2a3f55] bg-[#081223] p-5">
                     <div className="mb-4 flex items-center justify-between gap-4">
                       <h2 className="text-lg font-bold">Постоечки категории</h2>
                       <select
                         value={categorySort}
                         onChange={(e) => setCategorySort(e.target.value as 'name_asc' | 'name_desc' | 'newest')}
-                        className="rounded-lg border border-[#223653] bg-[#0b1727] px-3 py-1.5 text-sm text-white"
+                        className="rounded-lg border border-[#2a3f55] bg-[#0b1727] px-3 py-1.5 text-sm text-white"
                       >
                         <option value="newest">Најнови</option>
                         <option value="name_asc">Име (А-Ш)</option>
@@ -2333,7 +2333,7 @@ function AdminPageContent() {
                         if (categorySort === 'name_desc') return b.name.localeCompare(a.name, 'mk');
                         return b.id - a.id;
                       }).slice(0, adminPerPage).map((category) => (
-                        <div key={category.id} className="rounded-lg border border-[#223653] bg-[#0b1727] p-4">
+                        <div key={category.id} className="rounded-lg border border-[#2a3f55] bg-[#0b1727] p-4">
                           <div className="flex items-center justify-between gap-3">
                             <div>
                               <h3 className="font-semibold">{category.name}</h3>
@@ -2369,7 +2369,7 @@ function AdminPageContent() {
               {activeTab === 'homepage' && (
                 <section className="grid gap-5 lg:grid-cols-[440px_1fr]">
                   <div className="space-y-5">
-                    <div className="rounded-xl border border-[#1d2c43] bg-[#081223] p-5">
+                    <div className="rounded-xl border border-[#2a3f55] bg-[#081223] p-5">
                       <h2 className="text-lg font-bold">Уредување банери</h2>
                       <p className="mt-2 text-sm leading-6 text-slate-400">
                         Овде се уредуваат трите live секции на почетната: горниот банер со категории, долниот info банер и долниот банер со категории под info банерот.
@@ -2381,7 +2381,7 @@ function AdminPageContent() {
                       </ul>
                     </div>
 
-                    <form onSubmit={submitHomepageSections} className="space-y-5 rounded-xl border border-[#1d2c43] bg-[#081223] p-5">
+                    <form onSubmit={submitHomepageSections} className="space-y-5 rounded-xl border border-[#2a3f55] bg-[#081223] p-5">
                       <div className="space-y-3">
                         <div>
                           <h3 className="text-base font-bold">Горен банер со категории</h3>
@@ -2394,7 +2394,7 @@ function AdminPageContent() {
                               <select
                                 value={homepageSections.headerCategorySlugs[index] || ''}
                                 onChange={(e) => updateHomepageCategorySlug('headerCategorySlugs', index, e.target.value)}
-                                className="h-11 w-full rounded-lg border border-[#223653] bg-[#0b1727] px-3 text-sm text-white"
+                                className="h-11 w-full rounded-lg border border-[#2a3f55] bg-[#0b1727] px-3 text-sm text-white"
                               >
                                 <option value="">Избери категорија</option>
                                 {categories.map((category) => (
@@ -2413,7 +2413,7 @@ function AdminPageContent() {
                         </div>
                         <div className="grid gap-3">
                           {homepageSections.trustItems.map((item, index) => (
-                            <div key={`${item.icon}-${index}`} className="rounded-lg border border-[#223653] bg-[#0b1727] p-4">
+                            <div key={`${item.icon}-${index}`} className="rounded-lg border border-[#2a3f55] bg-[#0b1727] p-4">
                               <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-slate-400">Info картичка {index + 1}</p>
                               <div className="space-y-3">
                                 <Input
@@ -2444,7 +2444,7 @@ function AdminPageContent() {
                               <select
                                 value={homepageSections.homeCategorySlugs[index] || ''}
                                 onChange={(e) => updateHomepageCategorySlug('homeCategorySlugs', index, e.target.value)}
-                                className="h-11 w-full rounded-lg border border-[#223653] bg-[#0b1727] px-3 text-sm text-white"
+                                className="h-11 w-full rounded-lg border border-[#2a3f55] bg-[#0b1727] px-3 text-sm text-white"
                               >
                                 <option value="">Избери категорија</option>
                                 {categories.map((category) => (
@@ -2464,13 +2464,13 @@ function AdminPageContent() {
                     </form>
                   </div>
 
-                  <div className="space-y-5 rounded-xl border border-[#1d2c43] bg-[#081223] p-5">
+                  <div className="space-y-5 rounded-xl border border-[#2a3f55] bg-[#081223] p-5">
                     <div>
                       <h2 className="text-lg font-bold">Преглед на секциите</h2>
                       <p className="mt-1 text-sm text-slate-400">Ова е брз преглед на моменталната структура на почетната страница.</p>
                     </div>
 
-                    <div className="rounded-xl border border-[#223653] bg-[#0b1727] p-4">
+                    <div className="rounded-xl border border-[#2a3f55] bg-[#0b1727] p-4">
                       <h3 className="text-sm font-bold text-slate-200">Горен банер со категории</h3>
                       <div className="mt-3 flex flex-wrap gap-2">
                         {homepageSections.headerCategorySlugs.map((slug, index) => {
@@ -2484,7 +2484,7 @@ function AdminPageContent() {
                       </div>
                     </div>
 
-                    <div className="rounded-xl border border-[#223653] bg-[#0b1727] p-4">
+                    <div className="rounded-xl border border-[#2a3f55] bg-[#0b1727] p-4">
                       <h3 className="text-sm font-bold text-slate-200">Долен info банер</h3>
                       <div className="mt-3 grid gap-3 sm:grid-cols-2">
                         {homepageSections.trustItems.map((item, index) => (
@@ -2496,7 +2496,7 @@ function AdminPageContent() {
                       </div>
                     </div>
 
-                    <div className="rounded-xl border border-[#223653] bg-[#0b1727] p-4">
+                    <div className="rounded-xl border border-[#2a3f55] bg-[#0b1727] p-4">
                       <h3 className="text-sm font-bold text-slate-200">Долен банер со категории</h3>
                       <div className="mt-3 grid gap-2 sm:grid-cols-2 xl:grid-cols-3">
                         {homepageSections.homeCategorySlugs.map((slug, index) => {
@@ -2528,7 +2528,7 @@ function AdminPageContent() {
               {activeTab === 'banners' && (
                 <section className="grid gap-5 lg:grid-cols-[420px_1fr]">
                   <div className="space-y-5">
-                    <div className="rounded-xl border border-[#1d2c43] bg-[#081223] p-5">
+                    <div className="rounded-xl border border-[#2a3f55] bg-[#081223] p-5">
                       <h2 className="text-lg font-bold">Голем банер</h2>
                       <p className="mt-2 text-sm leading-6 text-slate-400">
                         Овој дел е наменет за промотивни банери што добиваат приоритетен простор на почетната страница и служат за поголема видливост на бренд, категорија, понуда или специјална кампања.
@@ -2541,7 +2541,7 @@ function AdminPageContent() {
                       </ul>
                     </div>
 
-                    <form onSubmit={submitBanner} className="rounded-xl border border-[#1d2c43] bg-[#081223] p-5 space-y-4">
+                    <form onSubmit={submitBanner} className="rounded-xl border border-[#2a3f55] bg-[#081223] p-5 space-y-4">
                       <div>
                         <h2 className="text-lg font-bold">{editingBannerId ? 'Уреди промотивен банер' : 'Нов промотивен банер'}</h2>
                         <p className="mt-1 text-sm text-slate-400">Препорачана димензија: 1600 x 400 px, JPG или PNG. Овие банери се користат за истакнување, рекламирање и приоритетно позиционирање на почетната страница.</p>
@@ -2564,7 +2564,7 @@ function AdminPageContent() {
                       </div>
 
                       {bannerForm.image_url && (
-                        <div className="overflow-hidden rounded-lg border border-[#223653] bg-[#0b1727]">
+                        <div className="overflow-hidden rounded-lg border border-[#2a3f55] bg-[#0b1727]">
                           <img src={bannerForm.image_url} alt="Preview банер" className="h-32 w-full object-cover" />
                         </div>
                       )}
@@ -2576,7 +2576,7 @@ function AdminPageContent() {
                         <p className="text-xs text-slate-400">Колку е помал бројот, толку порано и поприоритетно ќе се прикаже банерот на почетна.</p>
                       </div>
 
-                      <label className="flex items-center gap-3 rounded-lg border border-[#223653] bg-[#0b1727] px-4 py-3 text-sm text-slate-200">
+                      <label className="flex items-center gap-3 rounded-lg border border-[#2a3f55] bg-[#0b1727] px-4 py-3 text-sm text-slate-200">
                         <input
                           type="checkbox"
                           checked={bannerForm.is_active}
@@ -2598,13 +2598,13 @@ function AdminPageContent() {
                     </form>
                   </div>
 
-                  <div className="rounded-xl border border-[#1d2c43] bg-[#081223] p-5">
+                  <div className="rounded-xl border border-[#2a3f55] bg-[#081223] p-5">
                     <h2 className="mb-4 text-lg font-bold">Активни и достапни промотивни позиции</h2>
                     <div className="space-y-4">
                       {banners.map((banner) => (
-                        <div key={banner.id} className="rounded-lg border border-[#223653] bg-[#0b1727] p-4">
+                        <div key={banner.id} className="rounded-lg border border-[#2a3f55] bg-[#0b1727] p-4">
                           <div className="flex flex-col gap-4 xl:flex-row">
-                            <div className="overflow-hidden rounded-lg border border-[#223653] bg-[#081223] xl:w-[320px]">
+                            <div className="overflow-hidden rounded-lg border border-[#2a3f55] bg-[#081223] xl:w-[320px]">
                               <img src={banner.image_url} alt={`Банер ${banner.id}`} className="h-28 w-full object-cover" />
                             </div>
                             <div className="flex-1">

@@ -98,9 +98,9 @@ const CITIES = [
   'Валандово',
   'Демир Хисар',
 ];
-const fieldClass = '!bg-[#0b1727] !border-[#223653] !text-white !placeholder:text-slate-500 focus:!border-red-500 focus:!ring-red-500/20';
+const fieldClass = '!bg-[#0b1727] !border-[#2a3f55] !text-white !placeholder:text-slate-500 focus:!border-red-500 focus:!ring-red-500/20';
 
-const selectClass = 'h-12 w-full rounded-lg border border-[#223653] bg-[#0b1727] px-3 text-sm text-white outline-none transition focus:border-red-500 focus:ring-2 focus:ring-red-500/20';
+const selectClass = 'h-12 w-full rounded-lg border border-[#2a3f55] bg-[#0b1727] px-3 text-sm text-white outline-none transition focus:border-red-500 focus:ring-2 focus:ring-red-500/20';
 
 const fieldErrorClass = '!bg-[#0b1727] !border-red-500 !ring-2 !ring-red-500/40 !text-white !placeholder:text-slate-500 focus:!border-red-500 focus:!ring-red-500/20';
 
@@ -381,7 +381,7 @@ export default function SellPage() {
           ) : (
           <form onSubmit={handleSubmit} className="grid gap-5 lg:grid-cols-[1fr_320px]">
             <div className="space-y-5">
-              <section className="rounded-lg border border-[#1d2c43] bg-[#081223] p-5">
+              <section className="rounded-lg border border-[#2a3f55] bg-[#081223] p-5">
                 <h2 className="text-lg font-bold">Основни информации</h2>
                 <div className="mt-4 grid gap-4 md:grid-cols-2">
                   <div className="md:col-span-2">
@@ -470,15 +470,15 @@ export default function SellPage() {
                   </div>
 
                   <div className="flex flex-wrap items-center gap-3 md:col-span-2">
-                    <label className={`flex cursor-pointer items-center gap-2 rounded-lg border px-3 py-3 text-sm transition ${formData.negotiable ? 'border-orange-500 bg-orange-500/10 text-orange-200' : 'border-[#223653] bg-[#0b1727] text-slate-200'}`}>
+                    <label className={`flex cursor-pointer items-center gap-2 rounded-lg border px-3 py-3 text-sm transition ${formData.negotiable ? 'border-orange-500 bg-orange-500/10 text-orange-200' : 'border-[#2a3f55] bg-[#0b1727] text-slate-200'}`}>
                       <input type="radio" name="priceType" checked={formData.negotiable} onChange={() => updateField('negotiable', true)} className="h-4 w-4 accent-orange-500" />
                       Цена по договор
                     </label>
-                    <label className={`flex cursor-pointer items-center gap-2 rounded-lg border px-3 py-3 text-sm transition ${!formData.negotiable ? 'border-red-500 bg-red-500/10 text-red-200' : 'border-[#223653] bg-[#0b1727] text-slate-200'}`}>
+                    <label className={`flex cursor-pointer items-center gap-2 rounded-lg border px-3 py-3 text-sm transition ${!formData.negotiable ? 'border-red-500 bg-red-500/10 text-red-200' : 'border-[#2a3f55] bg-[#0b1727] text-slate-200'}`}>
                       <input type="radio" name="priceType" checked={!formData.negotiable} onChange={() => updateField('negotiable', false)} className="h-4 w-4 accent-red-600" />
                       Цената е фиксна
                     </label>
-                    <label className={`flex cursor-pointer items-center gap-2 rounded-lg border px-3 py-3 text-sm transition ${formData.tradePossible ? 'border-emerald-500 bg-emerald-500/10 text-emerald-200' : 'border-[#223653] bg-[#0b1727] text-slate-200'}`}>
+                    <label className={`flex cursor-pointer items-center gap-2 rounded-lg border px-3 py-3 text-sm transition ${formData.tradePossible ? 'border-emerald-500 bg-emerald-500/10 text-emerald-200' : 'border-[#2a3f55] bg-[#0b1727] text-slate-200'}`}>
                       <input type="checkbox" checked={formData.tradePossible} onChange={(e) => updateField('tradePossible', e.target.checked)} className="h-4 w-4 accent-emerald-500" />
                       Можна замена
                     </label>
@@ -486,7 +486,7 @@ export default function SellPage() {
                 </div>
               </section>
 
-              <section className="rounded-lg border border-[#1d2c43] bg-[#081223] p-5">
+              <section className="rounded-lg border border-[#2a3f55] bg-[#081223] p-5">
                 <h2 className="text-lg font-bold">Слики</h2>
                 <p className="mt-1 text-sm text-slate-400">Додај до 8 слики. Првата слика што ќе ја ставиш ќе биде главна.</p>
 
@@ -500,7 +500,7 @@ export default function SellPage() {
                 {imagePreviews.length > 0 && (
                   <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
                     {imagePreviews.map((image, index) => (
-                      <div key={`${image.slice(0, 24)}-${index}`} className="relative overflow-hidden rounded-lg border border-[#223653] bg-[#0b1727]">
+                      <div key={`${image.slice(0, 24)}-${index}`} className="relative overflow-hidden rounded-lg border border-[#2a3f55] bg-[#0b1727]">
                         <img src={image} alt={`Слика ${index + 1}`} className="h-28 w-full object-cover" />
                         {index === 0 && <span className="absolute left-2 top-2 rounded bg-red-600 px-2 py-0.5 text-[11px] font-bold">Главна</span>}
                         <button
@@ -517,7 +517,7 @@ export default function SellPage() {
                 )}
               </section>
 
-              <section className="rounded-lg border border-[#1d2c43] bg-[#081223] p-5">
+              <section className="rounded-lg border border-[#2a3f55] bg-[#081223] p-5">
                 <h2 className="text-lg font-bold">Опис и детали</h2>
                 <div className="mt-4 grid gap-4 md:grid-cols-2">
                   <div className="md:col-span-2">
@@ -528,7 +528,7 @@ export default function SellPage() {
                       value={formData.description}
                       onChange={(e) => updateField('description', e.target.value)}
                       placeholder="Опиши состојба, старост, гаранција, што е вклучено, причина за продажба..."
-                    className="min-h-40 w-full resize-y rounded-lg border border-[#223653] bg-[#0b1727] px-4 py-3 text-sm text-white outline-none transition placeholder:text-slate-500 focus:border-red-500 focus:ring-2 focus:ring-red-500/20"
+                    className="min-h-40 w-full resize-y rounded-lg border border-[#2a3f55] bg-[#0b1727] px-4 py-3 text-sm text-white outline-none transition placeholder:text-slate-500 focus:border-red-500 focus:ring-2 focus:ring-red-500/20"
                   />
                   </div>
 
@@ -552,7 +552,7 @@ export default function SellPage() {
                 </div>
               </section>
 
-              <section className="rounded-lg border border-[#1d2c43] bg-[#081223] p-5">
+              <section className="rounded-lg border border-[#2a3f55] bg-[#081223] p-5">
                 <h2 className="text-lg font-bold">Локација и контакт</h2>
                 <div className="mt-4 grid gap-4 md:grid-cols-2">
                   <div>
@@ -613,9 +613,9 @@ export default function SellPage() {
             </div>
 
             <aside className="space-y-4 lg:sticky lg:top-28 lg:self-start">
-              <div className="rounded-lg border border-[#1d2c43] bg-[#081223] p-4">
+              <div className="rounded-lg border border-[#2a3f55] bg-[#081223] p-4">
                 <h2 className="text-base font-bold">Преглед</h2>
-                <div className="mt-4 overflow-hidden rounded-lg border border-[#223653] bg-[#0b1727]">
+                <div className="mt-4 overflow-hidden rounded-lg border border-[#2a3f55] bg-[#0b1727]">
                   {imagePreviews[0] ? (
                     <img src={imagePreviews[0]} alt="Главна слика" className="h-44 w-full object-cover" />
                   ) : (
