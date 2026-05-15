@@ -663,7 +663,7 @@ export default function ProductDetailsClient({ id }: { id: string }) {
                 </div>
               </div>
 
-              <div className="mt-3.5 grid gap-1.5">
+              <div className="mt-3.5 flex flex-col gap-1.5 w-full">
                 {sellerPhone && (
                   <a href={`tel:${sellerPhone}`} className="flex h-9 w-full items-center justify-center gap-2 rounded-lg border border-blue-500/30 bg-blue-500/10 px-3 text-sm font-bold text-blue-400 hover:bg-blue-500/20 transition">
                     <Phone className="h-3.5 w-3.5" /> {sellerPhone}
@@ -683,7 +683,7 @@ export default function ProductDetailsClient({ id }: { id: string }) {
                   </div>
                 )}
                 {!isCrmPublished && sellerEmail && (
-                  <a href={`mailto:${sellerEmail}`} className="mt-1 inline-flex h-8 items-center justify-center gap-2 rounded-lg border border-white/5 bg-[#0f1a2b] px-3 text-sm font-semibold text-slate-300 hover:bg-[#13243c] transition">
+                  <a href={`mailto:${sellerEmail}`} className="mt-1 flex h-8 w-full items-center justify-center gap-2 rounded-lg border border-white/5 bg-[#0f1a2b] px-3 text-sm font-semibold text-slate-300 hover:bg-[#13243c] transition">
                     <Mail className="h-3 w-3" /> {sellerEmail}
                   </a>
                 )}
@@ -694,7 +694,7 @@ export default function ProductDetailsClient({ id }: { id: string }) {
               isCrmPublished && sellerPhone ? (
                 <div className="mt-3 rounded-xl border border-emerald-500/20 bg-emerald-500/5 p-3 text-center">
                   <p className="text-lg font-black text-emerald-400">📞 Контактирајте го огласувачот</p>
-                  <a href={`tel:${sellerPhone}`} className="mt-1.5 inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-4 py-2 text-md font-black text-white hover:bg-emerald-500 transition">
+                  <a href={`tel:${sellerPhone}`} className="mt-1.5 flex w-full items-center justify-center gap-2 rounded-lg bg-emerald-600 px-4 py-2 text-md font-black text-white hover:bg-emerald-500 transition">
                     <Phone className="h-4 w-4" /> {sellerPhone}
                   </a>
                 </div>
