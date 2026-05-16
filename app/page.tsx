@@ -274,7 +274,7 @@ export default function Home() {
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as 'newest' | 'oldest' | 'price-asc' | 'price-desc' | 'title-asc')}
-              className="h-9 rounded-lg border border-[#1f3250] bg-[#0f1a2b] px-2.5 text-sm text-slate-200 outline-none transition focus:border-[#2d4f7d]"
+              className="h-9 min-w-0 rounded-lg border border-[#1f3250] bg-[#0f1a2b] px-2.5 text-sm text-slate-200 outline-none transition focus:border-[#2d4f7d] max-sm:flex-1 sm:flex-none"
               aria-label="Сортирај огласи"
             >
               <option value="newest">Најновите први</option>
@@ -286,9 +286,9 @@ export default function Home() {
 
             <Link
               href="/products"
-              className="group inline-flex h-9 items-center gap-1 rounded-lg border border-[#1f3250] bg-[#0f1a2b] px-3 text-sm font-semibold text-slate-200 transition hover:bg-[#14243a] hover:text-white"
+              className="group inline-flex h-9 items-center gap-1 rounded-lg border border-[#1f3250] bg-[#0f1a2b] px-3 text-sm font-semibold text-slate-200 transition hover:bg-[#14243a] hover:text-white max-sm:flex-1 sm:flex-none"
             >
-              Види ги сите
+              <span className="flex-1">Види ги сите</span>
               <span className="transition-transform duration-200 group-hover:translate-x-1">→</span>
             </Link>
           </div>
