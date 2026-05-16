@@ -249,7 +249,7 @@ export function Header() {
         </div>
       </Container>
 
-      <div className={`transition-colors duration-300 ${h.navBar}`}>
+      <div className={`hidden transition-colors duration-300 sm:block ${h.navBar}`}>
         <Container>
           <div className="grid grid-cols-1 gap-1 py-0.5 sm:grid-cols-3 sm:gap-2 lg:grid-cols-6 lg:gap-2.5">
             <button
@@ -276,19 +276,29 @@ export function Header() {
         </Container>
       </div>
 
-      <div className="block md:hidden">
+      <div className="block sm:hidden">
         <Container>
-          <form onSubmit={submitSearch} className={`flex w-full items-center overflow-hidden rounded-lg border-2 focus-within:border-blue-400 ${h.search}`}>
-            <span className={`pl-3 text-sm ${h.searchIcon}`}><Search className="h-4 w-4" /></span>
-            <input
-              type="text"
-              placeholder="Пребарај огласи..."
-              value={search}
-              onChange={e => setSearch(e.target.value)}
-              className={`flex-1 px-3 py-2 text-sm focus:outline-none bg-transparent ${h.searchInput}`}
-            />
-            <button type="submit" className="sr-only">Пребарај</button>
-          </form>
+          <div className="space-y-2 pb-2 pt-1">
+            <button
+              onClick={() => setShowCategories(!showCategories)}
+              className={`flex w-full items-center gap-2 rounded-lg border-2 px-3 py-2.5 text-sm font-semibold leading-none transition ${h.search} ${h.searchInput}`}
+            >
+              <LayoutGrid className={`h-4 w-4 shrink-0 ${h.searchIcon}`} />
+              <span className="flex-1 text-left">Сите категории</span>
+              <ChevronDown className={`h-4 w-4 ${h.searchIcon}`} />
+            </button>
+            <form onSubmit={submitSearch} className={`flex w-full items-center overflow-hidden rounded-lg border-2 focus-within:border-blue-400 ${h.search}`}>
+              <span className={`pl-3 text-sm ${h.searchIcon}`}><Search className="h-4 w-4" /></span>
+              <input
+                type="text"
+                placeholder="Пребарај огласи..."
+                value={search}
+                onChange={e => setSearch(e.target.value)}
+                className={`flex-1 px-3 py-2.5 text-sm focus:outline-none bg-transparent ${h.searchInput}`}
+              />
+              <button type="submit" className="sr-only">Пребарај</button>
+            </form>
+          </div>
         </Container>
       </div>
       </header>
