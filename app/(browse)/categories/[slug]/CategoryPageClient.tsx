@@ -194,7 +194,7 @@ export default function CategoryPageClient({ slug, initialCategoryName }: { slug
             )}
             {minPrice && (
               <div className="flex items-center gap-2 rounded-full border border-[#2a3f60] bg-[#122038] px-3 py-1 text-sm text-slate-200">
-                <span>От {minPrice} ден.</span>
+                <span>От {minPrice}</span>
                 <button onClick={() => removeFilter('minPrice')} className="text-slate-400 hover:text-white" aria-label="Отстрани минимална цена">
                   <X className="h-3.5 w-3.5" />
                 </button>
@@ -202,7 +202,7 @@ export default function CategoryPageClient({ slug, initialCategoryName }: { slug
             )}
             {maxPrice && (
               <div className="flex items-center gap-2 rounded-full border border-[#2a3f60] bg-[#122038] px-3 py-1 text-sm text-slate-200">
-                <span>До {maxPrice} ден.</span>
+                <span>До {maxPrice}</span>
                 <button onClick={() => removeFilter('maxPrice')} className="text-slate-400 hover:text-white" aria-label="Отстрани максимална цена">
                   <X className="h-3.5 w-3.5" />
                 </button>

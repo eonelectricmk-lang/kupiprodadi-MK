@@ -37,7 +37,7 @@ export default function ProductCard({ id, title, price, image_url, category, sel
           <p className="text-xs text-gray-400 mt-2">Продавач: {seller_name}</p>
           
           <div className="flex justify-between items-center mt-4">
-            <span className="text-2xl font-bold text-blue-600">{price} ден.</span>
+            <span className="text-2xl font-bold text-blue-600">{price}</span>
             <button className="bg-blue-600 text-white px-3 py-2 rounded text-sm hover:bg-blue-700">
               Детали
             </button>

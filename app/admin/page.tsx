@@ -620,7 +620,7 @@ function CrmPublishedTab() {
                 <div className="flex items-center justify-between gap-2">
                   <div className="flex gap-2">
                     <span className="text-cyan-600 font-bold text-xs">КП-{String(draft.id)}</span>
-                    {pid && <span className="text-yellow-600 font-bold text-xs">KP-{String(pid).padStart(6, '0')}</span>}
+                    {pid && <span className="text-yellow-600 font-bold text-xs">KP:{pid}</span>}
                   </div>
                   <div className="flex items-center gap-2">
                     <span className="text-xs text-white font-semibold">Status</span>
@@ -641,7 +641,7 @@ function CrmPublishedTab() {
                       <span className="ml-auto text-xs text-white/50 font-semibold">Status</span>
                       <span className={`text-xs font-bold px-1.5 py-0.5 rounded ${draft.sold_at ? 'bg-amber-700 text-amber-200' : draft.productStatus === 'active' ? 'bg-emerald-700 text-emerald-200' : draft.productStatus === 'inactive' ? 'bg-slate-600 text-slate-200' : 'bg-slate-600 text-slate-200'}`}>{draft.sold_at ? 'Продадено' : draft.productStatus === 'active' ? 'Активен' : draft.productStatus === 'inactive' ? 'Неактивен' : 'Неактивен'}</span>
                       <span className="text-cyan-600 font-bold text-xs">КП-{String(draft.id)}</span>
-                      {pid && <span className="text-yellow-600 font-bold text-xs">KP-{String(pid).padStart(6, '0')}</span>}
+                      {pid && <span className="text-yellow-600 font-bold text-xs">KP:{pid}</span>}
                       {draft.phone && <ViberButton phone={draft.phone} />}
                       {[1, 2, 3].map((t) => (
                         <button
@@ -1665,7 +1665,7 @@ function AdminPageContent() {
                       const filtered = products.filter(p => {
                         if (!productSearch) return true;
                         const q = productSearch.toLowerCase();
-                        const kpId = `KP-${String(p.id).padStart(6, '0')}`;
+                        const kpId = `KP:${p.id}`;
                         return p.title.toLowerCase().includes(q)
                           || kpId.toLowerCase().includes(q)
                           || String(p.id).includes(q)
@@ -1741,12 +1741,12 @@ function AdminPageContent() {
                                   <span className="text-slate-500">/</span>
                                   <span className="rounded bg-blue-500/20 px-1.5 py-0.5 text-xs font-mono font-semibold text-blue-300">IDP:{product.seller_id}</span>
                                   <span className="text-slate-500">/</span>
-                                  <span className="rounded bg-yellow-500/20 px-1.5 py-0.5 text-xs font-mono font-semibold text-yellow-400">KP-{String(product.id).padStart(6, '0')}</span>
+                                  <span className="rounded bg-yellow-500/20 px-1.5 py-0.5 text-xs font-mono font-semibold text-yellow-400">KP:{product.id}</span>
                                   <span className="text-slate-500">/</span>
                                   <span className="text-slate-400">{product.contact_phone || 'Нема телефон'}</span>
                                 </p>
                                 <p className="mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-sm text-slate-400">
-                                  <span className="font-semibold text-slate-200">{product.price} {product.currency}</span>
+                                  <span className="font-semibold text-slate-200">{product.price}</span>
                                   <span className="text-slate-600">/</span>
                                   <span>{product.city || product.location || 'Нема град'}</span>
                                   <span className="text-slate-600">/</span>
@@ -1808,7 +1808,7 @@ function AdminPageContent() {
                       const filtered = products.filter(p => {
                         if (!productSearch) return true;
                         const q = productSearch.toLowerCase();
-                        const kpId = `KP-${String(p.id).padStart(6, '0')}`;
+                        const kpId = `KP:${p.id}`;
                         return p.title.toLowerCase().includes(q)
                           || kpId.toLowerCase().includes(q)
                           || String(p.id).includes(q)

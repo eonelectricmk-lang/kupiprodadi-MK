@@ -21,6 +21,7 @@ import {
 } from 'lucide-react';
 import { CATEGORIES } from '@/lib/categories';
 import { normalizeCategorySlug } from '@/lib/category-aliases';
+import { getCategoryIconMeta } from '@/app/components/categoryIcons';
 import { loadFavoriteIds, subscribeToFavoriteUpdates, toggleFavorite } from '@/lib/client-favorites';
 
 function viberUrl(phone: string): string {
@@ -148,6 +149,7 @@ export default function ProductDetailsClient({ id }: { id: string }) {
   const [loggedInUser, setLoggedInUser] = useState<{ id: number; name: string; phone?: string; email?: string; avatar_url?: string | null } | null>(null);
   const [categories, setCategories] = useState<CategoryOption[]>(CATEGORIES as CategoryOption[]);
   const [sellerProducts, setSellerProducts] = useState<ProductDetails[]>([]);
+  const [descExpanded, setDescExpanded] = useState(false);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -444,7 +446,7 @@ export default function ProductDetailsClient({ id }: { id: string }) {
   return (
     <div className="product-detail-page bg-[#050b17] pt-4 pb-2 text-white">
       <div className="mx-auto max-w-6xl px-4">
-        <div className="mb-3 flex flex-wrap items-center gap-2 text-sm text-white">
+        <div className="hidden lg:flex mb-3 flex-wrap items-center gap-2 text-sm text-white">
           <Link href="/" className="text-white/70 hover:text-white">
             Почетна
           </Link>
@@ -483,7 +485,263 @@ export default function ProductDetailsClient({ id }: { id: string }) {
           </div>
         )}
 
-        <div className="grid items-start gap-5 lg:grid-cols-[1.35fr_1fr]">
+        {/* MOBILE - below lg */}
+        <div className="lg:hidden space-y-3 pb-6">
+          {/* 1. Header */}
+          <div className="flex items-center justify-between py-1">
+            <div className="flex flex-wrap items-center gap-1.5 text-xs text-white">
+              <Link href="/" className="text-white/60 hover:text-white transition">Почетна</Link>
+              <span className="text-white/30">/</span>
+              {categoryTrail?.category && categoryLink ? (
+                <>
+                  <Link href={categoryLink} className="text-white/60 hover:text-white transition whitespace-nowrap inline-flex items-center gap-1">
+                    {(() => { const m = getCategoryIconMeta(categoryTrail.category.slug); const I = m.Icon; return <I className={`h-3 w-3 shrink-0 ${m.className}`} />; })()}
+                    {categoryTrail.category.name}
+                  </Link>
+                  {categoryTrail.subcategory && subcategoryLink && (
+                    <>
+                      <span className="text-white/30">/</span>
+                      <Link href={subcategoryLink} className="text-white/60 hover:text-white transition whitespace-nowrap">{categoryTrail.subcategory.name}</Link>
+                    </>
+                  )}
+                </>
+              ) : (
+                <span className="text-white/60">Оглас</span>
+              )}
+            </div>
+            <div className="flex items-center gap-1">
+              <button type="button" onClick={onToggleFavorite} className={`rounded-full p-2 transition ${isSaved ? 'text-red-300' : 'text-white/60 hover:text-white'}`} aria-label={isSaved ? 'Отстрани од зачувани' : 'Зачувај оглас'}>
+                <Heart className={`h-5 w-5 ${isSaved ? 'fill-current' : ''}`} />
+              </button>
+              <button type="button" onClick={onCopyLink} className={`rounded-full p-2 transition text-white/60 hover:text-white`}>
+                <Copy className="h-5 w-5" />
+              </button>
+            </div>
+          </div>
+
+          {/* 2. Gallery */}
+          <div className="relative overflow-hidden rounded-xl bg-[#0e1828]">
+            <img src={images[activeImage] || FALLBACK_IMAGE} alt={ad.title} className="block h-[320px] w-full object-cover" />
+            {ad.sold_at && (
+              <div className="absolute inset-0 flex items-center justify-center bg-black/40">
+                <span className="-rotate-12 rounded border-4 border-red-500 bg-red-500/10 px-4 py-2 text-2xl font-black text-red-500 leading-tight">ПРОДАДЕНО !</span>
+              </div>
+            )}
+            {images.length > 1 && (
+              <div className="absolute bottom-3 left-3 z-10 rounded-full bg-black/60 px-2.5 py-0.5 text-xs font-bold text-white">
+                {activeImage + 1}/{images.length}
+              </div>
+            )}
+          </div>
+
+          {images.length > 1 && (
+            <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-none">
+              {images.slice(0, 8).map((image, idx) => (
+                <button key={`${image}-${idx}`} type="button" onClick={() => setActiveImage(idx)}
+                  className={`shrink-0 overflow-hidden rounded-lg border-2 transition ${activeImage === idx ? 'border-red-500' : 'border-transparent'}`}>
+                  <img src={image} alt="" className="block h-14 w-20 object-cover" />
+                </button>
+              ))}
+            </div>
+          )}
+
+          {/* 3. Title + KP */}
+          <div className="flex items-start justify-between gap-2">
+            <h1 className="text-xl font-bold leading-tight text-white">{ad.title}</h1>
+            <span className="shrink-0 mt-0.5 rounded-lg border border-yellow-500/20 bg-yellow-500/5 px-2 py-1 text-[10px] font-semibold text-yellow-500/80">KP:{ad.id}</span>
+          </div>
+
+          {/* 4. Price + Tags */}
+          <div>
+            <p className="text-2xl font-black text-red-500">{ad.price.toLocaleString('mk-MK')}</p>
+            <div className="flex flex-wrap gap-1.5 mt-1">
+              {Boolean(ad.negotiable) && <span className="rounded bg-orange-500/20 px-1.5 py-0.5 text-[10px] font-bold text-orange-300 uppercase">По договор</span>}
+              {!ad.negotiable && <span className="rounded bg-red-500/20 px-1.5 py-0.5 text-[10px] font-bold text-red-300 uppercase">Фиксна</span>}
+              {Boolean(ad.trade_possible) && <span className="rounded bg-emerald-500/20 px-1.5 py-0.5 text-[10px] font-bold text-emerald-300 uppercase">Замена</span>}
+            </div>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-slate-400">
+            <span className="inline-flex items-center gap-1"><MapPin className="h-3 w-3" /> {ad.city || ad.location || 'Македонија'}</span>
+            <span className="inline-flex items-center gap-1"><CalendarDays className="h-3 w-3" /> {formatPostedAt(ad.created_at)}</span>
+            <span className="inline-flex items-center gap-1"><Eye className="h-3 w-3" /> {Number(ad.views || 0).toLocaleString('mk-MK')} прегледи</span>
+          </div>
+
+          {/* 5. Description */}
+          <div className="rounded-xl border border-white/10 bg-[#0e1828] p-3">
+            <p className={`text-sm leading-relaxed text-slate-300 whitespace-pre-line break-words ${!descExpanded ? 'line-clamp-4' : ''}`}>
+              {ad.description}
+            </p>
+            {ad.description.length > 200 && !descExpanded && (
+              <button type="button" onClick={() => setDescExpanded(true)} className="mt-1 text-xs font-bold text-blue-400 hover:text-blue-300 transition">Прикажи повеќе</button>
+            )}
+            {descExpanded && (
+              <button type="button" onClick={() => setDescExpanded(false)} className="mt-1 text-xs font-bold text-slate-400 hover:text-slate-300 transition">Прикажи помалку</button>
+            )}
+          </div>
+
+          {/* 6. Specifications */}
+          {(ad.condition || ad.delivery || ad.neighborhood) && (
+            <div className="rounded-xl border border-white/10 bg-[#0b1727] p-3">
+              <h3 className="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-2">Детали</h3>
+              <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
+                {ad.condition && (
+                  <div>
+                    <p className="text-[10px] text-slate-500/70 uppercase">Состојба</p>
+                    <p className="font-semibold text-white">{ad.condition}</p>
+                  </div>
+                )}
+                {ad.delivery && (
+                  <div>
+                    <p className="text-[10px] text-slate-500/70 uppercase">Достава</p>
+                    <p className="font-semibold text-white">{ad.delivery}</p>
+                  </div>
+                )}
+                {ad.neighborhood && (
+                  <div>
+                    <p className="text-[10px] text-slate-500/70 uppercase">Место</p>
+                    <p className="font-semibold text-white">{ad.neighborhood}</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* 7. Seller & Contact */}
+          <div className="rounded-xl border border-white/10 bg-[#101f33] p-3 space-y-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#172945] border border-white/10">
+                  {sellerAvatarUrl ? (
+                    <img src={sellerAvatarUrl} alt="" className="h-full w-full object-cover" />
+                  ) : (
+                    <UserCircle2 className="h-7 w-7 text-slate-400" />
+                  )}
+                </div>
+                <div>
+                  <p className="text-sm font-bold text-white">{sellerName}</p>
+                  <div className="flex items-center gap-1 text-[10px]">
+                    <Star className="h-3 w-3 text-amber-400 fill-current" />
+                    <span className="font-bold text-amber-400">{sellerRating ? sellerRating.toFixed(1) : '5.0'}</span>
+                    {Boolean(ad.seller_is_active) && <span className="font-bold text-green-400">· Проверен</span>}
+                  </div>
+                </div>
+              </div>
+              <span className="shrink-0 rounded bg-blue-500/10 px-1.5 py-0.5 text-[10px] font-bold text-blue-400">IDP:{ad.seller_id}</span>
+            </div>
+
+            {sellerPhone && (
+              <a href={`tel:${sellerPhone}`} className="flex items-center justify-center gap-2 rounded-lg bg-blue-600/20 border border-blue-500/20 py-2.5 text-sm font-bold text-blue-400 transition hover:bg-blue-600/30">
+                <Phone className="h-4 w-4" /> {sellerPhone}
+              </a>
+            )}
+
+            {sellerPhone && (
+              <div className="flex gap-1">
+                <a href={Boolean(ad.has_viber) ? viberUrl(sellerPhone) : '#'} target={Boolean(ad.has_viber) ? '_blank' : undefined} rel={Boolean(ad.has_viber) ? 'noopener noreferrer' : undefined} className={`flex-1 flex items-center justify-center gap-1 rounded-lg px-1.5 py-2 text-[11px] font-bold transition ${Boolean(ad.has_viber) ? 'bg-purple-900/40 text-purple-300 hover:bg-purple-800/50' : 'bg-slate-800/40 text-slate-600 cursor-default pointer-events-none'}`}>
+                  <ViberIcon className="h-3 w-3" /> Viber
+                </a>
+                <a href={Boolean(ad.has_whatsapp) ? waUrl(sellerPhone) : '#'} target={Boolean(ad.has_whatsapp) ? '_blank' : undefined} rel={Boolean(ad.has_whatsapp) ? 'noopener noreferrer' : undefined} className={`flex-1 flex items-center justify-center gap-1 rounded-lg px-1.5 py-2 text-[11px] font-bold transition ${Boolean(ad.has_whatsapp) ? 'bg-emerald-900/40 text-emerald-300 hover:bg-emerald-800/50' : 'bg-slate-800/40 text-slate-600 cursor-default pointer-events-none'}`}>
+                  <WhatsAppIcon className="h-3 w-3" /> WhatsApp
+                </a>
+                <a href={Boolean(ad.has_telegram) ? tgUrl(sellerPhone) : '#'} target={Boolean(ad.has_telegram) ? '_blank' : undefined} rel={Boolean(ad.has_telegram) ? 'noopener noreferrer' : undefined} className={`flex-1 flex items-center justify-center gap-1 rounded-lg px-1.5 py-2 text-[11px] font-bold transition ${Boolean(ad.has_telegram) ? 'bg-sky-900/40 text-sky-300 hover:bg-sky-800/50' : 'bg-slate-800/40 text-slate-600 cursor-default pointer-events-none'}`}>
+                  <TelegramIcon className="h-3 w-3" /> Telegram
+                </a>
+              </div>
+            )}
+
+            {!isCrmPublished && sellerEmail && (
+              <a href={`mailto:${sellerEmail}`} className="flex items-center justify-center gap-2 rounded-lg border border-white/5 bg-[#0f1a2b] px-3 py-2 text-sm font-semibold text-slate-300 hover:bg-[#13243c] transition">
+                <Mail className="h-3 w-3" /> {sellerEmail}
+              </a>
+            )}
+
+            {loggedInUser?.id !== ad.seller_id && isCrmPublished && sellerPhone && (
+              <div className="rounded-lg border border-emerald-500/60 bg-emerald-500/5 p-2.5 text-center">
+                <p className="text-xs font-bold text-emerald-400 mb-1">📞 Контактирајте го огласувачот</p>
+                <a href={`tel:${sellerPhone}`} className="inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-4 py-1.5 text-sm font-black text-white">{sellerPhone}</a>
+              </div>
+            )}
+
+            {loggedInUser?.id !== ad.seller_id && !isCrmPublished && (
+              <form onSubmit={onSendMessage} className="space-y-2">
+                <h3 className="flex items-center gap-2 text-xs font-bold text-white uppercase tracking-wider">
+                  <MessageCircle className="h-3 w-3 text-red-500" /> Порака
+                </h3>
+                <textarea required minLength={5} value={contactMessage} onChange={e => setContactMessage(e.target.value)} placeholder={`Здраво, заинтересиран сум за огласов...`}
+                  className="min-h-[72px] w-full resize-none rounded-lg border border-[#2a3f60] bg-[#0f1a2b] px-3 py-2 text-sm leading-snug text-white outline-none placeholder:text-slate-500 focus:border-red-500/50" />
+                <button type="submit" disabled={sendingMessage || !loggedInUser}
+                  className="flex h-9 w-full items-center justify-center gap-2 rounded-lg bg-red-600 text-sm font-bold text-white transition hover:bg-red-500 disabled:cursor-not-allowed disabled:opacity-50">
+                  <Send className="h-3.5 w-3.5" /> {sendingMessage ? '...' : 'Испрати'}
+                </button>
+                {contactStatus && <p className="text-center text-xs text-slate-400">{contactStatus}</p>}
+              </form>
+            )}
+          </div>
+
+          {/* 8. Other ads from seller */}
+          {ad.seller_id && sellerProducts.length > 0 && (
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <h3 className="text-sm font-semibold text-slate-300">Други огласи од овој огласувач</h3>
+                <Link href={`/products?seller_id=${ad.seller_id}`} className="text-xs font-bold text-white hover:text-slate-300 transition">Види ги сите &gt;</Link>
+              </div>
+              <div className="flex gap-3 overflow-x-auto pb-1 scrollbar-none">
+                {sellerProducts.slice(0, 6).map((sp) => {
+                  const img = (sp as any).image_url || (sp as any).images?.[0] || undefined;
+                  return (
+                    <Link key={sp.id} href={`/products/${sp.id}?seller_id=${ad.seller_id}`} className="shrink-0 w-[130px]">
+                      <div className="overflow-hidden rounded-xl border border-[#2a3f55] bg-[#0b1727] transition hover:border-[#4d6fad]">
+                        <div className="aspect-[4/3] overflow-hidden">
+                          <img src={img || 'https://picsum.photos/640/480?grayscale&blur=1'} alt={sp.title} className="h-full w-full object-cover" />
+                        </div>
+                        <div className="p-1.5">
+                          <p className="line-clamp-1 text-xs font-semibold text-white">{sp.title}</p>
+                          <p className="text-xs font-bold text-red-400">{sp.price.toLocaleString()}</p>
+                        </div>
+                      </div>
+                    </Link>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          {/* 9. Bottom actions */}
+          <div className="grid grid-cols-2 gap-2">
+            <button type="button" onClick={onToggleFavorite} className={`inline-flex h-9 items-center justify-center gap-2 rounded-lg border text-sm font-bold transition ${isSaved ? 'border-red-500/30 bg-red-500/10 text-red-300' : 'border-white/20 bg-[#0f1a2b] text-white hover:bg-[#13243c]'}`}>
+              <Heart className={`h-3.5 w-3.5 ${isSaved ? 'fill-current' : ''}`} /> {isSaved ? 'Зачувано' : 'Зачувај'}
+            </button>
+            <button type="button" onClick={onCopyLink} className={`inline-flex h-9 items-center justify-center gap-2 rounded-lg border text-sm font-bold transition ${copiedLink ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-300' : 'border-white/20 bg-[#0f1a2b] text-white hover:bg-[#13243c]'}`}>
+              <Copy className="h-3.5 w-3.5" /> {copiedLink ? 'Копирано' : 'Линк'}
+            </button>
+            <button type="button" onClick={onShareFacebook} className="inline-flex h-9 items-center justify-center gap-2 rounded-lg border border-white/20 bg-[#0f1a2b] text-sm font-bold text-white hover:bg-[#13243c] transition">
+              <Share2 className="h-3.5 w-3.5" /> Сподели
+            </button>
+            <button type="button" onClick={onReport} className={`inline-flex h-9 items-center justify-center gap-2 rounded-lg border text-sm font-bold transition ${reported ? 'border-amber-500/30 bg-amber-500/10 text-amber-300' : 'border-red-500/40 bg-[#0f1a2b] text-white hover:bg-[#13243c]'}`}>
+              <AlertTriangle className="h-3.5 w-3.5" /> {reported ? 'Пријавено' : 'Пријави'}
+            </button>
+          </div>
+
+          {/* 10. Prev/Next */}
+          {(ad.prevProduct || ad.nextProduct) && (
+            <div className="flex items-center gap-2">
+              {ad.prevProduct ? (
+                <Link href={`/products/${ad.prevProduct.id}`} className="flex-1 rounded-lg border border-[#2a3f55] bg-[#081223] px-3 py-2 text-sm font-semibold text-slate-300 hover:bg-[#1d2c43] transition text-center">← Претходен</Link>
+              ) : (
+                <span className="flex-1 rounded-lg border border-[#2a3f55]/30 bg-[#081223]/50 px-3 py-2 text-sm font-semibold text-slate-600 text-center cursor-not-allowed">← Претходен</span>
+              )}
+              {ad.nextProduct ? (
+                <Link href={`/products/${ad.nextProduct.id}`} className="flex-1 rounded-lg border border-[#2a3f55] bg-[#081223] px-3 py-2 text-sm font-semibold text-slate-300 hover:bg-[#1d2c43] transition text-center">Следен →</Link>
+              ) : (
+                <span className="flex-1 rounded-lg border border-[#2a3f55]/30 bg-[#081223]/50 px-3 py-2 text-sm font-semibold text-slate-600 text-center cursor-not-allowed">Следен →</span>
+              )}
+            </div>
+          )}
+        </div>
+
+        {/* DESKTOP - lg and above */}
+        <div className="hidden lg:grid items-start gap-5 lg:grid-cols-[1.35fr_1fr]">
           <div className="min-w-0">
             <div className="overflow-hidden rounded-xl border border-white/20 bg-[#0e1828] relative">
               <img src={images[activeImage] || FALLBACK_IMAGE} alt={ad.title} className="block h-[280px] w-full object-cover sm:h-[340px] lg:h-[400px]" />
@@ -583,7 +841,7 @@ export default function ProductDetailsClient({ id }: { id: string }) {
                           </div>
                           <div className="p-2">
                             <p className="line-clamp-1 text-sm font-semibold text-white">{sp.title}</p>
-                            <p className="mt-0.5 text-sm font-bold text-red-400">{sp.price.toLocaleString()} {sp.currency || '€'}</p>
+                            <p className="mt-0.5 text-sm font-bold text-red-400">{sp.price.toLocaleString()}</p>
                           </div>
                         </div>
                       </Link>
@@ -598,13 +856,13 @@ export default function ProductDetailsClient({ id }: { id: string }) {
             <div className="flex items-start justify-between gap-3">
               <h1 className="text-3xl font-bold leading-tight">{ad.title}</h1>
               <span className="shrink-0 inline-flex items-center gap-1 rounded-lg border border-yellow-500/20 bg-yellow-500/5 px-2 py-1 text-xs text-yellow-500/80">
-                ID: KP-{ad.id.toString().padStart(6, '0')}
+                KP:{ad.id}
               </span>
             </div>
 
             <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1">
               <p className="text-3xl font-black text-red-500">
-                {ad.price.toLocaleString('mk-MK')} <span className="text-xl text-white">{ad.currency || '€'}</span>
+                {ad.price.toLocaleString('mk-MK')}
               </p>
               <div className="flex flex-wrap gap-1.5">
                 {Boolean(ad.negotiable) && <span className="rounded bg-orange-500/20 px-2 py-0.5 text-xs font-bold text-orange-300 uppercase">По договор</span>}

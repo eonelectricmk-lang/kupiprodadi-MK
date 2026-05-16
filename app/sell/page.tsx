@@ -626,7 +626,7 @@ export default function SellPage() {
                   <div className="p-3">
                     <p className="line-clamp-2 font-semibold text-white">{formData.title || 'Наслов на огласот'}</p>
                     <p className="mt-2 text-xl font-bold text-red-500">
-                      {formData.price ? Number(formData.price).toLocaleString() : '0'} {formData.currency}
+                      {formData.price ? Number(formData.price).toLocaleString() : '0'}
                     </p>
                     <p className="mt-2 flex items-center gap-1 text-xs text-slate-400">
                       <MapPin className="h-3.5 w-3.5" /> {formData.city || 'Локација'}

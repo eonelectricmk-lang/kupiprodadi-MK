@@ -232,7 +232,7 @@ function MiniAdCard({
           <span className="shrink-0 font-bold text-red-400">{price}</span>
         </div>
         <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-[11px] text-slate-500">
-          {productId && <span className="text-yellow-400 font-semibold">KP-{String(productId).padStart(6, '0')}</span>}
+          {productId && <span className="text-yellow-400 font-semibold">KP:{productId}</span>}
           {sellerName && <span className="truncate">{sellerName}</span>}
         </div>
         <div className="flex items-center justify-between gap-2 text-[11px] text-slate-500">
@@ -418,7 +418,7 @@ function OwnerAdCard({
                 )}
                 {typeof productId === 'number' && (
                   <span className={`inline-flex shrink-0 items-center rounded-[8px] border px-3 py-1 text-[11px] font-semibold ${dark ? 'force-dark-subtle border-[#2a3f55] bg-[#081223] !text-slate-300' : 'border-slate-500 bg-slate-50 text-slate-900'}`}>
-                    ID: KP-{String(productId).padStart(5, '0')}
+                    KP:{productId}
                   </span>
                 )}
               </span>
@@ -1141,7 +1141,7 @@ export default function ProfilePage() {
                       href={`/products/${product.id}?seller_id=${user?.id || ''}`}
                       title={product.title}
                       meta={`${product.location || 'Македонија'} · ${formatDate(product.created_at)}`}
-                      price={`${product.price.toLocaleString()} ${product.currency || '€'}`}
+                      price={`${product.price.toLocaleString()}`}
                       image={product.images?.[0] || product.image_url}
                       images={product.images}
                       description={product.description}
