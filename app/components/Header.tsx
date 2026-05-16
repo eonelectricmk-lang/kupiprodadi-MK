@@ -275,6 +275,22 @@ export function Header() {
           </div>
         </Container>
       </div>
+
+      <div className="block md:hidden">
+        <Container>
+          <form onSubmit={submitSearch} className={`flex w-full items-center overflow-hidden rounded-lg border-2 focus-within:border-blue-400 ${h.search}`}>
+            <span className={`pl-3 text-sm ${h.searchIcon}`}><Search className="h-4 w-4" /></span>
+            <input
+              type="text"
+              placeholder="Пребарај огласи..."
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+              className={`flex-1 px-3 py-2 text-sm focus:outline-none bg-transparent ${h.searchInput}`}
+            />
+            <button type="submit" className="sr-only">Пребарај</button>
+          </form>
+        </Container>
+      </div>
       </header>
 
       {showCategories && typeof window !== 'undefined' && createPortal(
