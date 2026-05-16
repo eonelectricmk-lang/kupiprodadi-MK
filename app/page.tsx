@@ -151,20 +151,17 @@ export default function Home() {
               className="relative overflow-hidden rounded-2xl bg-[#07101c] shadow-[inset_0_0_0_1px_#2a3f55]"
               style={{ aspectRatio: '4 / 1' }}
             >
-              <div className="relative h-full w-full">
-                {bannerSlides.map((slide, idx) => (
-                  <Link
-                    key={slide.id || slide.image_url}
-                    href={slide.link_url || '#'}
-                    aria-label={`Банер ${slide.id || slide.image_url}`}
-                    className={`absolute inset-0 bg-contain bg-center bg-no-repeat transition-transform duration-700 ease-in-out ${slide.link_url ? 'cursor-pointer' : 'pointer-events-none'}`}
-                    style={{
-                      backgroundImage: `url('${slide.image_url}')`,
-                      transform: `translateX(${(idx - activeBanner) * 100}%)`,
-                    }}
-                  />
-                ))}
-              </div>
+              {bannerSlides.map((slide, idx) => (
+                <Link
+                  key={slide.id || slide.image_url}
+                  href={slide.link_url || '#'}
+                  aria-label={`Банер ${slide.id || slide.image_url}`}
+                  className={`absolute inset-0 transition-transform duration-700 ease-in-out ${slide.link_url ? 'cursor-pointer' : 'pointer-events-none'}`}
+                  style={{ transform: `translateX(${(idx - activeBanner) * 100}%)` }}
+                >
+                  <img src={slide.image_url} alt={`Банер ${idx + 1}`} className="block h-full w-full object-cover object-center" />
+                </Link>
+              ))}
 
               <div className="absolute bottom-3 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2 rounded-full bg-black/30 px-2 py-1 backdrop-blur-sm">
                 {bannerSlides.map((_, idx) => (
