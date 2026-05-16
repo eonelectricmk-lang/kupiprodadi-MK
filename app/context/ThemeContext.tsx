@@ -5,13 +5,7 @@ const ThemeContext = createContext({ dark: true, setDark: (_: boolean) => {} });
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const [dark, setDark] = useState(() => {
-    if (typeof window === 'undefined') return true;
-
-    const storedTheme = window.localStorage.getItem('theme');
-    if (storedTheme === 'light') return false;
-    if (storedTheme === 'dark') return true;
-
-    return !document.documentElement.classList.contains('light');
+    return true;
   });
 
   useEffect(() => {
@@ -20,8 +14,6 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     } else {
       document.documentElement.classList.add('light');
     }
-
-    window.localStorage.setItem('theme', dark ? 'dark' : 'light');
   }, [dark]);
 
   return (
