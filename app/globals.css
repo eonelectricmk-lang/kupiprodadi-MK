@@ -135,8 +135,7 @@ html.light [class*="border-"][class*="#"] {
 }
 
 html.light #hero-banner {
-  border-color: #0f172a !important;
-  border-width: 2px !important;
+  box-shadow: inset 0 0 0 2px #0f172a !important;
 }
 
 html.light button.admin-dark-button,
