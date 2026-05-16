@@ -911,6 +911,7 @@ function AdminPageContent() {
     sort_order: '',
     is_active: true,
   });
+  const [bannerDimensions, setBannerDimensions] = useState<Record<string, { width: number; height: number } | null>>({});
   const [homepageSections, setHomepageSections] = useState<HomepageSectionsState>({
     headerCategorySlugs: [],
     trustItems: [
@@ -2583,9 +2584,18 @@ function AdminPageContent() {
                       </div>
 
                       {bannerForm.image_url && (
-                        <div className="relative overflow-hidden rounded-lg bg-[#0b1727] shadow-[inset_0_0_0_1px_#2a3f55]">
-                          <div style={{ paddingBottom: '25%' }} />
-                          <img src={bannerForm.image_url} alt="Preview банер" className="absolute inset-0 block h-full w-full object-cover object-center" />
+                        <div>
+                          <div className="relative overflow-hidden rounded-lg bg-[#0b1727] shadow-[inset_0_0_0_1px_#2a3f55]">
+                            <div style={{ paddingBottom: '25%' }} />
+                            <img src={bannerForm.image_url} alt="Preview банер" className="absolute inset-0 block h-full w-full object-cover object-center"
+                              onLoad={(e) => {
+                                const img = e.currentTarget;
+                                setBannerDimensions((prev) => ({ ...prev, preview: { width: img.naturalWidth, height: img.naturalHeight } }));
+                              }} />
+                          </div>
+                          {bannerDimensions.preview && (bannerDimensions.preview.width !== 1600 || bannerDimensions.preview.height !== 400) && (
+                            <p className="mt-1 text-xs text-red-400">⚠ Овој банер не е 1600x400 (реално: {bannerDimensions.preview.width}x{bannerDimensions.preview.height})</p>
+                          )}
                         </div>
                       )}
 
@@ -2626,8 +2636,15 @@ function AdminPageContent() {
                           <div className="flex flex-col gap-4 xl:flex-row">
                               <div className="relative overflow-hidden rounded-lg bg-[#081223] shadow-[inset_0_0_0_1px_#2a3f55] xl:w-[320px]">
                                 <div style={{ paddingBottom: '25%' }} />
-                                <img src={banner.image_url} alt={`Банер ${banner.id}`} className="absolute inset-0 block h-full w-full object-cover object-center" />
+                                <img src={banner.image_url} alt={`Банер ${banner.id}`} className="absolute inset-0 block h-full w-full object-cover object-center"
+                                  onLoad={(e) => {
+                                    const img = e.currentTarget;
+                                    setBannerDimensions((prev) => ({ ...prev, [String(banner.id)]: { width: img.naturalWidth, height: img.naturalHeight } }));
+                                  }} />
                             </div>
+                            {bannerDimensions[String(banner.id)] && (bannerDimensions[String(banner.id)]!.width !== 1600 || bannerDimensions[String(banner.id)]!.height !== 400) && (
+                              <p className="mt-1 text-xs text-red-400">⚠ Не е 1600x400 (реално: {bannerDimensions[String(banner.id)]!.width}x{bannerDimensions[String(banner.id)]!.height})</p>
+                            )}
                             <div className="flex-1">
                               <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
                                 <div>
