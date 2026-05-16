@@ -226,7 +226,7 @@ export function Header() {
           </div>
 
           <div className="ml-auto flex flex-shrink-0 items-center gap-2 sm:gap-3">
-            <button onClick={() => setDark(!dark)} className={`hidden transition sm:inline-flex ${h.icon}`} title={dark ? 'Светла тема' : 'Темна тема'}>
+            <button onClick={() => setDark(!dark)} className={`inline-flex transition ${h.icon}`} title={dark ? 'Светла тема' : 'Темна тема'}>
               {dark ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
             </button>
             <Link href="/profile?tab=saved">
