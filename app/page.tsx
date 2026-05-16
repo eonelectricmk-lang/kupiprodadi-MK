@@ -237,7 +237,7 @@ export default function Home() {
                 type="button"
                 aria-label="Прикажи 6 во ред"
                 onClick={() => setCardsPerRow(6)}
-                className={`rounded p-1 transition ${cardsPerRow === 6 ? 'bg-[#162945] text-white' : 'text-slate-400 hover:text-slate-200'}`}
+                className={`hidden rounded p-1 transition sm:inline-flex ${cardsPerRow === 6 ? 'bg-[#162945] text-white' : 'text-slate-400 hover:text-slate-200'}`}
               >
                 <span className="grid grid-cols-3 gap-0.5">
                   {Array.from({ length: 6 }, (_, i) => (
