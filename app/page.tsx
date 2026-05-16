@@ -144,7 +144,8 @@ export default function Home() {
         <section>
           <div
             id="hero-banner"
-            className="relative aspect-[4/1] overflow-hidden rounded-2xl border border-[#2a3f55] bg-[#07101c]"
+            className="relative overflow-hidden rounded-2xl border border-[#2a3f55] bg-[#07101c]"
+            style={{ aspectRatio: '4 / 1' }}
           >
             <div
               className="absolute inset-0 flex transition-transform duration-700 ease-in-out"
@@ -155,7 +156,7 @@ export default function Home() {
                   key={slide.id || slide.image_url}
                   href={slide.link_url || '#'}
                   aria-label={`Банер ${slide.id || slide.image_url}`}
-                  className={`relative h-full w-full shrink-0 bg-cover bg-center ${slide.link_url ? 'cursor-pointer' : 'pointer-events-none'}`}
+                  className={`relative h-full w-full shrink-0 bg-contain bg-center ${slide.link_url ? 'cursor-pointer' : 'pointer-events-none'}`}
                   style={{ backgroundImage: `url('${slide.image_url}')` }}
                 />
               ))}
