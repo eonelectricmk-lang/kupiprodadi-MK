@@ -143,6 +143,13 @@ export function Header() {
     setShowLocation(false);
   }, [pathname]);
 
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const handler = () => setShowCategories(prev => !prev);
+    window.addEventListener('toggle-categories-mobile', handler);
+    return () => window.removeEventListener('toggle-categories-mobile', handler);
+  }, []);
+
   const orderedHeaderCategories = useMemo(() => {
     if (!headerCategorySlugs.length) return categories.slice(0, 5);
     const bySlug = new Map(categories.map((category) => [category.slug, category]));

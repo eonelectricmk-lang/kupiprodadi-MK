@@ -177,14 +177,15 @@ export default function Home() {
 
         <div className="block sm:hidden">
           <div className="grid grid-cols-2 gap-1">
-            <a
-              href="/products"
+            <button
+              type="button"
+              onClick={() => window.dispatchEvent(new CustomEvent('toggle-categories-mobile'))}
               className="flex h-9 min-w-0 items-center gap-1 overflow-hidden rounded-lg border border-[#1f3250] bg-[#0f1a2b] px-2.5 text-[12px] font-semibold leading-none tracking-[-0.01em] text-slate-200 transition hover:bg-[#14243a] hover:text-white"
             >
               <LayoutGrid className="h-4 w-4 shrink-0" />
               <span className="min-w-0 flex-1 truncate text-left">Сите категории</span>
               <ChevronDown className="h-4 w-4 shrink-0" />
-            </a>
+            </button>
             {orderedHomeCategories.slice(0, 3).map((category) => {
               const iconMeta = getCategoryIconMeta(category.slug);
               const Icon = iconMeta.Icon;
