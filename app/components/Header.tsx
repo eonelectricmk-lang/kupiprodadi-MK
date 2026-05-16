@@ -190,12 +190,12 @@ export function Header() {
           <div className="flex flex-wrap items-center gap-3 py-2 md:flex-nowrap md:justify-between md:gap-4">
             <button
               onClick={() => setShowMobileMenu(!showMobileMenu)}
-              className="block rounded-lg border border-red-500 bg-[#0f1a2b] p-1.5 sm:hidden"
+              className="block rounded-lg border border-red-500 bg-[#0f1a2b] p-1 sm:hidden"
               aria-label="Мени"
             >
               <Menu className="h-5 w-5 text-white" />
             </button>
-            <Link href="/" className="ml-2 flex-shrink-0 transition hover:opacity-90">
+            <Link href="/" className="ml-1 flex-shrink-0 transition hover:opacity-90 sm:ml-2">
               <span className={`text-3xl font-extrabold tracking-tight sm:text-4xl ${h.logo}`}>kupi</span>
               <span className="text-3xl font-extrabold tracking-tight text-red-500 sm:text-4xl">prodadi</span>
             </Link>
