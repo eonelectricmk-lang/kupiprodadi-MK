@@ -143,7 +143,7 @@ export default function Home() {
         <section>
           <div
             id="hero-banner"
-            className="relative h-[230px] overflow-hidden rounded-2xl border border-[#2a3f55] bg-[#07101c] md:h-[280px]"
+            className="relative h-[130px] overflow-hidden rounded-2xl border border-[#2a3f55] bg-[#07101c] md:h-[280px]"
           >
             <div
               className="absolute inset-0 flex transition-transform duration-700 ease-in-out"
@@ -174,8 +174,9 @@ export default function Home() {
           </div>
         </section>
 
-        <TrustBar items={trustItems} />
+        <div className="hidden md:block"><TrustBar items={trustItems} /></div>
 
+        <div className="hidden md:block">
         <section>
           <div className="grid gap-2.5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6">
             {orderedHomeCategories.slice(0, 6).map((category) => {
@@ -193,6 +194,7 @@ export default function Home() {
             })}
           </div>
         </section>
+        </div>
 
         <section className="pb-5 sm:pb-8">
         <div className="mb-3 flex flex-wrap items-end justify-between gap-2.5">
