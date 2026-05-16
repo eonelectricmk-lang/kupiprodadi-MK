@@ -1185,11 +1185,11 @@ export default function ProfilePage() {
                   <div className="inline-flex items-center gap-1 rounded-lg border border-[#1f3250] bg-[#0f1a2b] p-1">
                     <button
                       type="button"
-                      onClick={() => setSavedCardsPerRow(6)}
-                      className={`rounded p-1 transition ${savedCardsPerRow === 6 ? 'bg-[#162945] text-white' : 'text-slate-400 hover:text-slate-200'}`}
+                      onClick={() => setSavedCardsPerRow(2)}
+                      className={`rounded p-1 transition ${savedCardsPerRow === 2 ? 'bg-[#162945] text-white' : 'text-slate-400 hover:text-slate-200'}`}
                     >
-                      <span className="grid grid-cols-3 gap-0.5">
-                        {Array.from({ length: 6 }, (_, i) => <span key={`sv6-${i}`} className="h-1.5 w-1.5 rounded-[2px] bg-current" />)}
+                      <span className="grid grid-cols-1 gap-0.5">
+                        {Array.from({ length: 2 }, (_, i) => <span key={`sv2-${i}`} className="h-1.5 w-3 rounded-[2px] bg-current" />)}
                       </span>
                     </button>
                     <button
@@ -1203,11 +1203,11 @@ export default function ProfilePage() {
                     </button>
                     <button
                       type="button"
-                      onClick={() => setSavedCardsPerRow(2)}
-                      className={`rounded p-1 transition ${savedCardsPerRow === 2 ? 'bg-[#162945] text-white' : 'text-slate-400 hover:text-slate-200'}`}
+                      onClick={() => setSavedCardsPerRow(6)}
+                      className={`hidden rounded p-1 transition sm:inline-flex ${savedCardsPerRow === 6 ? 'bg-[#162945] text-white' : 'text-slate-400 hover:text-slate-200'}`}
                     >
-                      <span className="grid grid-cols-1 gap-0.5">
-                        {Array.from({ length: 2 }, (_, i) => <span key={`sv2-${i}`} className="h-1.5 w-3 rounded-[2px] bg-current" />)}
+                      <span className="grid grid-cols-3 gap-0.5">
+                        {Array.from({ length: 6 }, (_, i) => <span key={`sv6-${i}`} className="h-1.5 w-1.5 rounded-[2px] bg-current" />)}
                       </span>
                     </button>
                   </div>
