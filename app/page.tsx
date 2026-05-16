@@ -225,13 +225,13 @@ export default function Home() {
         </div>
 
         <section className="pb-5 sm:pb-8">
-        <div className="mb-3 flex flex-wrap items-end justify-between gap-2.5">
+        <div className="mb-3 flex flex-wrap items-end justify-start gap-2.5 sm:justify-between">
           <div>
             <h2 className="text-2xl font-bold">Популарни огласи</h2>
             <div className="mt-1 h-0.5 w-16 rounded bg-red-600" />
           </div>
 
-          <div className="ml-auto flex items-center gap-2">
+          <div className="ml-0 flex items-center gap-2 sm:ml-auto">
             <div className="inline-flex items-center gap-0.5 rounded-lg border border-[#1f3250] bg-[#0f1a2b] p-0.5 sm:gap-1 sm:p-1">
               <button
                 type="button"
