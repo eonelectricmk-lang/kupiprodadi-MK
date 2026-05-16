@@ -4,7 +4,6 @@ import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import {
   AlertTriangle,
-  Bookmark,
   Heart,
   CalendarDays,
   Copy,
@@ -598,8 +597,12 @@ export default function ProductDetailsClient({ id }: { id: string }) {
           <div className="min-w-0 rounded-2xl border border-white/20 bg-[#0e1828] p-3 pb-1">
             <div className="flex items-start justify-between gap-3">
               <h1 className="text-3xl font-bold leading-tight">{ad.title}</h1>
+              <span className="shrink-0 inline-flex items-center gap-1 rounded-lg border border-yellow-500/20 bg-yellow-500/5 px-2 py-1 text-xs text-yellow-500/80">
+                ID: KP-{ad.id.toString().padStart(6, '0')}
+              </span>
             </div>
-            <div className="mt-2 flex flex-wrap items-baseline gap-2">
+
+            <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1">
               <p className="text-3xl font-black text-red-500">
                 {ad.price.toLocaleString('mk-MK')} <span className="text-xl text-white">{ad.currency || '€'}</span>
               </p>
@@ -608,17 +611,11 @@ export default function ProductDetailsClient({ id }: { id: string }) {
                 {!ad.negotiable && <span className="rounded bg-red-500/20 px-2 py-0.5 text-xs font-bold text-red-300 uppercase">Фиксна</span>}
                 {Boolean(ad.trade_possible) && <span className="rounded bg-emerald-500/20 px-2 py-0.5 text-xs font-bold text-emerald-300 uppercase">Замена</span>}
               </div>
-            </div>
-
-            <div className="mt-3 flex flex-wrap gap-2 text-xs text-slate-400">
-              <span className="inline-flex items-center gap-1 rounded-full border border-white/20 bg-[#101f33] px-2 py-0.5">
+              <span className="inline-flex items-center gap-1 rounded-lg border border-white/20 bg-[#101f33] px-2 py-0.5 text-xs text-slate-400">
                 <CalendarDays className="h-3 w-3" /> {formatPostedAt(ad.created_at)}
               </span>
-              <span className="inline-flex items-center gap-1 rounded-full border border-white/20 bg-[#101f33] px-2 py-0.5">
+              <span className="inline-flex items-center gap-1 rounded-lg border border-white/20 bg-[#101f33] px-2 py-0.5 text-xs text-slate-400">
                 <Eye className="h-3 w-3" /> {Number(ad.views || 0).toLocaleString('mk-MK')} прегледи
-              </span>
-              <span className="inline-flex items-center gap-1 rounded-full border border-yellow-500/20 bg-yellow-500/5 px-2 py-0.5 text-yellow-500/80">
-                ID: KP-{ad.id.toString().padStart(6, '0')}
               </span>
             </div>
 
@@ -636,11 +633,11 @@ export default function ProductDetailsClient({ id }: { id: string }) {
                 <h2 className="text-base font-bold text-blue-400 uppercase tracking-wider">{isCrmPublished ? 'Продавач' : 'Профил'}</h2>
                 <div className="flex items-center gap-2">
                   {ad.seller_is_active && (
-                    <span className="inline-flex items-center gap-1 rounded-full bg-green-500/10 px-2 py-0.5 text-xs font-bold text-green-400 border border-green-500/20">
+                    <span className="inline-flex items-center gap-1 rounded-lg bg-green-500/10 px-2 py-0.5 text-xs font-bold text-green-400 border border-green-500/20">
                       <ShieldCheck className="h-3 w-3" /> ПРОВЕРЕН
                     </span>
                   )}
-                  <span className="inline-flex items-center rounded-full bg-blue-500/10 px-2 py-0.5 text-xs font-bold text-blue-400 border border-blue-500/20">IDP: {ad.seller_id}</span>
+                  <span className="inline-flex items-center rounded-lg bg-blue-500/10 px-2 py-0.5 text-xs font-bold text-blue-400 border border-blue-500/20">IDP: {ad.seller_id}</span>
                 </div>
               </div>
                 <div className="mt-1 flex items-center gap-3">
@@ -663,32 +660,32 @@ export default function ProductDetailsClient({ id }: { id: string }) {
                 </div>
               </div>
 
-              <div className="mt-3.5 grid gap-1.5">
+              <div className="mt-3 grid gap-3">
                 {sellerPhone && (
                   <a href={`tel:${sellerPhone}`} className="relative flex h-9 w-full items-center justify-center rounded-lg border border-blue-500/20 bg-blue-500/10 px-4 font-bold text-blue-400 hover:bg-blue-500/20 transition leading-none">
                     <span className="absolute left-3 text-base">
                       Контакт
                     </span>
-                    <span className="flex items-center gap-2 text-lg">
+                    <span className="flex items-center gap-2 text-lg text-white">
                       <Phone className="h-4 w-4" /> {sellerPhone}
                     </span>
                   </a>
                 )}
                 {sellerPhone && (
-                  <div className="flex justify-between px-1">
-                    <a href={Boolean(ad.has_viber) ? viberUrl(sellerPhone) : '#'} target={Boolean(ad.has_viber) ? '_blank' : undefined} rel={Boolean(ad.has_viber) ? 'noopener noreferrer' : undefined} className={`inline-flex items-center gap-1 text-xs font-bold transition ${Boolean(ad.has_viber) ? 'text-purple-400 hover:text-purple-300' : 'text-slate-600 cursor-default pointer-events-none'}`}>
-                      <ViberIcon className="h-3.5 w-3.5" /> Viber
+                  <div className="flex gap-1 px-1">
+                    <a href={Boolean(ad.has_viber) ? viberUrl(sellerPhone) : '#'} target={Boolean(ad.has_viber) ? '_blank' : undefined} rel={Boolean(ad.has_viber) ? 'noopener noreferrer' : undefined} className={`flex-1 justify-center inline-flex items-center gap-1 rounded-lg px-1.5 py-1.5 text-[11px] font-bold transition ${Boolean(ad.has_viber) ? 'bg-purple-900/40 text-purple-300 hover:bg-purple-800/50' : 'bg-slate-800/40 text-slate-600 cursor-default pointer-events-none'}`}>
+                      <ViberIcon className="h-2.5 w-2.5" /> Viber
                     </a>
-                    <a href={Boolean(ad.has_whatsapp) ? waUrl(sellerPhone) : '#'} target={Boolean(ad.has_whatsapp) ? '_blank' : undefined} rel={Boolean(ad.has_whatsapp) ? 'noopener noreferrer' : undefined} className={`inline-flex items-center gap-1 text-xs font-bold transition ${Boolean(ad.has_whatsapp) ? 'text-emerald-400 hover:text-emerald-300' : 'text-slate-600 cursor-default pointer-events-none'}`}>
-                      <WhatsAppIcon className="h-3.5 w-3.5" /> WhatsApp
+                    <a href={Boolean(ad.has_whatsapp) ? waUrl(sellerPhone) : '#'} target={Boolean(ad.has_whatsapp) ? '_blank' : undefined} rel={Boolean(ad.has_whatsapp) ? 'noopener noreferrer' : undefined} className={`flex-1 justify-center inline-flex items-center gap-1 rounded-lg px-1.5 py-1.5 text-[11px] font-bold transition ${Boolean(ad.has_whatsapp) ? 'bg-emerald-900/40 text-emerald-300 hover:bg-emerald-800/50' : 'bg-slate-800/40 text-slate-600 cursor-default pointer-events-none'}`}>
+                      <WhatsAppIcon className="h-2.5 w-2.5" /> WhatsApp
                     </a>
-                    <a href={Boolean(ad.has_telegram) ? tgUrl(sellerPhone) : '#'} target={Boolean(ad.has_telegram) ? '_blank' : undefined} rel={Boolean(ad.has_telegram) ? 'noopener noreferrer' : undefined} className={`inline-flex items-center gap-1 text-xs font-bold transition ${Boolean(ad.has_telegram) ? 'text-sky-400 hover:text-sky-300' : 'text-slate-600 cursor-default pointer-events-none'}`}>
-                      <TelegramIcon className="h-3.5 w-3.5" /> Telegram
+                    <a href={Boolean(ad.has_telegram) ? tgUrl(sellerPhone) : '#'} target={Boolean(ad.has_telegram) ? '_blank' : undefined} rel={Boolean(ad.has_telegram) ? 'noopener noreferrer' : undefined} className={`flex-1 justify-center inline-flex items-center gap-1 rounded-lg px-1.5 py-1.5 text-[11px] font-bold transition ${Boolean(ad.has_telegram) ? 'bg-sky-900/40 text-sky-300 hover:bg-sky-800/50' : 'bg-slate-800/40 text-slate-600 cursor-default pointer-events-none'}`}>
+                      <TelegramIcon className="h-2.5 w-2.5" /> Telegram
                     </a>
                   </div>
                 )}
                 {!isCrmPublished && sellerEmail && (
-                  <a href={`mailto:${sellerEmail}`} className="mt-1 inline-flex h-8 items-center justify-center gap-2 rounded-lg border border-white/5 bg-[#0f1a2b] px-3 text-sm font-semibold text-slate-300 hover:bg-[#13243c] transition">
+                  <a href={`mailto:${sellerEmail}`} className="inline-flex h-8 items-center justify-center gap-2 rounded-lg border border-white/5 bg-[#0f1a2b] px-3 text-sm font-semibold text-slate-300 hover:bg-[#13243c] transition">
                     <Mail className="h-3 w-3" /> {sellerEmail}
                   </a>
                 )}
@@ -697,14 +694,14 @@ export default function ProductDetailsClient({ id }: { id: string }) {
 
             {loggedInUser?.id !== ad.seller_id && (
               isCrmPublished && sellerPhone ? (
-                <div className="mt-3 rounded-xl border border-emerald-500/80 bg-emerald-500/5 p-4 text-center">
+                <div className="mt-3 rounded-xl border border-emerald-500/80 bg-emerald-500/5 pt-2 pb-3 px-4 text-center">
                   <p className="text-sm font-bold text-emerald-400">📞 Контактирајте го огласувачот</p>
                   <a href={`tel:${sellerPhone}`} className="mt-2 inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-4 py-2 text-md font-black text-white hover:bg-emerald-500 transition">
                     <Phone className="h-4 w-4" /> {sellerPhone}
                   </a>
                 </div>
               ) : (
-                <form onSubmit={onSendMessage} className="mt-2 rounded-xl border border-white/20 bg-[#101f33] p-3">
+                <form onSubmit={onSendMessage} className="mt-3 rounded-xl border border-white/20 bg-[#101f33] p-3">
                   <h2 className="flex items-center gap-2 text-base font-bold text-white uppercase tracking-wider">
                     <MessageCircle className="h-3.5 w-3.5 text-red-500" /> Порака
                   </h2>
@@ -730,10 +727,10 @@ export default function ProductDetailsClient({ id }: { id: string }) {
               )
             )}
 
-            <div className="mt-2.5 space-y-1.5">
+            <div className="mt-3 space-y-2">
               <div className="grid grid-cols-2 gap-2">
                 <button type="button" onClick={onToggleFavorite} className={`inline-flex h-9 items-center justify-center gap-2 rounded-lg border text-sm font-bold transition ${isSaved ? 'border-red-500/30 bg-red-500/10 text-red-300' : 'border-white/20 bg-[#0f1a2b] text-white hover:bg-[#13243c]'}`}>
-                  <Bookmark className="h-3.5 w-3.5" /> {isSaved ? 'Зачувано' : 'Зачувај'}
+                  <Heart className={`h-3.5 w-3.5 ${isSaved ? 'fill-current' : ''}`} /> {isSaved ? 'Зачувано' : 'Зачувај'}
                 </button>
                 <button type="button" onClick={onCopyLink} className={`inline-flex h-9 items-center justify-center gap-2 rounded-lg border text-sm font-bold transition ${copiedLink ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-300' : 'border-white/20 bg-[#0f1a2b] text-white hover:bg-[#13243c]'}`}>
                   <Copy className="h-3.5 w-3.5" /> {copiedLink ? 'Копирано' : 'Линк'}
@@ -743,14 +740,14 @@ export default function ProductDetailsClient({ id }: { id: string }) {
                 <button type="button" onClick={onShareFacebook} className="inline-flex h-9 items-center justify-center gap-2 rounded-lg border border-white/20 bg-[#0f1a2b] text-sm font-bold text-white hover:bg-[#13243c]">
                   <Share2 className="h-3.5 w-3.5" /> Сподели
                 </button>
-                <button type="button" onClick={onReport} className={`inline-flex h-9 items-center justify-center gap-2 rounded-lg border text-sm font-bold transition ${reported ? 'border-amber-500/30 bg-amber-500/10 text-amber-300' : 'border-white/20 bg-[#0f1a2b] text-white hover:bg-[#13243c]'}`}>
+                <button type="button" onClick={onReport} className={`inline-flex h-9 items-center justify-center gap-2 rounded-lg border text-sm font-bold transition ${reported ? 'border-amber-500/30 bg-amber-500/10 text-amber-300' : 'border-red-500/40 bg-[#0f1a2b] text-white hover:bg-[#13243c]'}`}>
                   <AlertTriangle className="h-3.5 w-3.5" /> {reported ? 'Пријавено' : 'Пријави'}
                 </button>
               </div>
             </div>
 
             {ad.delivery && (
-              <div className="mt-2 rounded-xl border border-white/20 bg-[#101f33] py-2 px-3 text-sm text-slate-400">
+              <div className="mt-3 rounded-xl border border-white/20 bg-[#101f33] py-2 px-3 text-sm text-slate-400">
                 <p className="flex items-center gap-2 font-bold text-white uppercase tracking-tighter">
                   <Truck className="h-3.5 w-3.5 text-blue-400" /> Достава
                 </p>
@@ -758,7 +755,7 @@ export default function ProductDetailsClient({ id }: { id: string }) {
               </div>
             )}
 
-            <div className="mt-2 rounded-xl border border-white/20 bg-[#101f33] py-2 px-3 text-sm text-slate-400">
+            <div className="mt-3 rounded-xl border border-white/20 bg-[#101f33] py-2 px-3 text-sm text-slate-400">
               <p className="flex items-center gap-2 font-bold text-white uppercase tracking-tighter">
                 <MapPin className="h-3.5 w-3.5 text-emerald-400" /> Локација
               </p>
@@ -768,7 +765,7 @@ export default function ProductDetailsClient({ id }: { id: string }) {
               </p>
             </div>
 
-            <div className="mt-1.5 flex items-center gap-2 text-xs text-slate-500 px-1">
+            <div className="mt-3 flex items-center gap-2 text-xs text-slate-500 px-1">
               <span className="inline-flex items-center gap-1">
                 <ShieldCheck className="h-3 w-3" /> Безбедна комуникација
               </span>

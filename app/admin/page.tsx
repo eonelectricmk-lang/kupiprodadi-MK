@@ -762,6 +762,17 @@ function ReportsTab() {
     } catch {}
   };
 
+  const reactivateReport = async (id: number) => {
+    try {
+      await fetch('/api/admin/reports', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, status: 'new' }),
+      });
+      loadReports();
+    } catch {}
+  };
+
   const deleteReport = async (id: number) => {
     if (!confirm('Избриши ја пријавата?')) return;
     try {
@@ -797,7 +808,7 @@ function ReportsTab() {
             <div className="flex flex-col gap-2 lg:flex-row lg:items-start lg:justify-between">
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2 flex-wrap">
-                  <span className="text-base font-bold text-white truncate">{report.product_title}</span>
+                  <a href={`/products/${report.product_id}`} target="_blank" rel="noopener noreferrer" className="text-base font-bold text-white truncate hover:underline">{report.product_title}</a>
                   {report.status === 'new' && (
                     <span className="rounded bg-red-600/20 px-1.5 py-0.5 text-xs font-semibold text-red-300">Нова</span>
                   )}
@@ -821,6 +832,14 @@ function ReportsTab() {
                 >
                   📄 Оглас
                 </button>
+                {report.status === 'dismissed' && (
+                  <button
+                    onClick={() => reactivateReport(report.id)}
+                    className="rounded px-2.5 py-1 text-xs bg-amber-700 hover:bg-amber-600 text-white font-semibold"
+                  >
+                    Врати
+                  </button>
+                )}
                 {report.status === 'new' && (
                   <button
                     onClick={() => dismissReport(report.id)}
