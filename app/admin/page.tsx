@@ -2585,7 +2585,7 @@ function AdminPageContent() {
                       {bannerForm.image_url && (
                         <div className="relative overflow-hidden rounded-lg bg-[#0b1727] shadow-[inset_0_0_0_1px_#2a3f55]">
                           <div style={{ paddingBottom: '25%' }} />
-                          <img src={bannerForm.image_url} alt="Preview банер" className="absolute inset-0 block h-full w-full object-contain" />
+                          <img src={bannerForm.image_url} alt="Preview банер" className="absolute inset-0 block h-full w-full object-cover object-center" />
                         </div>
                       )}
 
@@ -2626,7 +2626,7 @@ function AdminPageContent() {
                           <div className="flex flex-col gap-4 xl:flex-row">
                               <div className="relative overflow-hidden rounded-lg bg-[#081223] shadow-[inset_0_0_0_1px_#2a3f55] xl:w-[320px]">
                                 <div style={{ paddingBottom: '25%' }} />
-                                <img src={banner.image_url} alt={`Банер ${banner.id}`} className="absolute inset-0 block h-full w-full object-contain" />
+                                <img src={banner.image_url} alt={`Банер ${banner.id}`} className="absolute inset-0 block h-full w-full object-cover object-center" />
                             </div>
                             <div className="flex-1">
                               <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
