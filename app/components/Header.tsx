@@ -195,7 +195,7 @@ export function Header() {
             >
               <Menu className="h-5 w-5 text-white" />
             </button>
-            <Link href="/" className="ml-1 flex-shrink-0 transition hover:opacity-90 sm:ml-2">
+            <Link href="/" className="ml-0 flex-shrink-0 transition hover:opacity-90 sm:ml-2">
               <span className={`text-3xl font-extrabold tracking-tight sm:text-4xl ${h.logo}`}>kupi</span>
               <span className="text-3xl font-extrabold tracking-tight text-red-500 sm:text-4xl">prodadi</span>
             </Link>
