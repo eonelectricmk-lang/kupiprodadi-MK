@@ -232,7 +232,7 @@ export default function Home() {
           </div>
 
           <div className="ml-0 flex w-full items-center gap-2 sm:w-auto sm:ml-auto">
-            <div className="inline-flex h-9 items-center gap-1 rounded-lg border border-[#1f3250] bg-[#0f1a2b] p-1">
+            <div className="inline-flex h-9 items-center gap-1 rounded-lg border border-[#1f3250] bg-[#0f1a2b] p-1 max-sm:px-2.5">
               <button
                 type="button"
                 aria-label="Прикажи 6 во ред"
@@ -286,7 +286,7 @@ export default function Home() {
 
             <Link
               href="/products"
-              className="group inline-flex h-9 items-center gap-1 rounded-lg border border-[#1f3250] bg-[#0f1a2b] px-3 text-sm font-semibold text-slate-200 transition hover:bg-[#14243a] hover:text-white max-sm:flex-1 sm:flex-none"
+              className="group inline-flex h-9 items-center gap-1 rounded-lg border border-[#1f3250] bg-[#0f1a2b] px-3 text-sm font-semibold text-slate-200 transition hover:bg-[#14243a] hover:text-white max-sm:px-2.5 max-sm:flex-1 sm:flex-none"
             >
               <span className="flex-1">Види ги сите</span>
               <span className="transition-transform duration-200 group-hover:translate-x-1">→</span>
