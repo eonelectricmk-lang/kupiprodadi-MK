@@ -231,7 +231,7 @@ export default function Home() {
             <div className="mt-1 h-0.5 w-16 rounded bg-red-600" />
           </div>
 
-          <div className="ml-0 flex items-center gap-2 sm:ml-auto">
+          <div className="ml-0 flex w-full items-center gap-2 sm:w-auto sm:ml-auto">
             <div className="inline-flex h-9 items-center gap-1 rounded-lg border border-[#1f3250] bg-[#0f1a2b] p-1">
               <button
                 type="button"
