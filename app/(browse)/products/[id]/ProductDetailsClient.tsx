@@ -150,6 +150,7 @@ export default function ProductDetailsClient({ id }: { id: string }) {
   const [categories, setCategories] = useState<CategoryOption[]>(CATEGORIES as CategoryOption[]);
   const [sellerProducts, setSellerProducts] = useState<ProductDetails[]>([]);
   const [descExpanded, setDescExpanded] = useState(false);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -365,8 +366,17 @@ export default function ProductDetailsClient({ id }: { id: string }) {
     try {
       const saved = await toggleFavorite(userId, ad.id);
       setIsSaved(saved);
+      return saved;
     } catch (error) {
       console.error(error);
+    }
+  };
+
+  const handleMobileFavorite = async () => {
+    const saved = await onToggleFavorite();
+    if (saved !== undefined) {
+      setToastMessage(saved ? 'Зачувано' : 'Отстрането од зачувани');
+      setTimeout(() => setToastMessage(null), 2000);
     }
   };
 
@@ -486,9 +496,9 @@ export default function ProductDetailsClient({ id }: { id: string }) {
         )}
 
         {/* MOBILE - below lg */}
-        <div className="lg:hidden space-y-3 pb-6">
+        <div className="lg:hidden space-y-2 pb-3">
           {/* 1. Header */}
-          <div className="flex items-center justify-between py-1">
+          <div className="flex items-center py-1">
             <div className="flex flex-wrap items-center gap-1.5 text-xs text-white">
               <Link href="/" className="text-white/60 hover:text-white transition">Почетна</Link>
               <span className="text-white/30">/</span>
@@ -509,19 +519,14 @@ export default function ProductDetailsClient({ id }: { id: string }) {
                 <span className="text-white/60">Оглас</span>
               )}
             </div>
-            <div className="flex items-center gap-1">
-              <button type="button" onClick={onToggleFavorite} className={`rounded-full p-2 transition ${isSaved ? 'text-red-300' : 'text-white/60 hover:text-white'}`} aria-label={isSaved ? 'Отстрани од зачувани' : 'Зачувај оглас'}>
-                <Heart className={`h-5 w-5 ${isSaved ? 'fill-current' : ''}`} />
-              </button>
-              <button type="button" onClick={onCopyLink} className={`rounded-full p-2 transition text-white/60 hover:text-white`}>
-                <Copy className="h-5 w-5" />
-              </button>
-            </div>
           </div>
 
           {/* 2. Gallery */}
           <div className="relative overflow-hidden rounded-xl bg-[#0e1828]">
             <img src={images[activeImage] || FALLBACK_IMAGE} alt={ad.title} className="block h-[320px] w-full object-cover" />
+            <button type="button" onClick={handleMobileFavorite} className={`absolute top-3 right-3 z-10 rounded-full p-2 transition ${isSaved ? 'bg-red-500/30 text-red-300' : 'bg-black/40 text-white hover:bg-black/60'}`} aria-label={isSaved ? 'Отстрани од зачувани' : 'Зачувај оглас'}>
+              <Heart className={`h-5 w-5 ${isSaved ? 'fill-current' : ''}`} />
+            </button>
             {ad.sold_at && (
               <div className="absolute inset-0 flex items-center justify-center bg-black/40">
                 <span className="-rotate-12 rounded border-4 border-red-500 bg-red-500/10 px-4 py-2 text-2xl font-black text-red-500 leading-tight">ПРОДАДЕНО !</span>
@@ -548,13 +553,13 @@ export default function ProductDetailsClient({ id }: { id: string }) {
           {/* 3. Title + KP */}
           <div className="flex items-start justify-between gap-2">
             <h1 className="text-xl font-bold leading-tight text-white">{ad.title}</h1>
-            <span className="shrink-0 mt-0.5 rounded-lg border border-yellow-500/20 bg-yellow-500/5 px-2 py-1 text-[10px] font-semibold text-yellow-500/80">KP:{ad.id}</span>
+            <span className="shrink-0 mt-0.5 rounded-lg border border-yellow-500/20 bg-yellow-500/5 px-2 py-1 text-xs font-bold text-yellow-500/90">KP:{ad.id}</span>
           </div>
 
           {/* 4. Price + Tags */}
-          <div>
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
             <p className="text-2xl font-black text-red-500">{ad.price.toLocaleString('mk-MK')}</p>
-            <div className="flex flex-wrap gap-1.5 mt-1">
+            <div className="flex flex-wrap gap-1.5">
               {Boolean(ad.negotiable) && <span className="rounded bg-orange-500/20 px-1.5 py-0.5 text-[10px] font-bold text-orange-300 uppercase">По договор</span>}
               {!ad.negotiable && <span className="rounded bg-red-500/20 px-1.5 py-0.5 text-[10px] font-bold text-red-300 uppercase">Фиксна</span>}
               {Boolean(ad.trade_possible) && <span className="rounded bg-emerald-500/20 px-1.5 py-0.5 text-[10px] font-bold text-emerald-300 uppercase">Замена</span>}
@@ -619,15 +624,15 @@ export default function ProductDetailsClient({ id }: { id: string }) {
                   )}
                 </div>
                 <div>
-                  <p className="text-sm font-bold text-white">{sellerName}</p>
-                  <div className="flex items-center gap-1 text-[10px]">
+                  <p className="text-base font-bold text-white">{sellerName}</p>
+                  <div className="flex items-center gap-1 text-xs">
                     <Star className="h-3 w-3 text-amber-400 fill-current" />
                     <span className="font-bold text-amber-400">{sellerRating ? sellerRating.toFixed(1) : '5.0'}</span>
                     {Boolean(ad.seller_is_active) && <span className="font-bold text-green-400">· Проверен</span>}
                   </div>
                 </div>
               </div>
-              <span className="shrink-0 rounded bg-blue-500/10 px-1.5 py-0.5 text-[10px] font-bold text-blue-400">IDP:{ad.seller_id}</span>
+              <span className="shrink-0 rounded bg-blue-500/10 px-2 py-0.5 text-xs font-bold text-blue-400">IDP:{ad.seller_id}</span>
             </div>
 
             {sellerPhone && (
@@ -708,37 +713,45 @@ export default function ProductDetailsClient({ id }: { id: string }) {
           )}
 
           {/* 9. Bottom actions */}
-          <div className="grid grid-cols-2 gap-2">
-            <button type="button" onClick={onToggleFavorite} className={`inline-flex h-9 items-center justify-center gap-2 rounded-lg border text-sm font-bold transition ${isSaved ? 'border-red-500/30 bg-red-500/10 text-red-300' : 'border-white/20 bg-[#0f1a2b] text-white hover:bg-[#13243c]'}`}>
+          <div className="grid grid-cols-2 gap-1.5">
+            <button type="button" onClick={handleMobileFavorite} className={`inline-flex h-8 items-center justify-center gap-2 rounded-lg border text-xs font-bold transition ${isSaved ? 'border-red-500/30 bg-red-500/10 text-red-300' : 'border-white/20 bg-[#0f1a2b] text-white hover:bg-[#13243c]'}`}>
               <Heart className={`h-3.5 w-3.5 ${isSaved ? 'fill-current' : ''}`} /> {isSaved ? 'Зачувано' : 'Зачувај'}
             </button>
-            <button type="button" onClick={onCopyLink} className={`inline-flex h-9 items-center justify-center gap-2 rounded-lg border text-sm font-bold transition ${copiedLink ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-300' : 'border-white/20 bg-[#0f1a2b] text-white hover:bg-[#13243c]'}`}>
+            <button type="button" onClick={onCopyLink} className={`inline-flex h-8 items-center justify-center gap-2 rounded-lg border text-xs font-bold transition ${copiedLink ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-300' : 'border-white/20 bg-[#0f1a2b] text-white hover:bg-[#13243c]'}`}>
               <Copy className="h-3.5 w-3.5" /> {copiedLink ? 'Копирано' : 'Линк'}
             </button>
-            <button type="button" onClick={onShareFacebook} className="inline-flex h-9 items-center justify-center gap-2 rounded-lg border border-white/20 bg-[#0f1a2b] text-sm font-bold text-white hover:bg-[#13243c] transition">
+            <button type="button" onClick={onShareFacebook} className="inline-flex h-8 items-center justify-center gap-2 rounded-lg border border-white/20 bg-[#0f1a2b] text-xs font-bold text-white hover:bg-[#13243c] transition">
               <Share2 className="h-3.5 w-3.5" /> Сподели
             </button>
-            <button type="button" onClick={onReport} className={`inline-flex h-9 items-center justify-center gap-2 rounded-lg border text-sm font-bold transition ${reported ? 'border-amber-500/30 bg-amber-500/10 text-amber-300' : 'border-red-500/40 bg-[#0f1a2b] text-white hover:bg-[#13243c]'}`}>
+            <button type="button" onClick={onReport} className={`inline-flex h-8 items-center justify-center gap-2 rounded-lg border text-xs font-bold transition ${reported ? 'border-amber-500/30 bg-amber-500/10 text-amber-300' : 'border-red-500/40 bg-[#0f1a2b] text-white hover:bg-[#13243c]'}`}>
               <AlertTriangle className="h-3.5 w-3.5" /> {reported ? 'Пријавено' : 'Пријави'}
             </button>
           </div>
 
+          <div className="border-t border-[#2a3f55]/70" />
+
           {/* 10. Prev/Next */}
           {(ad.prevProduct || ad.nextProduct) && (
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5">
               {ad.prevProduct ? (
-                <Link href={`/products/${ad.prevProduct.id}`} className="flex-1 rounded-lg border border-[#2a3f55] bg-[#081223] px-3 py-2 text-sm font-semibold text-slate-300 hover:bg-[#1d2c43] transition text-center">← Претходен</Link>
+                <Link href={`/products/${ad.prevProduct.id}`} className="flex-1 rounded-lg border border-blue-500/40 bg-blue-500/10 px-3 py-1.5 text-xs font-semibold text-blue-400 hover:bg-blue-500/20 transition text-center">← Претходен</Link>
               ) : (
-                <span className="flex-1 rounded-lg border border-[#2a3f55]/30 bg-[#081223]/50 px-3 py-2 text-sm font-semibold text-slate-600 text-center cursor-not-allowed">← Претходен</span>
+                <span className="flex-1 rounded-lg border border-[#2a3f55]/30 bg-[#081223]/50 px-3 py-1.5 text-xs font-semibold text-slate-600 text-center cursor-not-allowed">← Претходен</span>
               )}
               {ad.nextProduct ? (
-                <Link href={`/products/${ad.nextProduct.id}`} className="flex-1 rounded-lg border border-[#2a3f55] bg-[#081223] px-3 py-2 text-sm font-semibold text-slate-300 hover:bg-[#1d2c43] transition text-center">Следен →</Link>
+                <Link href={`/products/${ad.nextProduct.id}`} className="flex-1 rounded-lg border border-emerald-500/40 bg-emerald-500/10 px-3 py-1.5 text-xs font-semibold text-emerald-400 hover:bg-emerald-500/20 transition text-center">Следен →</Link>
               ) : (
-                <span className="flex-1 rounded-lg border border-[#2a3f55]/30 bg-[#081223]/50 px-3 py-2 text-sm font-semibold text-slate-600 text-center cursor-not-allowed">Следен →</span>
+                <span className="flex-1 rounded-lg border border-[#2a3f55]/30 bg-[#081223]/50 px-3 py-1.5 text-xs font-semibold text-slate-600 text-center cursor-not-allowed">Следен →</span>
               )}
             </div>
           )}
         </div>
+
+        {toastMessage && (
+          <div className="fixed bottom-20 left-1/2 z-50 -translate-x-1/2 rounded-full bg-black/80 px-4 py-2 text-sm font-semibold text-white shadow-lg backdrop-blur-sm">
+            {toastMessage}
+          </div>
+        )}
 
         {/* DESKTOP - lg and above */}
         <div className="hidden lg:grid items-start gap-5 lg:grid-cols-[1.35fr_1fr]">
