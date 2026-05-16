@@ -2585,7 +2585,7 @@ function AdminPageContent() {
                       {bannerForm.image_url && (
                         <div className="overflow-hidden rounded-lg border border-[#2a3f55] bg-[#0b1727]"
                           style={{ aspectRatio: '4 / 1' }}>
-                          <img src={bannerForm.image_url} alt="Preview банер" className="h-full w-full object-contain" />
+                          <img src={bannerForm.image_url} alt="Preview банер" className="h-full w-full object-cover" />
                         </div>
                       )}
 
@@ -2626,7 +2626,7 @@ function AdminPageContent() {
                           <div className="flex flex-col gap-4 xl:flex-row">
                              <div className="overflow-hidden rounded-lg border border-[#2a3f55] bg-[#081223] xl:w-[320px]"
                                style={{ aspectRatio: '4 / 1' }}>
-                               <img src={banner.image_url} alt={`Банер ${banner.id}`} className="h-full w-full object-contain" />
+                               <img src={banner.image_url} alt={`Банер ${banner.id}`} className="h-full w-full object-cover" />
                             </div>
                             <div className="flex-1">
                               <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">

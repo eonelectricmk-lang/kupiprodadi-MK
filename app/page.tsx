@@ -36,7 +36,7 @@ type BannerSlide = {
 
 export default function Home() {
   const [activeBanner, setActiveBanner] = useState(0);
-  const [bannerSlides, setBannerSlides] = useState<BannerSlide[]>(DEFAULT_BANNERS);
+  const [bannerSlides, setBannerSlides] = useState<BannerSlide[] | null>(null);
   const [homeCategories, setHomeCategories] = useState(CATEGORIES);
   const [homeCategorySlugs, setHomeCategorySlugs] = useState<string[]>([]);
   const [trustItems, setTrustItems] = useState<HomepageTrustItem[]>(DEFAULT_TRUST_ITEMS);
@@ -78,9 +78,11 @@ export default function Home() {
       .then((data) => {
         if (Array.isArray(data?.banners) && data.banners.length > 0) {
           setBannerSlides(data.banners);
+        } else {
+          setBannerSlides(DEFAULT_BANNERS);
         }
       })
-      .catch(() => {});
+      .catch(() => setBannerSlides(DEFAULT_BANNERS));
   }, []);
 
   useEffect(() => {
@@ -120,12 +122,13 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
+    if (!bannerSlides || bannerSlides.length === 0) return;
     const intervalId = setInterval(() => {
       setActiveBanner((prev) => (prev + 1) % bannerSlides.length);
     }, 4500);
 
     return () => clearInterval(intervalId);
-  }, [bannerSlides.length]);
+  }, [bannerSlides]);
 
   const orderedHomeCategories = useMemo(() => {
     if (!homeCategorySlugs.length) return homeCategories.slice(0, 6);
@@ -141,40 +144,42 @@ export default function Home() {
       <Header />
 
       <div className="mx-auto max-w-6xl space-y-2.5 px-4 py-2.5">
-        <section>
-          <div
-            id="hero-banner"
-            className="relative overflow-hidden rounded-2xl border border-[#2a3f55] bg-[#07101c]"
-            style={{ aspectRatio: '4 / 1' }}
-          >
-            <div className="relative h-full w-full">
-              {bannerSlides.map((slide, idx) => (
-                <Link
-                  key={slide.id || slide.image_url}
-                  href={slide.link_url || '#'}
-                  aria-label={`Банер ${slide.id || slide.image_url}`}
-                  className={`absolute inset-0 bg-contain bg-center bg-no-repeat transition-transform duration-700 ease-in-out ${slide.link_url ? 'cursor-pointer' : 'pointer-events-none'}`}
-                  style={{
-                    backgroundImage: `url('${slide.image_url}')`,
-                    transform: `translateX(${(idx - activeBanner) * 100}%)`,
-                  }}
-                />
-              ))}
-            </div>
+        {bannerSlides && (
+          <section>
+            <div
+              id="hero-banner"
+              className="relative overflow-hidden rounded-2xl border border-[#2a3f55] bg-[#07101c]"
+              style={{ aspectRatio: '4 / 1' }}
+            >
+              <div className="relative h-full w-full">
+                {bannerSlides.map((slide, idx) => (
+                  <Link
+                    key={slide.id || slide.image_url}
+                    href={slide.link_url || '#'}
+                    aria-label={`Банер ${slide.id || slide.image_url}`}
+                    className={`absolute inset-0 bg-cover bg-center bg-no-repeat transition-transform duration-700 ease-in-out ${slide.link_url ? 'cursor-pointer' : 'pointer-events-none'}`}
+                    style={{
+                      backgroundImage: `url('${slide.image_url}')`,
+                      transform: `translateX(${(idx - activeBanner) * 100}%)`,
+                    }}
+                  />
+                ))}
+              </div>
 
-            <div className="absolute bottom-3 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2 rounded-full bg-black/30 px-2 py-1 backdrop-blur-sm">
-              {bannerSlides.map((_, idx) => (
-                <button
-                  key={idx}
-                  type="button"
-                  aria-label={`Промени банер ${idx + 1}`}
-                  onClick={() => setActiveBanner(idx)}
-                  className={`h-1.5 rounded-full transition ${activeBanner === idx ? 'w-6 bg-white' : 'w-2 bg-white/55 hover:bg-white/80'}`}
-                />
-              ))}
+              <div className="absolute bottom-3 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2 rounded-full bg-black/30 px-2 py-1 backdrop-blur-sm">
+                {bannerSlides.map((_, idx) => (
+                  <button
+                    key={idx}
+                    type="button"
+                    aria-label={`Промени банер ${idx + 1}`}
+                    onClick={() => setActiveBanner(idx)}
+                    className={`h-1.5 rounded-full transition ${activeBanner === idx ? 'w-6 bg-white' : 'w-2 bg-white/55 hover:bg-white/80'}`}
+                  />
+                ))}
+              </div>
             </div>
-          </div>
-        </section>
+          </section>
+        )}
 
         <div className="block sm:hidden">
           <div className="grid grid-cols-2 gap-1">
