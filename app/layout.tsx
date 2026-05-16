@@ -16,6 +16,13 @@ export const metadata: Metadata = {
   description: "Купи и продај производи локално во Македонија.",
 };
 
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+};
+
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="mk" className={`${geistSans.variable} ${geistMono.variable} ${nunito.variable} h-full antialiased`}>
