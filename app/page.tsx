@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
+import { LayoutGrid } from 'lucide-react';
 import Header from './components/Header';
 import CategoryCard from './components/CategoryCard';
 import AdCard from './components/AdCard';
@@ -173,6 +174,17 @@ export default function Home() {
             </div>
           </div>
         </section>
+
+        <div className="block sm:hidden">
+          <a
+            href="/products"
+            className="flex w-full items-center gap-2 rounded-lg border-2 border-gray-400 bg-[#0b1727] px-3 py-2.5 text-sm font-semibold text-gray-100 transition"
+          >
+            <LayoutGrid className="h-4 w-4 shrink-0 text-gray-400" />
+            <span className="flex-1 text-left">Сите категории</span>
+            <span className="text-gray-400">→</span>
+          </a>
+        </div>
 
         <div className="hidden md:block"><TrustBar items={trustItems} /></div>
 

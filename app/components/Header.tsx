@@ -278,15 +278,7 @@ export function Header() {
 
       <div className="block sm:hidden">
         <Container>
-          <div className="space-y-2 pb-2 pt-1">
-            <button
-              onClick={() => setShowCategories(!showCategories)}
-              className={`flex w-full items-center gap-2 rounded-lg border-2 px-3 py-2.5 text-sm font-semibold leading-none transition ${h.search} ${h.searchInput}`}
-            >
-              <LayoutGrid className={`h-4 w-4 shrink-0 ${h.searchIcon}`} />
-              <span className="flex-1 text-left">Сите категории</span>
-              <ChevronDown className={`h-4 w-4 ${h.searchIcon}`} />
-            </button>
+          <div className="pb-2 pt-1">
             <form onSubmit={submitSearch} className={`flex w-full items-center overflow-hidden rounded-lg border-2 focus-within:border-blue-400 ${h.search}`}>
               <span className={`pl-3 text-sm ${h.searchIcon}`}><Search className="h-4 w-4" /></span>
               <input
