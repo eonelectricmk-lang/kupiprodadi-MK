@@ -227,23 +227,23 @@ export function Header() {
 
           <div className="ml-auto flex flex-shrink-0 items-center gap-2 sm:gap-3">
             <button onClick={() => setDark(!dark)} className={`inline-flex transition ${h.icon}`} title={dark ? 'Светла тема' : 'Темна тема'}>
-              {dark ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+              {dark ? <Sun className="max-sm:h-[22px] max-sm:w-[22px] h-5 w-5" /> : <Moon className="max-sm:h-[22px] max-sm:w-[22px] h-5 w-5" />}
             </button>
             <Link href="/profile?tab=saved">
-              <button className={`transition ${h.icon}`}><Heart className="h-5 w-5" /></button>
+              <button className={`transition ${h.icon}`}><Heart className="max-sm:h-[22px] max-sm:w-[22px] h-5 w-5" /></button>
             </Link>
             <Link href="/profile?tab=messages">
               <div className="relative">
-                <button className={`transition ${h.icon}`}><Bell className="h-5 w-5" /></button>
+                <button className={`transition ${h.icon}`}><Bell className="max-sm:h-[22px] max-sm:w-[22px] h-5 w-5" /></button>
                 {unreadCount > 0 && <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs rounded-full min-w-[16px] h-4 flex items-center justify-center font-bold px-1">{unreadCount}</span>}
               </div>
             </Link>
             <Link href="/auth">
               <button className={`transition ${h.icon}`}>
                 {userAvatar ? (
-                  <img src={userAvatar} alt="" className="h-5 w-5 rounded-full object-cover" />
+                  <img src={userAvatar} alt="" className="max-sm:h-[22px] max-sm:w-[22px] h-5 w-5 rounded-full object-cover" />
                 ) : (
-                  <UserCircle className="h-5 w-5" />
+                  <UserCircle className="max-sm:h-[22px] max-sm:w-[22px] h-5 w-5" />
                 )}
               </button>
             </Link>
