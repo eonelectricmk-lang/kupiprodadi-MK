@@ -179,7 +179,7 @@ export default function Home() {
           <div className="grid grid-cols-2 gap-1">
             <a
               href="/products"
-              className="flex min-w-0 items-center gap-1 overflow-hidden rounded border-2 border-[#2a3f55] bg-[#121f33] px-2 py-1 text-[12px] font-semibold leading-none tracking-[-0.01em] text-white transition hover:bg-[#1a2d49]"
+              className="flex h-9 min-w-0 items-center gap-1 overflow-hidden rounded-lg border border-[#1f3250] bg-[#0f1a2b] px-2.5 text-[12px] font-semibold leading-none tracking-[-0.01em] text-slate-200 transition hover:bg-[#14243a] hover:text-white"
             >
               <LayoutGrid className="h-4 w-4 shrink-0" />
               <span className="min-w-0 flex-1 truncate text-left">Сите категории</span>
@@ -192,7 +192,7 @@ export default function Home() {
                 <a
                   key={category.slug}
                   href={`/products?category=${category.slug}`}
-                  className="flex min-w-0 items-center gap-1 overflow-hidden rounded border-2 border-[#2a3f55] bg-[#0f1a2b] px-2 py-1 text-[12px] leading-none tracking-[-0.01em] text-gray-300 transition hover:bg-[#16263d] hover:text-white"
+                  className="flex h-9 min-w-0 items-center gap-1 overflow-hidden rounded-lg border border-[#1f3250] bg-[#0f1a2b] px-2.5 text-[12px] leading-none tracking-[-0.01em] text-slate-200 transition hover:bg-[#14243a] hover:text-white"
                 >
                   <Icon className={`h-4 w-4 shrink-0 ${iconMeta.className}`} />
                   <span className="min-w-0 flex-1 truncate text-left">{category.name}</span>
