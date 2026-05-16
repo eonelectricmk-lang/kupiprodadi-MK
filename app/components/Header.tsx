@@ -9,7 +9,7 @@ import { CATEGORIES } from '@/lib/categories';
 import {
   Bell, ChevronDown, Heart, LayoutGrid, MapPin,
   Search,
-  UserCircle, Sun, Moon,
+  UserCircle, Sun, Moon, Menu, LogOut, Settings, PlusCircle,
 } from 'lucide-react';
 import { getCategoryIconMeta } from './categoryIcons';
 import { useTheme } from '@/app/context/ThemeContext';
@@ -34,6 +34,8 @@ export function Header() {
   const [search, setSearch] = useState('');
   const [unreadCount, setUnreadCount] = useState(0);
   const [userAvatar, setUserAvatar] = useState<string | null>(null);
+  const [user, setUser] = useState<{id?: number; name?: string} | null>(null);
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
 
   const h = dark ? {
     header: 'bg-[#07101c]/95 border-[#2a3f55]',
@@ -102,10 +104,11 @@ export function Header() {
     const fetchUnread = () => {
       try {
         const stored = localStorage.getItem('user');
-        if (!stored) { setUserAvatar(null); return; }
+        if (!stored) { setUserAvatar(null); setUser(null); return; }
         const user = JSON.parse(stored);
         if (!user?.id) return;
         setUserAvatar(user.avatar_url || null);
+        setUser(user);
         fetch(`/api/messages?user_id=${user.id}`)
           .then((res) => res.json())
           .then((msgs) => {
@@ -141,6 +144,7 @@ export function Header() {
   useEffect(() => {
     setShowCategories(false);
     setShowLocation(false);
+    setShowMobileMenu(false);
   }, [pathname]);
 
   useEffect(() => {
@@ -184,6 +188,13 @@ export function Header() {
       <header ref={headerRef} className={`sticky top-0 z-50 backdrop-blur transition-colors duration-300 ${h.header}`}>
         <Container>
           <div className="flex flex-wrap items-center gap-3 py-2 md:flex-nowrap md:justify-between md:gap-4">
+            <button
+              onClick={() => setShowMobileMenu(!showMobileMenu)}
+              className="block rounded-lg border border-red-500 bg-[#0f1a2b] p-1.5 sm:hidden"
+              aria-label="Мени"
+            >
+              <Menu className="h-5 w-5 text-white" />
+            </button>
             <Link href="/" className="ml-2 flex-shrink-0 transition hover:opacity-90">
               <span className={`text-3xl font-extrabold tracking-tight sm:text-4xl ${h.logo}`}>kupi</span>
               <span className="text-3xl font-extrabold tracking-tight text-red-500 sm:text-4xl">prodadi</span>
@@ -300,6 +311,99 @@ export function Header() {
           </div>
         </Container>
       </div>
+
+      {showMobileMenu && (
+        <div className="border-t border-[#2a3f55] bg-[#0d1727]/95 backdrop-blur-lg sm:hidden">
+          <Container>
+            <div className="divide-y divide-[#2a3f55]/60 py-2">
+              {user?.id ? (
+                <div className="px-2 pb-2 text-sm text-gray-400">
+                  {user.name || 'Корисник'}
+                </div>
+              ) : (
+                <Link
+                  href="/auth"
+                  onClick={() => setShowMobileMenu(false)}
+                  className="flex items-center gap-2 rounded-lg px-2 py-2 text-sm font-semibold text-red-400 transition hover:bg-[#16263d]"
+                >
+                  <UserCircle className="h-4 w-4" />
+                  Најави се
+                </Link>
+              )}
+              <div className="space-y-0.5 pt-2">
+                <Link
+                  href="/sell"
+                  onClick={() => setShowMobileMenu(false)}
+                  className="flex items-center gap-2 rounded-lg px-2 py-2 text-sm text-gray-200 transition hover:bg-[#16263d]"
+                >
+                  <PlusCircle className="h-4 w-4 text-red-400" />
+                  Внеси оглас
+                </Link>
+                <Link
+                  href="/profile"
+                  onClick={() => setShowMobileMenu(false)}
+                  className="flex items-center gap-2 rounded-lg px-2 py-2 text-sm text-gray-200 transition hover:bg-[#16263d]"
+                >
+                  <UserCircle className="h-4 w-4 text-blue-400" />
+                  Мој профил
+                </Link>
+                <Link
+                  href="/profile?tab=my-ads"
+                  onClick={() => setShowMobileMenu(false)}
+                  className="flex items-center gap-2 rounded-lg px-2 py-2 text-sm text-gray-200 transition hover:bg-[#16263d]"
+                >
+                  <LayoutGrid className="h-4 w-4 text-green-400" />
+                  Мои огласи
+                </Link>
+                <Link
+                  href="/profile?tab=saved"
+                  onClick={() => setShowMobileMenu(false)}
+                  className="flex items-center gap-2 rounded-lg px-2 py-2 text-sm text-gray-200 transition hover:bg-[#16263d]"
+                >
+                  <Heart className="h-4 w-4 text-pink-400" />
+                  Зачувани огласи
+                </Link>
+                <Link
+                  href="/profile?tab=messages"
+                  onClick={() => setShowMobileMenu(false)}
+                  className="flex items-center gap-2 rounded-lg px-2 py-2 text-sm text-gray-200 transition hover:bg-[#16263d]"
+                >
+                  <Bell className="h-4 w-4 text-yellow-400" />
+                  Пораки
+                  {unreadCount > 0 && (
+                    <span className="ml-auto inline-flex h-5 min-w-[20px] items-center justify-center rounded-full bg-red-600 px-1.5 text-[11px] font-bold text-white">
+                      {unreadCount}
+                    </span>
+                  )}
+                </Link>
+                <Link
+                  href="/profile?tab=settings"
+                  onClick={() => setShowMobileMenu(false)}
+                  className="flex items-center gap-2 rounded-lg px-2 py-2 text-sm text-gray-200 transition hover:bg-[#16263d]"
+                >
+                  <Settings className="h-4 w-4 text-gray-400" />
+                  Подесувања
+                </Link>
+                {user?.id && (
+                  <button
+                    onClick={() => {
+                      localStorage.removeItem('user');
+                      setUser(null);
+                      setUserAvatar(null);
+                      setShowMobileMenu(false);
+                      router.push('/');
+                    }}
+                    className="flex w-full items-center gap-2 rounded-lg px-2 py-2 text-sm text-gray-400 transition hover:bg-[#16263d] hover:text-red-400"
+                  >
+                    <LogOut className="h-4 w-4" />
+                    Одјава
+                  </button>
+                )}
+              </div>
+            </div>
+          </Container>
+        </div>
+      )}
       </header>
 
       {showCategories && typeof window !== 'undefined' && createPortal(
