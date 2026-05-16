@@ -10,7 +10,7 @@ type BannerRecord = {
 
 export const DEFAULT_BANNERS: BannerRecord[] = [
   {
-    image_url: '/banners/brand-banner.jpg',
+    image_url: '/banners/4444444.png',
     eyebrow: null,
     title: null,
     subtitle: null,
