@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
+import { LayoutGrid, ChevronDown } from 'lucide-react';
 import Header from './components/Header';
 import CategoryCard from './components/CategoryCard';
 import AdCard from './components/AdCard';
@@ -173,6 +174,33 @@ export default function Home() {
             </div>
           </div>
         </section>
+
+        <div className="block sm:hidden">
+          <div className="grid grid-cols-2 gap-1">
+            <a
+              href="/products"
+              className="flex min-w-0 items-center gap-1 overflow-hidden rounded border-2 border-[#2a3f55] bg-[#121f33] px-2 py-1 text-[12px] font-semibold leading-none tracking-[-0.01em] text-white transition hover:bg-[#1a2d49]"
+            >
+              <LayoutGrid className="h-4 w-4 shrink-0" />
+              <span className="min-w-0 flex-1 truncate text-left">Сите категории</span>
+              <ChevronDown className="h-4 w-4 shrink-0" />
+            </a>
+            {orderedHomeCategories.slice(0, 3).map((category) => {
+              const iconMeta = getCategoryIconMeta(category.slug);
+              const Icon = iconMeta.Icon;
+              return (
+                <a
+                  key={category.slug}
+                  href={`/products?category=${category.slug}`}
+                  className="flex min-w-0 items-center gap-1 overflow-hidden rounded border-2 border-[#2a3f55] bg-[#0f1a2b] px-2 py-1 text-[12px] leading-none tracking-[-0.01em] text-gray-300 transition hover:bg-[#16263d] hover:text-white"
+                >
+                  <Icon className={`h-4 w-4 shrink-0 ${iconMeta.className}`} />
+                  <span className="min-w-0 flex-1 truncate text-left">{category.name}</span>
+                </a>
+              );
+            })}
+          </div>
+        </div>
 
         <div className="hidden md:block"><TrustBar items={trustItems} /></div>
 

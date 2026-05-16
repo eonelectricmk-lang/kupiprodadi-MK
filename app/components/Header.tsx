@@ -267,7 +267,7 @@ export function Header() {
         </Container>
       </div>
 
-      <div className={`transition-colors duration-300 ${h.navBar}`}>
+      <div className={`hidden transition-colors duration-300 sm:block ${h.navBar}`}>
         <Container>
           <div className="grid grid-cols-2 gap-1 py-0.5 sm:grid-cols-3 sm:gap-2 lg:grid-cols-6 lg:gap-2.5">
             <button
