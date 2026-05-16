@@ -946,7 +946,10 @@ function AdminPageContent() {
     const response = await fetch('/api/admin/banners', { cache: 'no-store' });
     const data = await response.json();
     setBanners(Array.isArray(data?.banners) ? data.banners : []);
+    setBannerRefreshKey(Date.now());
   };
+
+  const [bannerRefreshKey, setBannerRefreshKey] = useState(0);
 
   const refreshHomepageSections = async () => {
     const response = await fetch('/api/admin/homepage-sections', { cache: 'no-store' });
@@ -999,6 +1002,12 @@ function AdminPageContent() {
   useEffect(() => {
     setAdminPage(1);
   }, [statusFilter, productSort, productSource, productSearch, adminPerPage]);
+
+  useEffect(() => {
+    if (!me?.authenticated || activeTab !== 'banners') return;
+    refreshBanners();
+    resetBannerForm();
+  }, [activeTab, me?.authenticated]);
 
   useEffect(() => {
     if (!me?.authenticated || activeTab !== 'users') return;
@@ -2587,7 +2596,8 @@ function AdminPageContent() {
                         <div>
                           <div className="relative overflow-hidden rounded-lg bg-[#0b1727] shadow-[inset_0_0_0_1px_#2a3f55]">
                             <div style={{ paddingBottom: '25%' }} />
-                            <img src={bannerForm.image_url} alt="Preview банер" className="absolute inset-0 block h-full w-full object-cover object-center"
+                            <img src={bannerForm.image_url + (bannerForm.image_url.startsWith('data:') ? '' : `?v=${Date.now()}`)} alt="Preview банер"
+                              style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'contain' }}
                               onLoad={(e) => {
                                 const img = e.currentTarget;
                                 setBannerDimensions((prev) => ({ ...prev, preview: { width: img.naturalWidth, height: img.naturalHeight } }));
@@ -2631,24 +2641,25 @@ function AdminPageContent() {
                   <div className="rounded-xl border border-[#2a3f55] bg-[#081223] p-5">
                     <h2 className="mb-4 text-lg font-bold">Активни и достапни промотивни позиции</h2>
                     <div className="space-y-4">
-                      {banners.map((banner) => (
-                        <div key={banner.id} className="rounded-lg border border-[#2a3f55] bg-[#0b1727] p-4">
+                      {banners.map((banner, index) => (
+                        <div key={`banner-${banner.id}-${bannerRefreshKey}`} className="rounded-lg border border-[#2a3f55] bg-[#0b1727] p-4">
                           <div className="flex flex-col gap-4 xl:flex-row">
                               <div className="relative overflow-hidden rounded-lg bg-[#081223] shadow-[inset_0_0_0_1px_#2a3f55] xl:w-[320px]">
                                 <div style={{ paddingBottom: '25%' }} />
-                                <img src={banner.image_url} alt={`Банер ${banner.id}`} className="absolute inset-0 block h-full w-full object-cover object-center"
+                                <img src={banner.image_url + (banner.image_url.startsWith('data:') ? '' : `?v=${Date.now()}`)} alt={`Банер ${banner.id}`}
+                                  style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'contain' }}
                                   onLoad={(e) => {
                                     const img = e.currentTarget;
                                     setBannerDimensions((prev) => ({ ...prev, [String(banner.id)]: { width: img.naturalWidth, height: img.naturalHeight } }));
                                   }} />
                             </div>
-                            {bannerDimensions[String(banner.id)] && (bannerDimensions[String(banner.id)]!.width !== 1600 || bannerDimensions[String(banner.id)]!.height !== 400) && (
+                            {bannerDimensions[String(banner.id)] && banner.is_active && (bannerDimensions[String(banner.id)]!.width !== 1600 || bannerDimensions[String(banner.id)]!.height !== 400) && (
                               <p className="mt-1 text-xs text-red-400">⚠ Не е 1600x400 (реално: {bannerDimensions[String(banner.id)]!.width}x{bannerDimensions[String(banner.id)]!.height})</p>
                             )}
                             <div className="flex-1">
                               <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
                                 <div>
-                                  <h3 className="text-lg font-semibold">Промотивен банер #{banner.id}</h3>
+                                  <h3 className="text-lg font-semibold">Промотивен банер #{index + 1}</h3>
                                   <p className="mt-2 text-xs text-slate-500">Приоритет: {banner.sort_order} · {banner.is_active ? 'Активен и видлив' : 'Скриен'}</p>
                                   {banner.link_url && <p className="mt-1 text-xs text-slate-500">Линк: {banner.link_url}</p>}
                                 </div>

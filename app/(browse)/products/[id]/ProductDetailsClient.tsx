@@ -515,7 +515,7 @@ export default function ProductDetailsClient({ id }: { id: string }) {
                     onClick={() => setActiveImage(idx)}
                     className={`overflow-hidden rounded-lg border bg-[#0e1828] relative ${activeImage === idx ? 'border-red-500' : 'border-white/40'}`}
                   >
-                    <img src={image} alt={`${ad.title} ${idx + 1}`} className="block h-16 w-full object-cover sm:h-20" />
+                    <img src={image} alt={`${ad.title} ${idx + 1}`} className="block h-16 w-full object-cover object-bottom sm:h-20" />
                     {ad.sold_at && (
                       <div className="absolute inset-0 flex items-center justify-center bg-black/40">
                         <span className="rounded border border-red-500 bg-red-500/10 px-1 py-0.5 text-[7px] font-black text-red-500 leading-tight">ПРОД !</span>
