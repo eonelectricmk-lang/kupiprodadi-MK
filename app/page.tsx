@@ -153,7 +153,7 @@ export default function Home() {
                   key={slide.id || slide.image_url}
                   href={slide.link_url || '#'}
                   aria-label={`Банер ${slide.id || slide.image_url}`}
-                  className={`absolute inset-0 bg-contain bg-center transition-transform duration-700 ease-in-out ${slide.link_url ? 'cursor-pointer' : 'pointer-events-none'}`}
+                  className={`absolute inset-0 bg-contain bg-center bg-no-repeat transition-transform duration-700 ease-in-out ${slide.link_url ? 'cursor-pointer' : 'pointer-events-none'}`}
                   style={{
                     backgroundImage: `url('${slide.image_url}')`,
                     transform: `translateX(${(idx - activeBanner) * 100}%)`,
