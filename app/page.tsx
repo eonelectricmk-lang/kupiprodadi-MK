@@ -232,7 +232,7 @@ export default function Home() {
           </div>
 
           <div className="ml-auto flex items-center gap-2">
-            <div className="inline-flex items-center gap-1 rounded-lg border border-[#1f3250] bg-[#0f1a2b] p-1">
+            <div className="inline-flex items-center gap-0.5 rounded-lg border border-[#1f3250] bg-[#0f1a2b] p-0.5 sm:gap-1 sm:p-1">
               <button
                 type="button"
                 aria-label="Прикажи 6 во ред"
