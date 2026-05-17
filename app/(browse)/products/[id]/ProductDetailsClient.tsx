@@ -667,7 +667,7 @@ export default function ProductDetailsClient({ id }: { id: string }) {
                           {!Boolean(ad.hide_phone) && (
                             <a
                               href={`tel:${sellerPhone.replace(/\s/g, '')}`}
-                              className="flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-emerald-800 text-sm font-bold text-white transition hover:bg-emerald-700"
+                              className="inline-flex h-11 items-center justify-center gap-2 rounded-full bg-emerald-800 px-6 text-sm font-bold text-white transition hover:bg-emerald-700"
                             >
                               <Phone className="h-4 w-4" /> {sellerPhone}
                             </a>
