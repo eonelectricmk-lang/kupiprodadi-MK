@@ -164,18 +164,21 @@ export function AdCard({
             <div>
               <div className="flex items-start justify-between gap-2">
                 <h3 className="truncate text-base font-semibold leading-[1.2] text-white">{card.title}</h3>
-                <button
-                  type="button"
-                  onClick={onToggleFavorite}
-                  className={`shrink-0 rounded-full p-1.5 transition ${
-                    isSaved
-                      ? 'bg-red-500/20 text-red-300 hover:bg-red-500/30'
-                      : 'bg-black/35 text-gray-100 hover:bg-black/50'
-                  }`}
-                  aria-label={isSaved ? 'Отстрани од зачувани' : 'Зачувај оглас'}
-                >
-                  <Heart className={`h-4 w-4 ${isSaved ? 'fill-current' : ''}`} />
-                </button>
+                <div className="flex shrink-0 items-center gap-1.5">
+                  <span className="text-[10px] font-medium text-yellow-400">KP:{card.id}</span>
+                  <button
+                    type="button"
+                    onClick={onToggleFavorite}
+                    className={`rounded-full p-1.5 transition ${
+                      isSaved
+                        ? 'bg-red-500/20 text-red-300 hover:bg-red-500/30'
+                        : 'bg-black/35 text-gray-100 hover:bg-black/50'
+                    }`}
+                    aria-label={isSaved ? 'Отстрани од зачувани' : 'Зачувај оглас'}
+                  >
+                    <Heart className={`h-4 w-4 ${isSaved ? 'fill-current' : ''}`} />
+                  </button>
+                </div>
               </div>
 
               <p className="mt-1 flex items-center gap-1 text-xs text-slate-400">
@@ -183,7 +186,6 @@ export function AdCard({
                   <MapPin className="h-3.5 w-3.5" />
                   {card.location || 'Македонија'}
                 </span>
-                <span className="ml-auto text-yellow-400">KP:{card.id}</span>
               </p>
 
               <p className="mt-1 line-clamp-2 text-xs leading-5 text-slate-300">
