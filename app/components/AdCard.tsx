@@ -140,7 +140,7 @@ export function AdCard({
   if (layout === 'list') {
     return (
       <div className="h-full overflow-hidden rounded-2xl border border-white/20 bg-[#0f1a2b] transition duration-200 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-red-950/20">
-        <div className="flex gap-3 p-3">
+        <div className="flex gap-2.5 p-2.5">
           <div className="relative h-28 w-28 shrink-0 overflow-hidden rounded-xl border border-white/20 bg-[#0a1322] sm:h-32 sm:w-32">
             <img
               src={imageSrc}
@@ -162,7 +162,7 @@ export function AdCard({
 
       <div className="min-w-0 flex-1">
             <div className="flex items-start justify-between gap-2">
-              <h3 className="line-clamp-2 text-base font-semibold leading-[1.2] text-white">{card.title}</h3>
+              <h3 className="truncate text-base font-semibold leading-[1.2] text-white">{card.title}</h3>
               <button
                 type="button"
                 onClick={onToggleFavorite}
@@ -248,7 +248,7 @@ export function AdCard({
         </button>
       </div>
 
-      <div className="flex h-[98px] flex-col px-3 pb-2 pt-2.5">
+      <div className="flex h-[82px] flex-col px-3 pb-2 pt-2">
         <div className="flex items-center justify-between gap-1">
           <p className="flex items-center gap-1 truncate text-[11px] text-slate-400">
             <MapPin className="h-3.5 w-3.5 shrink-0" />
@@ -265,7 +265,7 @@ export function AdCard({
             )}
           </div>
         </div>
-        <h3 className="mt-0.5 line-clamp-2 text-[14px] font-semibold leading-[1.2] text-white">{card.title}</h3>
+        <h3 className="mt-0.5 truncate text-[14px] font-semibold leading-[1.2] text-white">{card.title}</h3>
         <div className="mt-auto flex items-end justify-between gap-1 pt-0">
           <p className="whitespace-nowrap text-xl font-bold leading-none text-red-500">{card.price.toLocaleString()} <span className="text-white">€</span></p>
           <div className="flex shrink-0 items-center gap-1">
