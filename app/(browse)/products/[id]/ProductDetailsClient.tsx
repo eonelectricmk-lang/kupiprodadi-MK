@@ -567,9 +567,9 @@ export default function ProductDetailsClient({ id }: { id: string }) {
           <div className="flex flex-wrap items-center justify-between gap-y-1">
             <div className="flex flex-wrap items-center gap-1">
               <p className="text-2xl font-black text-red-500">{ad.price.toLocaleString('mk-MK')} <span className="text-white">{ad.currency || '€'}</span></p>
-              {Boolean(ad.negotiable) && <span className="rounded bg-orange-500/20 px-1.5 py-0.5 text-[10px] font-bold text-orange-300 uppercase">По договор</span>}
-              {!ad.negotiable && <span className="rounded bg-red-500/20 px-1.5 py-0.5 text-[10px] font-bold text-red-300 uppercase">Фиксна</span>}
-              {Boolean(ad.trade_possible) && <span className="rounded bg-emerald-500/20 px-1.5 py-0.5 text-[10px] font-bold text-emerald-300 uppercase">Замена</span>}
+              {Boolean(ad.negotiable) && <span className="text-sm text-slate-400">По договор</span>}
+              {!ad.negotiable && <span className="text-sm text-slate-400">Фиксна</span>}
+              {Boolean(ad.trade_possible) && <span className="text-sm text-slate-400">Замена</span>}
             </div>
             <div className="flex flex-wrap gap-1 justify-end">
               <span className="text-xs font-light text-slate-400">Состојба: {ad.condition || 'Многу добро'}</span>
@@ -871,9 +871,9 @@ export default function ProductDetailsClient({ id }: { id: string }) {
                 {ad.price.toLocaleString('mk-MK')} <span className="text-white">{ad.currency || '€'}</span>
               </p>
               <div className="flex flex-wrap gap-1.5">
-                {Boolean(ad.negotiable) && <span className="rounded bg-orange-500/20 px-2 py-0.5 text-xs font-bold text-orange-300 uppercase">По договор</span>}
-                {!ad.negotiable && <span className="rounded bg-red-500/20 px-2 py-0.5 text-xs font-bold text-red-300 uppercase">Фиксна</span>}
-                {Boolean(ad.trade_possible) && <span className="rounded bg-emerald-500/20 px-2 py-0.5 text-xs font-bold text-emerald-300 uppercase">Замена</span>}
+                {Boolean(ad.negotiable) && <span className="text-sm text-slate-400">По договор</span>}
+                {!ad.negotiable && <span className="text-sm text-slate-400">Фиксна</span>}
+                {Boolean(ad.trade_possible) && <span className="text-sm text-slate-400">Замена</span>}
               </div>
               <span className="inline-flex items-center gap-1 rounded-lg border border-white/20 bg-[#101f33] px-2 py-0.5 text-xs text-slate-400">
                 <CalendarDays className="h-3 w-3" /> {formatPostedAt(ad.created_at)}
