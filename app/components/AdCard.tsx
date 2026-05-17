@@ -161,21 +161,21 @@ export function AdCard({
       </div>
 
       <div className="grid min-w-0 flex-1 grid-rows-[auto_1fr_auto] gap-1">
-            <div className="relative">
-              <h3 className="truncate pr-20 text-base font-semibold leading-[1.2] text-white">{card.title}</h3>
-              <div className="absolute right-0 top-0 flex items-center gap-1.5">
+            <div className="flex min-w-0 items-center gap-2">
+              <h3 className="min-w-0 flex-1 truncate text-base font-semibold leading-[1.2] text-white">{card.title}</h3>
+              <div className="flex shrink-0 items-center gap-1">
                 <span className="text-[10px] font-medium text-yellow-400">KP:{card.id}</span>
                 <button
                   type="button"
                   onClick={onToggleFavorite}
-                  className={`rounded-full p-1.5 transition ${
+                  className={`rounded-full p-0.5 transition ${
                     isSaved
                       ? 'bg-red-500/20 text-red-300 hover:bg-red-500/30'
                       : 'bg-black/35 text-gray-100 hover:bg-black/50'
                   }`}
                   aria-label={isSaved ? 'Отстрани од зачувани' : 'Зачувај оглас'}
                 >
-                  <Heart className={`h-4 w-4 ${isSaved ? 'fill-current' : ''}`} />
+                  <Heart className={`h-3.5 w-3.5 ${isSaved ? 'fill-current' : ''}`} />
                 </button>
               </div>
             </div>
