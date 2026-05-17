@@ -160,40 +160,38 @@ export function AdCard({
         )}
       </div>
 
-      <div className="flex min-w-0 flex-1 flex-col justify-between">
-            <div>
-              <div className="flex items-start justify-between gap-2">
-                <h3 className="truncate text-base font-semibold leading-[1.2] text-white">{card.title}</h3>
-                <div className="flex shrink-0 items-center gap-1.5">
-                  <span className="text-[10px] font-medium text-yellow-400">KP:{card.id}</span>
-                  <button
-                    type="button"
-                    onClick={onToggleFavorite}
-                    className={`rounded-full p-1.5 transition ${
-                      isSaved
-                        ? 'bg-red-500/20 text-red-300 hover:bg-red-500/30'
-                        : 'bg-black/35 text-gray-100 hover:bg-black/50'
-                    }`}
-                    aria-label={isSaved ? 'Отстрани од зачувани' : 'Зачувај оглас'}
-                  >
-                    <Heart className={`h-4 w-4 ${isSaved ? 'fill-current' : ''}`} />
-                  </button>
-                </div>
+      <div className="flex min-w-0 flex-1 flex-col">
+            <div className="flex items-start justify-between gap-2">
+              <h3 className="truncate text-base font-semibold leading-[1.2] text-white">{card.title}</h3>
+              <div className="flex shrink-0 items-center gap-1.5">
+                <span className="text-[10px] font-medium text-yellow-400">KP:{card.id}</span>
+                <button
+                  type="button"
+                  onClick={onToggleFavorite}
+                  className={`rounded-full p-1.5 transition ${
+                    isSaved
+                      ? 'bg-red-500/20 text-red-300 hover:bg-red-500/30'
+                      : 'bg-black/35 text-gray-100 hover:bg-black/50'
+                  }`}
+                  aria-label={isSaved ? 'Отстрани од зачувани' : 'Зачувај оглас'}
+                >
+                  <Heart className={`h-4 w-4 ${isSaved ? 'fill-current' : ''}`} />
+                </button>
               </div>
-
-              <p className="mt-0.5 flex items-center gap-1 text-xs text-slate-400">
-                <span className="flex items-center gap-1">
-                  <MapPin className="h-3.5 w-3.5" />
-                  {card.location || 'Македонија'}
-                </span>
-              </p>
-
-              <p className="mt-0.5 line-clamp-2 text-xs leading-5 text-slate-300">
-                {card.description || 'Краток преглед на огласот со повеќе детали, состојба и клучни информации.'}
-              </p>
             </div>
 
-            <div className="flex items-center justify-between gap-3">
+            <p className="mt-0.5 flex items-center gap-1 text-xs text-slate-400">
+              <span className="flex items-center gap-1">
+                <MapPin className="h-3.5 w-3.5" />
+                {card.location || 'Македонија'}
+              </span>
+            </p>
+
+            <p className="mt-0.5 line-clamp-2 text-xs leading-5 text-slate-300">
+              {card.description || 'Краток преглед на огласот со повеќе детали, состојба и клучни информации.'}
+            </p>
+
+            <div className="mt-auto flex items-center justify-between gap-3">
               <p className="shrink-0 min-w-fit whitespace-nowrap text-xl font-bold leading-none text-red-500">{card.price.toLocaleString()} <span className="text-white">€</span></p>
               <div className="flex items-center gap-2">
                 <p className="text-[11px] font-medium text-slate-400">Објавен: {postedLabel}</p>
