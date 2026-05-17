@@ -160,7 +160,7 @@ export function AdCard({
         )}
       </div>
 
-      <div className="flex min-w-0 flex-1 flex-col">
+      <div className="grid min-w-0 flex-1 grid-rows-[auto_1fr_auto]">
             <div className="relative">
               <h3 className="truncate pr-12 text-base font-semibold leading-[1.2] text-white">{card.title}</h3>
               <div className="absolute right-0 top-0 flex items-center gap-1.5">
@@ -180,18 +180,20 @@ export function AdCard({
               </div>
             </div>
 
-            <p className="mt-1 flex items-center gap-1 text-xs text-slate-400">
-              <span className="flex items-center gap-1">
-                <MapPin className="h-3.5 w-3.5" />
-                {card.location || 'Македонија'}
-              </span>
-            </p>
+            <div className="self-center">
+              <p className="flex items-center gap-1 text-xs text-slate-400">
+                <span className="flex items-center gap-1">
+                  <MapPin className="h-3.5 w-3.5" />
+                  {card.location || 'Македонија'}
+                </span>
+              </p>
 
-            <p className="mt-0 line-clamp-2 text-xs leading-5 text-slate-300">
-              {card.description || 'Краток преглед на огласот со повеќе детали, состојба и клучни информации.'}
-            </p>
+              <p className="line-clamp-2 text-xs leading-5 text-slate-300">
+                {card.description || 'Краток преглед на огласот со повеќе детали, состојба и клучни информации.'}
+              </p>
+            </div>
 
-            <div className="mt-auto flex items-center justify-between gap-3">
+            <div className="flex items-center justify-between gap-3">
               <p className="shrink-0 min-w-fit whitespace-nowrap text-xl font-bold leading-none text-red-500">{card.price.toLocaleString()} <span className="text-white">€</span></p>
               <div className="flex items-center gap-2">
                 <p className="text-[11px] font-medium text-slate-400">Објавен: {postedLabel}</p>
