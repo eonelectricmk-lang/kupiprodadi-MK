@@ -140,8 +140,8 @@ export function AdCard({
   if (layout === 'list') {
     return (
       <div className="h-full overflow-hidden rounded-2xl border border-white/20 bg-[#0f1a2b] transition duration-200 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-red-950/20">
-        <div className="flex gap-2.5 p-2.5">
-          <div className="relative h-28 w-28 shrink-0 overflow-hidden rounded-xl border border-white/20 bg-[#0a1322] sm:h-32 sm:w-32">
+        <div className="flex gap-3 p-2.5">
+          <div className="relative h-[104px] w-[104px] shrink-0 overflow-hidden rounded-xl border border-white/20 bg-[#0a1322] sm:h-[120px] sm:w-[120px]">
             <img
               src={imageSrc}
               alt={card.title}
