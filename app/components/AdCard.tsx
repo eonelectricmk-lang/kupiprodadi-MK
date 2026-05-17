@@ -160,7 +160,7 @@ export function AdCard({
         )}
       </div>
 
-      <div className="flex min-w-0 flex-1 flex-col overflow-hidden">
+      <div className="min-w-0 flex-1">
             <div className="flex items-start justify-between gap-2">
               <h3 className="truncate text-base font-semibold leading-[1.2] text-white">{card.title}</h3>
               <button
@@ -177,7 +177,7 @@ export function AdCard({
               </button>
             </div>
 
-            <p className="mt-0.5 flex items-center gap-1 text-xs text-slate-400">
+            <p className="mt-1 flex items-center gap-1 text-xs text-slate-400">
               <span className="flex items-center gap-1">
                 <MapPin className="h-3.5 w-3.5" />
                 {card.location || 'Македонија'}
@@ -185,11 +185,11 @@ export function AdCard({
               <span className="ml-auto text-yellow-400">KP:{card.id}</span>
             </p>
 
-            <p className="mt-0.5 min-w-0 flex-1 overflow-hidden line-clamp-2 text-xs leading-5 text-slate-300">
+            <p className="mt-1 min-w-0 line-clamp-2 text-xs leading-5 text-slate-300">
               {card.description || 'Краток преглед на огласот со повеќе детали, состојба и клучни информации.'}
             </p>
 
-            <div className="mt-auto flex items-center justify-between gap-3">
+            <div className="mt-1.5 flex items-center justify-between gap-3">
               <p className="shrink-0 min-w-fit whitespace-nowrap text-xl font-bold leading-none text-red-500">{card.price.toLocaleString()} <span className="text-white">€</span></p>
               <div className="flex items-center gap-2">
                 <p className="text-[11px] font-medium text-slate-400">Објавен: {postedLabel}</p>
