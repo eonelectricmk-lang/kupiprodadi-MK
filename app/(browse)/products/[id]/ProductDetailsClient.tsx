@@ -653,7 +653,11 @@ export default function ProductDetailsClient({ id }: { id: string }) {
                       <button
                         type="button"
                         onClick={() => setShowSellerPhone((prev) => !prev)}
-                        className="flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-emerald-800 text-sm font-bold text-white transition hover:bg-emerald-700"
+                        className={`flex h-11 w-full items-center justify-center gap-2 rounded-xl text-sm font-bold transition ${
+                          showSellerPhone
+                            ? 'border border-emerald-700/55 bg-emerald-900/20 text-emerald-400 hover:bg-emerald-900/30'
+                            : 'bg-emerald-800 text-white hover:bg-emerald-700'
+                        }`}
                       >
                         {showSellerPhone ? 'Затвори' : 'Прикажи контакт'}
                       </button>
@@ -663,7 +667,7 @@ export default function ProductDetailsClient({ id }: { id: string }) {
                           {!Boolean(ad.hide_phone) && (
                             <a
                               href={`tel:${sellerPhone.replace(/\s/g, '')}`}
-                              className="flex h-11 w-full items-center justify-center gap-2 rounded-xl border border-emerald-700/55 bg-emerald-900/20 text-base font-bold text-emerald-400 transition hover:bg-emerald-900/30"
+                              className="flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-emerald-800 text-sm font-bold text-white transition hover:bg-emerald-700"
                             >
                               <Phone className="h-4 w-4" /> {sellerPhone}
                             </a>
