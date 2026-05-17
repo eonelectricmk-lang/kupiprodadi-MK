@@ -165,6 +165,25 @@ html.light .admin-dark-button * {
   display: none;
 }
 
+.scrollbar-dark {
+  scrollbar-width: thin;
+  scrollbar-color: #334155 transparent;
+}
+
+.scrollbar-dark::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+.scrollbar-dark::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar-dark::-webkit-scrollbar-thumb {
+  background: #334155;
+  border-radius: 999px;
+}
+
 html.light .sell-safe-badge {
   background: #dcfce7 !important;
   border-color: #86efac !important;
