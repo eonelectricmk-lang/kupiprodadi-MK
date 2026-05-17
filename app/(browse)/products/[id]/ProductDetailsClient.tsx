@@ -1011,19 +1011,19 @@ export default function ProductDetailsClient({ id }: { id: string }) {
                                     <a href={viberEnabled ? viberUrl(sellerPhone) : '#'} target={viberEnabled ? '_blank' : undefined} rel={viberEnabled ? 'noopener noreferrer' : undefined} className={`flex w-full items-center justify-center gap-1 rounded-lg px-1.5 py-1.5 text-[11px] font-bold transition ${viberEnabled ? 'border border-transparent bg-purple-800 text-white hover:bg-purple-700' : 'border border-slate-700/30 bg-slate-800/20 text-slate-500 opacity-60 cursor-default pointer-events-none'}`}>
                                       <ViberIcon className="h-2.5 w-2.5" /> Viber
                                     </a>
-                                    {!viberEnabled && <span className="text-[10px] text-slate-600">Не користи Viber</span>}
+                                    <span className={`text-[11px] ${viberEnabled ? 'text-slate-300' : 'text-slate-600'}`}>{viberEnabled ? 'достапно' : 'недостапно'}</span>
                                   </div>
                                   <div className="flex flex-1 flex-col items-center gap-0.5">
                                     <a href={whatsappEnabled ? waUrl(sellerPhone) : '#'} target={whatsappEnabled ? '_blank' : undefined} rel={whatsappEnabled ? 'noopener noreferrer' : undefined} className={`flex w-full items-center justify-center gap-1 rounded-lg px-1.5 py-1.5 text-[11px] font-bold transition ${whatsappEnabled ? 'border border-transparent bg-emerald-800 text-white hover:bg-emerald-700' : 'border border-slate-700/30 bg-slate-800/20 text-slate-500 opacity-60 cursor-default pointer-events-none'}`}>
                                       <WhatsAppIcon className="h-2.5 w-2.5" /> WhatsApp
                                     </a>
-                                    {!whatsappEnabled && <span className="text-[10px] text-slate-600">Не користи WhatsApp</span>}
+                                    <span className={`text-[11px] ${whatsappEnabled ? 'text-slate-300' : 'text-slate-600'}`}>{whatsappEnabled ? 'достапно' : 'недостапно'}</span>
                                   </div>
                                   <div className="flex flex-1 flex-col items-center gap-0.5">
                                     <a href={telegramEnabled ? tgUrl(sellerPhone) : '#'} target={telegramEnabled ? '_blank' : undefined} rel={telegramEnabled ? 'noopener noreferrer' : undefined} className={`flex w-full items-center justify-center gap-1 rounded-lg px-1.5 py-1.5 text-[11px] font-bold transition ${telegramEnabled ? 'border border-transparent bg-sky-800 text-white hover:bg-sky-700' : 'border border-slate-700/30 bg-slate-800/20 text-slate-500 opacity-60 cursor-default pointer-events-none'}`}>
                                       <TelegramIcon className="h-2.5 w-2.5" /> Telegram
                                     </a>
-                                    {!telegramEnabled && <span className="text-[10px] text-slate-600">Не користи Telegram</span>}
+                                    <span className={`text-[11px] ${telegramEnabled ? 'text-slate-300' : 'text-slate-600'}`}>{telegramEnabled ? 'достапно' : 'недостапно'}</span>
                                   </div>
                                 </div>
                               </div>
