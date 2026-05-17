@@ -1080,7 +1080,7 @@ export default function ProductDetailsClient({ id }: { id: string }) {
                     <MapPin className="mt-[3px] h-3 w-3 shrink-0 text-emerald-400" />
                     <div className="min-w-0">
                       <p className="text-xs font-semibold text-white uppercase tracking-tighter leading-none">Локација</p>
-                      <p className="mt-0.5 text-xs">
+                      <p className="mt-0.5 text-xs text-slate-400">
                         {cleanLoc(ad.city) || cleanLoc(ad.location) || 'Македонија'}
                         {ad.neighborhood ? `, ${cleanLoc(ad.neighborhood)}` : ''}
                       </p>
