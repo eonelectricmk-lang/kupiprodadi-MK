@@ -558,7 +558,7 @@ export default function ProductDetailsClient({ id }: { id: string }) {
           )}
 
           {/* 3. Title + KP */}
-          <div className="-mt-1 flex items-start justify-between gap-2">
+          <div className="mt-1 flex items-start justify-between gap-2">
             <h1 className="text-xl font-bold leading-tight text-white">{ad.title}</h1>
             <span className="shrink-0 mt-[5px] rounded-lg border border-yellow-500/20 bg-yellow-500/5 px-2 py-1 text-xs font-bold text-yellow-500/90">KP:{ad.id}</span>
           </div>
@@ -573,9 +573,8 @@ export default function ProductDetailsClient({ id }: { id: string }) {
               {!ad.negotiable && Boolean(ad.trade_possible) && <span className="text-xs text-slate-400"> | </span>}
               {Boolean(ad.trade_possible) && <span className="text-xs text-slate-400 uppercase">Замена</span>}
             </div>
-            <div className="flex flex-wrap items-center gap-1.5 justify-end">
+            <div className="flex flex-wrap items-center gap-x-2 justify-end">
               <span className="text-xs text-slate-400">Состојба: {ad.condition || 'Многу добро'}</span>
-              <span className="text-xs text-slate-400">|</span>
               <span className="text-xs text-slate-400">Превземање: {ad.delivery || 'Лично'}</span>
             </div>
           </div>
