@@ -1076,13 +1076,16 @@ export default function ProductDetailsClient({ id }: { id: string }) {
             <div className="mt-3 rounded-xl border border-white/20 overflow-hidden">
               <div className="grid grid-cols-2 lg:grid-cols-4 bg-white/10 gap-px">
                 <div className="bg-[#101f33] py-2 px-3">
-                  <p className="flex items-center gap-2 leading-none text-xs font-semibold text-white uppercase tracking-tighter">
-                    <MapPin className="h-3 w-3 text-emerald-400" /> Локација
-                  </p>
-                  <p className="mt-0.5 text-xs">
-                    {cleanLoc(ad.city) || cleanLoc(ad.location) || 'Македонија'}
-                    {ad.neighborhood ? `, ${cleanLoc(ad.neighborhood)}` : ''}
-                  </p>
+                  <div className="flex gap-2">
+                    <MapPin className="mt-[3px] h-3 w-3 shrink-0 text-emerald-400" />
+                    <div className="min-w-0">
+                      <p className="text-xs font-semibold text-white uppercase tracking-tighter leading-none">Локација</p>
+                      <p className="mt-0.5 text-xs">
+                        {cleanLoc(ad.city) || cleanLoc(ad.location) || 'Македонија'}
+                        {ad.neighborhood ? `, ${cleanLoc(ad.neighborhood)}` : ''}
+                      </p>
+                    </div>
+                  </div>
                 </div>
                 <div className="bg-[#101f33] py-2 px-3">
                   <p className="leading-none text-xs font-semibold text-white uppercase tracking-tighter">Состојба</p>
@@ -1093,10 +1096,13 @@ export default function ProductDetailsClient({ id }: { id: string }) {
                   <p className="mt-0.5 text-xs text-slate-400">{ad.delivery || 'Лично'}</p>
                 </div>
                 <div className="bg-[#101f33] py-2 px-3">
-                  <p className="flex items-center gap-2 leading-none text-xs font-semibold text-white uppercase tracking-tighter">
-                    <CheckCircle className="h-3 w-3 text-emerald-400" /> Замена
-                  </p>
-                  <p className="mt-0.5 text-xs text-slate-400">{Boolean(ad.trade_possible) ? 'Можна' : '—'}</p>
+                  <div className="flex gap-2">
+                    <CheckCircle className="mt-[3px] h-3 w-3 shrink-0 text-emerald-400" />
+                    <div className="min-w-0">
+                      <p className="text-xs font-semibold text-white uppercase tracking-tighter leading-none">Замена</p>
+                      <p className="mt-0.5 text-xs text-slate-400">{Boolean(ad.trade_possible) ? 'Можна' : '—'}</p>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
