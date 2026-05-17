@@ -187,7 +187,7 @@ export function AdCard({
               </span>
             </p>
 
-            <p className="mt-0.5 line-clamp-2 text-xs leading-5 text-slate-300">
+            <p className="mt-0 line-clamp-2 text-xs leading-5 text-slate-300">
               {card.description || 'Краток преглед на огласот со повеќе детали, состојба и клучни информации.'}
             </p>
 
