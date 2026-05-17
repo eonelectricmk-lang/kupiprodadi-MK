@@ -161,9 +161,9 @@ export function AdCard({
       </div>
 
       <div className="flex min-w-0 flex-1 flex-col">
-            <div className="flex items-start justify-between gap-2">
-              <h3 className="truncate text-base font-semibold leading-[1.2] text-white">{card.title}</h3>
-              <div className="flex shrink-0 items-center gap-1.5">
+            <div className="relative">
+              <h3 className="truncate pr-12 text-base font-semibold leading-[1.2] text-white">{card.title}</h3>
+              <div className="absolute right-0 top-0 flex items-center gap-1.5">
                 <span className="text-[10px] font-medium text-yellow-400">KP:{card.id}</span>
                 <button
                   type="button"
@@ -191,7 +191,7 @@ export function AdCard({
               {card.description || 'Краток преглед на огласот со повеќе детали, состојба и клучни информации.'}
             </p>
 
-            <div className="mt-auto flex items-center justify-between gap-3">
+            <div className="mt-1 flex items-center justify-between gap-3">
               <p className="shrink-0 min-w-fit whitespace-nowrap text-xl font-bold leading-none text-red-500">{card.price.toLocaleString()} <span className="text-white">€</span></p>
               <div className="flex items-center gap-2">
                 <p className="text-[11px] font-medium text-slate-400">Објавен: {postedLabel}</p>
