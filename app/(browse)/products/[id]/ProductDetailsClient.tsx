@@ -681,11 +681,11 @@ export default function ProductDetailsClient({ id }: { id: string }) {
                                     <ViberIcon className="h-3 w-3" /> Viber
                                   </a>
                                 ) : (
-                                  <div className="flex w-full items-center justify-center rounded-lg border border-slate-600/50 bg-slate-800/30 px-1.5 py-2 text-[11px] font-bold text-slate-300">
-                                    <ViberIcon className="h-3 w-3" /> Viber
+                                  <div className="flex w-full items-center justify-center rounded-lg border border-slate-600/40 bg-slate-800/20 px-1.5 py-2 text-[11px] font-bold text-slate-500/80">
+                                    <ViberIcon className="h-3 w-3 opacity-60" /> <span className="opacity-60">Viber</span>
                                   </div>
                                 )}
-                                <span className={`text-[11px] ${viberEnabled ? 'text-slate-300' : 'text-slate-500'}`}>{viberEnabled ? 'достапно' : 'недостапно'}</span>
+                                <span className={`text-[11px] ${viberEnabled ? 'text-slate-300' : 'text-slate-600'}`}>{viberEnabled ? 'достапно' : 'недостапно'}</span>
                               </div>
                               <div className="flex flex-1 flex-col items-center gap-px">
                                 {whatsappEnabled ? (
