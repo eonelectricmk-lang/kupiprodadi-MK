@@ -675,15 +675,24 @@ export default function ProductDetailsClient({ id }: { id: string }) {
 
                           {!Boolean(ad.hide_phone) && (
                             <div className="flex gap-1">
-                              <a href={viberEnabled ? viberUrl(sellerPhone) : '#'} target={viberEnabled ? '_blank' : undefined} rel={viberEnabled ? 'noopener noreferrer' : undefined} className={`flex-1 flex items-center justify-center gap-1 rounded-lg px-1.5 py-2 text-[11px] font-bold transition ${viberEnabled ? 'border border-transparent bg-purple-800 text-white hover:bg-purple-700' : 'border border-purple-700/25 bg-purple-950/40 text-purple-400 opacity-70 cursor-default pointer-events-none'}`}>
-                                <ViberIcon className="h-3 w-3" /> Viber
-                              </a>
-                              <a href={whatsappEnabled ? waUrl(sellerPhone) : '#'} target={whatsappEnabled ? '_blank' : undefined} rel={whatsappEnabled ? 'noopener noreferrer' : undefined} className={`flex-1 flex items-center justify-center gap-1 rounded-lg px-1.5 py-2 text-[11px] font-bold transition ${whatsappEnabled ? 'border border-transparent bg-emerald-800 text-white hover:bg-emerald-700' : 'border border-emerald-700/25 bg-emerald-950/40 text-emerald-400 opacity-70 cursor-default pointer-events-none'}`}>
-                                <WhatsAppIcon className="h-3 w-3" /> WhatsApp
-                              </a>
-                              <a href={telegramEnabled ? tgUrl(sellerPhone) : '#'} target={telegramEnabled ? '_blank' : undefined} rel={telegramEnabled ? 'noopener noreferrer' : undefined} className={`flex-1 flex items-center justify-center gap-1 rounded-lg px-1.5 py-2 text-[11px] font-bold transition ${telegramEnabled ? 'border border-transparent bg-sky-800 text-white hover:bg-sky-700' : 'border border-sky-700/25 bg-sky-950/40 text-sky-400 opacity-70 cursor-default pointer-events-none'}`}>
-                                <TelegramIcon className="h-3 w-3" /> Telegram
-                              </a>
+                              <div className="flex flex-1 flex-col items-center gap-0.5">
+                                <a href={viberEnabled ? viberUrl(sellerPhone) : '#'} target={viberEnabled ? '_blank' : undefined} rel={viberEnabled ? 'noopener noreferrer' : undefined} className={`flex w-full items-center justify-center gap-1 rounded-lg px-1.5 py-2 text-[11px] font-bold transition ${viberEnabled ? 'border border-transparent bg-purple-800 text-white hover:bg-purple-700' : 'border border-slate-700/30 bg-slate-800/20 text-slate-500 opacity-60 cursor-default pointer-events-none'}`}>
+                                  <ViberIcon className="h-3 w-3" /> Viber
+                                </a>
+                                {!viberEnabled && <span className="text-[10px] text-slate-600">Не користи Viber</span>}
+                              </div>
+                              <div className="flex flex-1 flex-col items-center gap-0.5">
+                                <a href={whatsappEnabled ? waUrl(sellerPhone) : '#'} target={whatsappEnabled ? '_blank' : undefined} rel={whatsappEnabled ? 'noopener noreferrer' : undefined} className={`flex w-full items-center justify-center gap-1 rounded-lg px-1.5 py-2 text-[11px] font-bold transition ${whatsappEnabled ? 'border border-transparent bg-emerald-800 text-white hover:bg-emerald-700' : 'border border-slate-700/30 bg-slate-800/20 text-slate-500 opacity-60 cursor-default pointer-events-none'}`}>
+                                  <WhatsAppIcon className="h-3 w-3" /> WhatsApp
+                                </a>
+                                {!whatsappEnabled && <span className="text-[10px] text-slate-600">Не користи WhatsApp</span>}
+                              </div>
+                              <div className="flex flex-1 flex-col items-center gap-0.5">
+                                <a href={telegramEnabled ? tgUrl(sellerPhone) : '#'} target={telegramEnabled ? '_blank' : undefined} rel={telegramEnabled ? 'noopener noreferrer' : undefined} className={`flex w-full items-center justify-center gap-1 rounded-lg px-1.5 py-2 text-[11px] font-bold transition ${telegramEnabled ? 'border border-transparent bg-sky-800 text-white hover:bg-sky-700' : 'border border-slate-700/30 bg-slate-800/20 text-slate-500 opacity-60 cursor-default pointer-events-none'}`}>
+                                  <TelegramIcon className="h-3 w-3" /> Telegram
+                                </a>
+                                {!telegramEnabled && <span className="text-[10px] text-slate-600">Не користи Telegram</span>}
+                              </div>
                             </div>
                           )}
 
@@ -972,15 +981,24 @@ export default function ProductDetailsClient({ id }: { id: string }) {
                           {!Boolean(ad.hide_phone) && (
                               <div className="border-t border-white/10 pt-3 mt-4">
                                 <div className="flex gap-1 px-1">
-                                  <a href={viberEnabled ? viberUrl(sellerPhone) : '#'} target={viberEnabled ? '_blank' : undefined} rel={viberEnabled ? 'noopener noreferrer' : undefined} className={`flex-1 justify-center inline-flex items-center gap-1 rounded-lg px-1.5 py-1.5 text-[11px] font-bold transition ${viberEnabled ? 'border border-transparent bg-purple-800 text-white hover:bg-purple-700' : 'border border-purple-700/25 bg-purple-950/40 text-purple-400 opacity-70 cursor-default pointer-events-none'}`}>
-                                    <ViberIcon className="h-2.5 w-2.5" /> Viber
-                                  </a>
-                                  <a href={whatsappEnabled ? waUrl(sellerPhone) : '#'} target={whatsappEnabled ? '_blank' : undefined} rel={whatsappEnabled ? 'noopener noreferrer' : undefined} className={`flex-1 justify-center inline-flex items-center gap-1 rounded-lg px-1.5 py-1.5 text-[11px] font-bold transition ${whatsappEnabled ? 'border border-transparent bg-emerald-800 text-white hover:bg-emerald-700' : 'border border-emerald-700/25 bg-emerald-950/40 text-emerald-400 opacity-70 cursor-default pointer-events-none'}`}>
-                                    <WhatsAppIcon className="h-2.5 w-2.5" /> WhatsApp
-                                  </a>
-                                  <a href={telegramEnabled ? tgUrl(sellerPhone) : '#'} target={telegramEnabled ? '_blank' : undefined} rel={telegramEnabled ? 'noopener noreferrer' : undefined} className={`flex-1 justify-center inline-flex items-center gap-1 rounded-lg px-1.5 py-1.5 text-[11px] font-bold transition ${telegramEnabled ? 'border border-transparent bg-sky-800 text-white hover:bg-sky-700' : 'border border-sky-700/25 bg-sky-950/40 text-sky-400 opacity-70 cursor-default pointer-events-none'}`}>
-                                    <TelegramIcon className="h-2.5 w-2.5" /> Telegram
-                                  </a>
+                                  <div className="flex flex-1 flex-col items-center gap-0.5">
+                                    <a href={viberEnabled ? viberUrl(sellerPhone) : '#'} target={viberEnabled ? '_blank' : undefined} rel={viberEnabled ? 'noopener noreferrer' : undefined} className={`flex w-full items-center justify-center gap-1 rounded-lg px-1.5 py-1.5 text-[11px] font-bold transition ${viberEnabled ? 'border border-transparent bg-purple-800 text-white hover:bg-purple-700' : 'border border-slate-700/30 bg-slate-800/20 text-slate-500 opacity-60 cursor-default pointer-events-none'}`}>
+                                      <ViberIcon className="h-2.5 w-2.5" /> Viber
+                                    </a>
+                                    {!viberEnabled && <span className="text-[10px] text-slate-600">Не користи Viber</span>}
+                                  </div>
+                                  <div className="flex flex-1 flex-col items-center gap-0.5">
+                                    <a href={whatsappEnabled ? waUrl(sellerPhone) : '#'} target={whatsappEnabled ? '_blank' : undefined} rel={whatsappEnabled ? 'noopener noreferrer' : undefined} className={`flex w-full items-center justify-center gap-1 rounded-lg px-1.5 py-1.5 text-[11px] font-bold transition ${whatsappEnabled ? 'border border-transparent bg-emerald-800 text-white hover:bg-emerald-700' : 'border border-slate-700/30 bg-slate-800/20 text-slate-500 opacity-60 cursor-default pointer-events-none'}`}>
+                                      <WhatsAppIcon className="h-2.5 w-2.5" /> WhatsApp
+                                    </a>
+                                    {!whatsappEnabled && <span className="text-[10px] text-slate-600">Не користи WhatsApp</span>}
+                                  </div>
+                                  <div className="flex flex-1 flex-col items-center gap-0.5">
+                                    <a href={telegramEnabled ? tgUrl(sellerPhone) : '#'} target={telegramEnabled ? '_blank' : undefined} rel={telegramEnabled ? 'noopener noreferrer' : undefined} className={`flex w-full items-center justify-center gap-1 rounded-lg px-1.5 py-1.5 text-[11px] font-bold transition ${telegramEnabled ? 'border border-transparent bg-sky-800 text-white hover:bg-sky-700' : 'border border-slate-700/30 bg-slate-800/20 text-slate-500 opacity-60 cursor-default pointer-events-none'}`}>
+                                      <TelegramIcon className="h-2.5 w-2.5" /> Telegram
+                                    </a>
+                                    {!telegramEnabled && <span className="text-[10px] text-slate-600">Не користи Telegram</span>}
+                                  </div>
                                   <a href={whatsappEnabled ? waUrl(sellerPhone) : '#'} target={whatsappEnabled ? '_blank' : undefined} rel={whatsappEnabled ? 'noopener noreferrer' : undefined} className={`flex-1 justify-center inline-flex items-center gap-1 rounded-lg px-1.5 py-1.5 text-[11px] font-bold transition ${whatsappEnabled ? 'bg-emerald-900/40 text-emerald-300 hover:bg-emerald-800/50' : 'bg-slate-800/40 text-slate-600 cursor-default pointer-events-none'}`}>
                                     <WhatsAppIcon className="h-2.5 w-2.5" /> WhatsApp
                                   </a>
