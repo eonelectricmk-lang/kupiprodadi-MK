@@ -526,7 +526,7 @@ export default function ProductDetailsClient({ id }: { id: string }) {
               </div>
               <p className="text-center text-xs text-slate-400">Огласот е испратен на преглед и ќе биде објавен веднаш штом биде одобрен.</p>
               <div className="flex w-full flex-col gap-1.5 sm:w-auto sm:flex-row sm:gap-2">
-                <Link href="/profile" className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-slate-600 px-6 py-3 text-sm font-semibold text-white transition hover:bg-slate-500 sm:w-auto sm:min-w-[160px]">
+                <Link href="/profile" className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-cyan-700 px-6 py-3 text-sm font-semibold text-white transition hover:bg-cyan-600 sm:w-auto sm:min-w-[160px]">
                   Врати се на профил
                 </Link>
                 <Link href={`/sell?edit=${ad.id}`} className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-amber-800 px-6 py-3 text-sm font-semibold text-white transition hover:bg-amber-700 sm:w-auto sm:min-w-[160px]">
