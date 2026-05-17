@@ -649,39 +649,41 @@ export default function ProductDetailsClient({ id }: { id: string }) {
 
                 {sellerPhone ? (
                   <div className="overflow-hidden rounded-lg border border-emerald-700/55 bg-[#101a2b] transition">
-                    <div className="px-4 pb-3 pt-2">
-                      <p className="flex items-center justify-center gap-1.5 text-center text-base font-bold text-emerald-500">
-                        Контактирајте го огласувачот
-                      </p>
-
+                    <div className="space-y-3 p-3">
                       <button
                         type="button"
                         onClick={() => setShowSellerPhone((prev) => !prev)}
-                        className="mx-auto mt-2 flex h-11 w-full max-w-[182px] items-center justify-center gap-1 rounded-xl bg-emerald-800 px-1 py-2.5 text-sm font-bold text-white transition hover:bg-emerald-700"
+                        className="flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-emerald-800 text-sm font-bold text-white transition hover:bg-emerald-700"
                       >
-                        {!showSellerPhone && <Phone className="h-4 w-4" />}{showSellerPhone ? (Boolean(ad.hide_phone) ? 'Прати порака' : sellerPhone) : 'Прикажи контакт'}
+                        {showSellerPhone ? 'Затвори' : 'Прикажи контакт'}
                       </button>
 
                       {showSellerPhone && (
                         <>
                           {!Boolean(ad.hide_phone) && (
-                            <div className="border-t border-white/10 pt-3 mt-4">
-                              <div className="flex gap-1">
-                                  <a href={viberEnabled ? viberUrl(sellerPhone) : '#'} target={viberEnabled ? '_blank' : undefined} rel={viberEnabled ? 'noopener noreferrer' : undefined} className={`flex-1 flex items-center justify-center gap-1 rounded-lg px-1.5 py-2 text-[11px] font-bold transition ${viberEnabled ? 'bg-purple-900/40 text-purple-300 hover:bg-purple-800/50' : 'bg-slate-800/40 text-slate-600 cursor-default pointer-events-none'}`}>
-                                    <ViberIcon className="h-3 w-3" /> Viber
-                                  </a>
-                                  <a href={whatsappEnabled ? waUrl(sellerPhone) : '#'} target={whatsappEnabled ? '_blank' : undefined} rel={whatsappEnabled ? 'noopener noreferrer' : undefined} className={`flex-1 flex items-center justify-center gap-1 rounded-lg px-1.5 py-2 text-[11px] font-bold transition ${whatsappEnabled ? 'bg-emerald-900/40 text-emerald-300 hover:bg-emerald-800/50' : 'bg-slate-800/40 text-slate-600 cursor-default pointer-events-none'}`}>
-                                    <WhatsAppIcon className="h-3 w-3" /> WhatsApp
-                                  </a>
-                                  <a href={telegramEnabled ? tgUrl(sellerPhone) : '#'} target={telegramEnabled ? '_blank' : undefined} rel={telegramEnabled ? 'noopener noreferrer' : undefined} className={`flex-1 flex items-center justify-center gap-1 rounded-lg px-1.5 py-2 text-[11px] font-bold transition ${telegramEnabled ? 'bg-sky-900/40 text-sky-300 hover:bg-sky-800/50' : 'bg-slate-800/40 text-slate-600 cursor-default pointer-events-none'}`}>
-                                    <TelegramIcon className="h-3 w-3" /> Telegram
-                                  </a>
-                                </div>
-                              </div>
+                            <a
+                              href={`tel:${sellerPhone.replace(/\s/g, '')}`}
+                              className="flex h-11 w-full items-center justify-center gap-2 rounded-xl border border-emerald-700/55 bg-emerald-900/20 text-base font-bold text-emerald-400 transition hover:bg-emerald-900/30"
+                            >
+                              <Phone className="h-4 w-4" /> {sellerPhone}
+                            </a>
                           )}
 
-                          <div className={`${!Boolean(ad.hide_phone) ? 'border-t border-white/10 mt-4' : ''} pt-3`}>
-                            {!ad.is_crm && (
+                          {!Boolean(ad.hide_phone) && (
+                            <div className="flex gap-1">
+                              <a href={viberEnabled ? viberUrl(sellerPhone) : '#'} target={viberEnabled ? '_blank' : undefined} rel={viberEnabled ? 'noopener noreferrer' : undefined} className={`flex-1 flex items-center justify-center gap-1 rounded-lg px-1.5 py-2 text-[11px] font-bold transition ${viberEnabled ? 'bg-purple-900/40 text-purple-300 hover:bg-purple-800/50' : 'bg-slate-800/40 text-slate-600 cursor-default pointer-events-none'}`}>
+                                <ViberIcon className="h-3 w-3" /> Viber
+                              </a>
+                              <a href={whatsappEnabled ? waUrl(sellerPhone) : '#'} target={whatsappEnabled ? '_blank' : undefined} rel={whatsappEnabled ? 'noopener noreferrer' : undefined} className={`flex-1 flex items-center justify-center gap-1 rounded-lg px-1.5 py-2 text-[11px] font-bold transition ${whatsappEnabled ? 'bg-emerald-900/40 text-emerald-300 hover:bg-emerald-800/50' : 'bg-slate-800/40 text-slate-600 cursor-default pointer-events-none'}`}>
+                                <WhatsAppIcon className="h-3 w-3" /> WhatsApp
+                              </a>
+                              <a href={telegramEnabled ? tgUrl(sellerPhone) : '#'} target={telegramEnabled ? '_blank' : undefined} rel={telegramEnabled ? 'noopener noreferrer' : undefined} className={`flex-1 flex items-center justify-center gap-1 rounded-lg px-1.5 py-2 text-[11px] font-bold transition ${telegramEnabled ? 'bg-sky-900/40 text-sky-300 hover:bg-sky-800/50' : 'bg-slate-800/40 text-slate-600 cursor-default pointer-events-none'}`}>
+                                <TelegramIcon className="h-3 w-3" /> Telegram
+                              </a>
+                            </div>
+                          )}
+
+                          {!ad.is_crm && (
                             <form onSubmit={onSendMessage} className="space-y-3">
                               <textarea
                                 required
@@ -700,8 +702,7 @@ export default function ProductDetailsClient({ id }: { id: string }) {
                               </button>
                               {contactStatus && <p className="text-center text-xs text-slate-400">{contactStatus}</p>}
                             </form>
-                            )}
-                          </div>
+                          )}
                         </>
                       )}
                     </div>
