@@ -619,16 +619,6 @@ export default function ProductDetailsClient({ id }: { id: string }) {
             </div>
           </div>
 
-          {Boolean(ad.trade_possible) && (
-            <div className="flex items-center gap-2 rounded-lg border border-white/10 bg-[#101f33] px-3 py-1.5">
-              <ArrowLeftRight className="h-3.5 w-3.5 text-emerald-400" />
-              <div>
-                <p className="text-xs font-bold text-white uppercase tracking-tighter">Замена</p>
-                <p className="text-[11px] text-slate-400">Можна</p>
-              </div>
-            </div>
-          )}
-
           {/* 5. Description */}
           <p className={`max-w-[95%] text-sm leading-relaxed text-slate-300 whitespace-pre-line break-words ${!descExpanded ? 'line-clamp-6' : ''}`}>
             {ad.description}
@@ -1083,9 +1073,9 @@ export default function ProductDetailsClient({ id }: { id: string }) {
               </div>
             </div>
 
-            <div className="mt-3 rounded-xl border border-white/20 bg-[#101f33] text-sm text-slate-400">
-              <div className="grid grid-cols-3 divide-x divide-white/10">
-                <div className="py-2 px-3">
+            <div className="mt-3 rounded-xl border border-white/20 overflow-hidden">
+              <div className="grid grid-cols-2 lg:grid-cols-4 bg-white/10 gap-px">
+                <div className="bg-[#101f33] py-2 px-3">
                   <p className="flex items-center gap-2 font-bold text-white uppercase tracking-tighter">
                     <MapPin className="h-3.5 w-3.5 text-emerald-400" /> Локација
                   </p>
@@ -1094,22 +1084,20 @@ export default function ProductDetailsClient({ id }: { id: string }) {
                     {ad.neighborhood ? `, ${cleanLoc(ad.neighborhood)}` : ''}
                   </p>
                 </div>
-                <div className="py-2 px-3">
+                <div className="bg-[#101f33] py-2 px-3">
                   <p className="font-bold text-white uppercase tracking-tighter">Состојба</p>
                   <p className="mt-0.5 text-slate-400">{ad.condition || 'Многу добро'}</p>
                 </div>
-                <div className="py-2 px-3">
+                <div className="bg-[#101f33] py-2 px-3">
                   <p className="font-bold text-white uppercase tracking-tighter">Превземање</p>
                   <p className="mt-0.5 text-slate-400">{ad.delivery || 'Лично'}</p>
                 </div>
-                {Boolean(ad.trade_possible) && (
-                <div className="py-2 px-3">
+                <div className="bg-[#101f33] py-2 px-3">
                   <p className="flex items-center gap-2 font-bold text-white uppercase tracking-tighter">
                     <ArrowLeftRight className="h-3.5 w-3.5 text-emerald-400" /> Замена
                   </p>
-                  <p className="mt-0.5 text-slate-400">Можна</p>
+                  <p className="mt-0.5 text-slate-400">{Boolean(ad.trade_possible) ? 'Можна' : '—'}</p>
                 </div>
-                )}
               </div>
             </div>
 
