@@ -558,7 +558,7 @@ export default function ProductDetailsClient({ id }: { id: string }) {
           )}
 
           {/* 3. Title + KP */}
-          <div className="flex items-start justify-between gap-2">
+          <div className="-mt-1 flex items-start justify-between gap-2">
             <h1 className="text-xl font-bold leading-tight text-white">{ad.title}</h1>
             <span className="shrink-0 mt-[5px] rounded-lg border border-yellow-500/20 bg-yellow-500/5 px-2 py-1 text-xs font-bold text-yellow-500/90">KP:{ad.id}</span>
           </div>
@@ -580,7 +580,7 @@ export default function ProductDetailsClient({ id }: { id: string }) {
             </div>
           </div>
 
-          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-slate-400">
+          <div className="-mt-0.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-slate-400">
             <span className="inline-flex items-center gap-1"><MapPin className="h-3 w-3" /> {ad.city || ad.location || 'Македонија'}{ad.neighborhood ? `, ${ad.neighborhood}` : ''}</span>
             <span className="inline-flex items-center gap-1"><CalendarDays className="h-3 w-3" /> {formatPostedAt(ad.created_at)}</span>
             <span className="inline-flex items-center gap-1"><Eye className="h-3 w-3" /> {Number(ad.views || 0).toLocaleString('mk-MK')} прегледи</span>
@@ -598,7 +598,7 @@ export default function ProductDetailsClient({ id }: { id: string }) {
           )}
 
           {/* 6. Seller & Contact */}
-          <div className="rounded-xl border border-white/10 bg-[#101f33] p-3 space-y-3">
+          <div className="-mt-1 rounded-xl border border-white/10 bg-[#101f33] p-3 space-y-3">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#172945] border border-white/10">
