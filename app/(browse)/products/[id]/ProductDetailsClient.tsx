@@ -574,7 +574,7 @@ export default function ProductDetailsClient({ id }: { id: string }) {
           </div>
 
           {images.length > 1 && (
-            <div ref={thumbRef} className="flex gap-2 overflow-x-auto scrollbar-none">
+            <div ref={thumbRef} className="flex gap-2 overflow-x-auto no-scrollbar">
               {images.slice(0, 8).map((image, idx) => (
                 <button key={`${image}-${idx}`} type="button" onClick={() => setActiveImage(idx)}
                   className={`shrink-0 overflow-hidden rounded-lg border-2 transition ${activeImage === idx ? 'border-red-500' : 'border-transparent'}`}>
@@ -716,7 +716,7 @@ export default function ProductDetailsClient({ id }: { id: string }) {
                 <h3 className="text-sm font-semibold text-slate-300">Други огласи од овој огласувач</h3>
                 <Link href={`/products?seller_id=${ad.seller_id}`} className="text-xs font-bold text-white hover:text-slate-300 transition">Види ги сите &gt;</Link>
               </div>
-              <div className="flex gap-3 overflow-x-auto pb-1 scrollbar-dark">
+              <div className="flex gap-3 overflow-x-auto pb-1 no-scrollbar">
                 {sellerProducts.slice(0, 6).map((sp) => {
                   const img = (sp as any).image_url || (sp as any).images?.[0] || undefined;
                   return (
