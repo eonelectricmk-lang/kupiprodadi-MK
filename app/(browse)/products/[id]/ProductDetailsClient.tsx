@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import {
   AlertTriangle,
@@ -154,6 +154,33 @@ export default function ProductDetailsClient({ id }: { id: string }) {
   const [descExpanded, setDescExpanded] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [showSellerPhone, setShowSellerPhone] = useState(false);
+  const thumbRef = useRef<HTMLDivElement>(null);
+  const touchStartX = useRef(0);
+  const touchStartY = useRef(0);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+    touchStartY.current = e.touches[0].clientY;
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    const dx = e.changedTouches[0].clientX - touchStartX.current;
+    const dy = e.changedTouches[0].clientY - touchStartY.current;
+    if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) {
+      if (dx > 0 && activeImage > 0) {
+        setActiveImage(i => i - 1);
+      } else if (dx < 0 && activeImage < images.length - 1) {
+        setActiveImage(i => i + 1);
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (thumbRef.current) {
+      const child = thumbRef.current.children[activeImage] as HTMLElement | undefined;
+      child?.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+    }
+  }, [activeImage]);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -529,8 +556,8 @@ export default function ProductDetailsClient({ id }: { id: string }) {
           </div>
 
           {/* 2. Gallery */}
-          <div className="relative overflow-hidden rounded-xl bg-[#0e1828]">
-            <img src={images[activeImage] || FALLBACK_IMAGE} alt={ad.title} className="block h-[320px] w-full object-cover" />
+          <div className="relative overflow-hidden rounded-xl bg-[#0e1828]" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd} style={{ touchAction: 'pan-y' }}>
+            <img src={images[activeImage] || FALLBACK_IMAGE} alt={ad.title} className="block h-[320px] w-full select-none object-cover" />
             <button type="button" onClick={handleMobileFavorite} className={`absolute top-3 right-3 z-10 rounded-full p-2 transition ${isSaved ? 'bg-red-500/30 text-red-300' : 'bg-black/40 text-white hover:bg-black/60'}`} aria-label={isSaved ? 'Отстрани од зачувани' : 'Зачувај оглас'}>
               <Heart className={`h-5 w-5 ${isSaved ? 'fill-current' : ''}`} />
             </button>
@@ -547,7 +574,7 @@ export default function ProductDetailsClient({ id }: { id: string }) {
           </div>
 
           {images.length > 1 && (
-            <div className="flex gap-2 overflow-x-auto scrollbar-dark">
+            <div ref={thumbRef} className="flex gap-2 overflow-x-auto scrollbar-dark">
               {images.slice(0, 8).map((image, idx) => (
                 <button key={`${image}-${idx}`} type="button" onClick={() => setActiveImage(idx)}
                   className={`shrink-0 overflow-hidden rounded-lg border-2 transition ${activeImage === idx ? 'border-red-500' : 'border-transparent'}`}>
