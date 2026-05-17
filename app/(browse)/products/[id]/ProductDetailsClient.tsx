@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import {
   AlertTriangle,
+  ArrowLeftRight,
   CheckCircle,
   Heart,
   CalendarDays,
@@ -603,10 +604,8 @@ export default function ProductDetailsClient({ id }: { id: string }) {
               <div className="flex items-center gap-1.5">
                 <p className="shrink-0 whitespace-nowrap text-lg font-bold text-red-500">{ad.price.toLocaleString('mk-MK')} <span className="text-white">{ad.currency || '€'}</span></p>
                 {Boolean(ad.negotiable) && <span className="shrink truncate text-xs text-slate-400 uppercase">По договор</span>}
-                {Boolean(ad.negotiable) && Boolean(ad.trade_possible) && <span className="shrink-0 text-xs text-slate-400"> | </span>}
                 {!ad.negotiable && <span className="shrink truncate text-xs text-slate-400 uppercase">Фиксна</span>}
-                {!ad.negotiable && Boolean(ad.trade_possible) && <span className="shrink-0 text-xs text-slate-400"> | </span>}
-                {Boolean(ad.trade_possible) && <span className="shrink truncate text-xs text-slate-400 uppercase">Замена</span>}
+                {Boolean(ad.trade_possible) && <span className="inline-flex items-center gap-1 rounded bg-emerald-500/20 px-1.5 py-0.5 text-[11px] font-semibold text-emerald-300"><ArrowLeftRight className="h-3 w-3" /> Можна замена</span>}
               </div>
               <div className="flex flex-wrap items-center gap-x-2 justify-end">
                 <span className="text-xs text-slate-400">Состојба: {ad.condition || 'Многу добро'}</span>
@@ -941,10 +940,8 @@ export default function ProductDetailsClient({ id }: { id: string }) {
               </p>
               <div className="flex flex-wrap gap-1.5">
                 {Boolean(ad.negotiable) && <span className="text-xs text-slate-400 uppercase">По договор</span>}
-                {Boolean(ad.negotiable) && Boolean(ad.trade_possible) && <span className="text-xs text-slate-400"> | </span>}
                 {!ad.negotiable && <span className="text-xs text-slate-400 uppercase">Фиксна</span>}
-                {!ad.negotiable && Boolean(ad.trade_possible) && <span className="text-xs text-slate-400"> | </span>}
-                {Boolean(ad.trade_possible) && <span className="text-xs text-slate-400 uppercase">Замена</span>}
+                {Boolean(ad.trade_possible) && <span className="inline-flex items-center gap-1 rounded bg-emerald-500/20 px-1.5 py-0.5 text-[11px] font-semibold text-emerald-300"><ArrowLeftRight className="h-3 w-3" /> Можна замена</span>}
               </div>
               <span className="inline-flex items-center gap-1 rounded-lg border border-white/20 bg-[#101f33] px-2 py-0.5 text-xs text-slate-400">
                 <CalendarDays className="h-3 w-3" /> {formatPostedAt(ad.created_at)}
