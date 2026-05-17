@@ -605,7 +605,6 @@ export default function ProductDetailsClient({ id }: { id: string }) {
                 <p className="shrink-0 whitespace-nowrap text-lg font-bold text-red-500">{ad.price.toLocaleString('mk-MK')} <span className="text-white">{ad.currency || '€'}</span></p>
                 {Boolean(ad.negotiable) && <span className="shrink truncate text-xs text-slate-400 uppercase">По договор</span>}
                 {!ad.negotiable && <span className="shrink truncate text-xs text-slate-400 uppercase">Фиксна</span>}
-                {Boolean(ad.trade_possible) && <span className="inline-flex items-center gap-1 rounded bg-emerald-500/20 px-1.5 py-0.5 text-[11px] font-semibold text-emerald-300"><ArrowLeftRight className="h-3 w-3" /> Можна замена</span>}
               </div>
               <div className="flex flex-wrap items-center gap-x-2 justify-end">
                 <span className="text-xs text-slate-400">Состојба: {ad.condition || 'Многу добро'}</span>
@@ -619,6 +618,16 @@ export default function ProductDetailsClient({ id }: { id: string }) {
               <span className="inline-flex items-center gap-1"><Eye className="h-3 w-3" /> {Number(ad.views || 0).toLocaleString('mk-MK')} прегледи</span>
             </div>
           </div>
+
+          {Boolean(ad.trade_possible) && (
+            <div className="flex items-center gap-2 rounded-lg border border-white/10 bg-[#101f33] px-3 py-1.5">
+              <ArrowLeftRight className="h-3.5 w-3.5 text-emerald-400" />
+              <div>
+                <p className="text-xs font-bold text-white uppercase tracking-tighter">Замена</p>
+                <p className="text-[11px] text-slate-400">Можна</p>
+              </div>
+            </div>
+          )}
 
           {/* 5. Description */}
           <p className={`max-w-[95%] text-sm leading-relaxed text-slate-300 whitespace-pre-line break-words ${!descExpanded ? 'line-clamp-6' : ''}`}>
@@ -941,7 +950,6 @@ export default function ProductDetailsClient({ id }: { id: string }) {
               <div className="flex flex-wrap gap-1.5">
                 {Boolean(ad.negotiable) && <span className="text-xs text-slate-400 uppercase">По договор</span>}
                 {!ad.negotiable && <span className="text-xs text-slate-400 uppercase">Фиксна</span>}
-                {Boolean(ad.trade_possible) && <span className="inline-flex items-center gap-1 rounded bg-emerald-500/20 px-1.5 py-0.5 text-[11px] font-semibold text-emerald-300"><ArrowLeftRight className="h-3 w-3" /> Можна замена</span>}
               </div>
               <span className="inline-flex items-center gap-1 rounded-lg border border-white/20 bg-[#101f33] px-2 py-0.5 text-xs text-slate-400">
                 <CalendarDays className="h-3 w-3" /> {formatPostedAt(ad.created_at)}
@@ -1094,6 +1102,14 @@ export default function ProductDetailsClient({ id }: { id: string }) {
                   <p className="font-bold text-white uppercase tracking-tighter">Превземање</p>
                   <p className="mt-0.5 text-slate-400">{ad.delivery || 'Лично'}</p>
                 </div>
+                {Boolean(ad.trade_possible) && (
+                <div className="py-2 px-3">
+                  <p className="flex items-center gap-2 font-bold text-white uppercase tracking-tighter">
+                    <ArrowLeftRight className="h-3.5 w-3.5 text-emerald-400" /> Замена
+                  </p>
+                  <p className="mt-0.5 text-slate-400">Можна</p>
+                </div>
+                )}
               </div>
             </div>
 
