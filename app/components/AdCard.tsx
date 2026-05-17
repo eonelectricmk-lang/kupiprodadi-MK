@@ -248,7 +248,7 @@ export function AdCard({
         </button>
       </div>
 
-      <div className="flex h-[82px] flex-col px-3 pb-2 pt-2">
+      <div className="flex flex-col px-3 pb-2 pt-2">
         <div className="flex items-center justify-between gap-1">
           <p className="flex items-center gap-1 truncate text-[11px] text-slate-400">
             <MapPin className="h-3.5 w-3.5 shrink-0" />
@@ -265,8 +265,8 @@ export function AdCard({
             )}
           </div>
         </div>
-        <h3 className="mt-0.5 truncate text-[14px] font-semibold leading-[1.2] text-white">{card.title}</h3>
-        <div className="mt-auto flex items-end justify-between gap-1 pt-0">
+        <h3 className="mt-1 truncate text-[14px] font-semibold leading-[1.2] text-white">{card.title}</h3>
+        <div className="mt-1 flex items-end justify-between gap-1">
           <p className="whitespace-nowrap text-xl font-bold leading-none text-red-500">{card.price.toLocaleString()} <span className="text-white">€</span></p>
           <div className="flex shrink-0 items-center gap-1">
             <p className="shrink-0 text-[10px] text-slate-500">{postedLabel}</p>
