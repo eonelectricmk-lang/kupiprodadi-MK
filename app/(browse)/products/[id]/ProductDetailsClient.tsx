@@ -580,7 +580,7 @@ export default function ProductDetailsClient({ id }: { id: string }) {
               {images.slice(0, 8).map((image, idx) => (
                 <button key={`${image}-${idx}`} type="button" onClick={() => setActiveImage(idx)}
                   className={`shrink-0 overflow-hidden rounded-lg border-2 transition ${activeImage === idx ? 'border-red-500' : 'border-transparent'}`}>
-                  <img src={image} alt="" className="block h-14 w-20 object-cover" />
+                  <img src={image} alt="" className="block h-14 w-20 object-cover object-center" />
                 </button>
               ))}
             </div>
@@ -842,7 +842,7 @@ export default function ProductDetailsClient({ id }: { id: string }) {
                     onClick={() => setActiveImage(idx)}
                     className={`overflow-hidden rounded-lg border bg-[#0e1828] relative ${activeImage === idx ? 'border-red-500' : 'border-white/40'}`}
                   >
-                    <img src={image} alt={`${ad.title} ${idx + 1}`} className="block h-16 w-full object-cover object-bottom sm:h-20" />
+                    <img src={image} alt={`${ad.title} ${idx + 1}`} className="block h-16 w-full object-cover object-center sm:h-20" />
                     {ad.sold_at && (
                       <div className="absolute inset-0 flex items-center justify-center bg-black/40">
                         <span className="rounded border border-red-500 bg-red-500/10 px-1 py-0.5 text-[7px] font-black text-red-500 leading-tight">ПРОД !</span>
