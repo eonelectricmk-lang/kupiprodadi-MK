@@ -692,11 +692,11 @@ export default function ProductDetailsClient({ id }: { id: string }) {
                   const img = (sp as any).image_url || (sp as any).images?.[0] || undefined;
                   return (
                     <Link key={sp.id} href={`/products/${sp.id}?seller_id=${ad.seller_id}`} className="shrink-0 w-[130px]">
-                      <div className="flex h-32 flex-col overflow-hidden rounded-xl border border-[#2a3f55] bg-[#0b1727] transition hover:border-[#4d6fad]">
+                      <div className="flex h-[130px] flex-col overflow-hidden rounded-xl border border-[#2a3f55] bg-[#0b1727] transition hover:border-[#4d6fad]">
                         <div className="h-24 w-full shrink-0 overflow-hidden">
                           <img src={img || 'https://picsum.photos/640/480?grayscale&blur=1'} alt={sp.title} className="h-full w-full object-cover" />
                         </div>
-                        <div className="flex flex-1 flex-col px-1.5 pb-1">
+                        <div className="flex flex-1 flex-col px-1.5 pb-1.5">
                           <p className="truncate text-xs font-semibold text-white">{sp.title}</p>
                           <p className="whitespace-nowrap text-xs font-bold text-red-400">{sp.price.toLocaleString()} <span className="text-white">€</span></p>
                         </div>
