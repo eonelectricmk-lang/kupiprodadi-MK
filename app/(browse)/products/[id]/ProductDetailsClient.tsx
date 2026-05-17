@@ -958,7 +958,7 @@ export default function ProductDetailsClient({ id }: { id: string }) {
                   )}
                   <span className="inline-flex items-center rounded-lg bg-blue-500/10 px-2 py-0.5 text-xs font-bold text-blue-400 border border-blue-500/20">IDP: {ad.seller_id}</span>
                 </div>
-              <div className="mt-1 flex items-center gap-3">
+              <div className="flex items-center gap-3">
                   <div className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#172945] text-slate-200 border border-white/20">
                   {sellerAvatarUrl ? (
                     <img src={sellerAvatarUrl} alt="" className="h-full w-full rounded-full object-cover" />
