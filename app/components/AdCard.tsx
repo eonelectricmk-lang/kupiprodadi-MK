@@ -161,9 +161,9 @@ export function AdCard({
       </div>
 
       <div className="grid min-w-0 flex-1 grid-rows-[auto_1fr_auto]">
-            <div className="relative">
-              <h3 className="truncate pr-12 text-base font-semibold leading-[1.2] text-white">{card.title}</h3>
-              <div className="absolute right-0 top-0 flex items-center gap-1.5">
+            <div className="flex items-start gap-2">
+              <h3 className="min-w-0 flex-1 truncate text-base font-semibold leading-[1.2] text-white">{card.title}</h3>
+              <div className="flex shrink-0 items-center gap-1.5">
                 <span className="text-[10px] font-medium text-yellow-400">KP:{card.id}</span>
                 <button
                   type="button"
@@ -180,7 +180,7 @@ export function AdCard({
               </div>
             </div>
 
-            <div className="self-center">
+            <div className="self-center min-w-0">
               <p className="flex items-center gap-1 text-xs text-slate-400">
                 <span className="flex items-center gap-1">
                   <MapPin className="h-3.5 w-3.5" />
