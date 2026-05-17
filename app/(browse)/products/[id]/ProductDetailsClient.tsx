@@ -547,7 +547,7 @@ export default function ProductDetailsClient({ id }: { id: string }) {
           </div>
 
           {images.length > 1 && (
-            <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-none">
+            <div className="flex gap-2 overflow-x-auto scrollbar-none">
               {images.slice(0, 8).map((image, idx) => (
                 <button key={`${image}-${idx}`} type="button" onClick={() => setActiveImage(idx)}
                   className={`shrink-0 overflow-hidden rounded-lg border-2 transition ${activeImage === idx ? 'border-red-500' : 'border-transparent'}`}>
@@ -560,7 +560,7 @@ export default function ProductDetailsClient({ id }: { id: string }) {
           {/* 3. Title + KP */}
           <div className="flex items-start justify-between gap-2">
             <h1 className="text-xl font-bold leading-tight text-white">{ad.title}</h1>
-            <span className="shrink-0 rounded-lg border border-yellow-500/20 bg-yellow-500/5 px-2 py-1 text-xs font-bold text-yellow-500/90">KP:{ad.id}</span>
+            <span className="shrink-0 mt-[5px] rounded-lg border border-yellow-500/20 bg-yellow-500/5 px-2 py-1 text-xs font-bold text-yellow-500/90">KP:{ad.id}</span>
           </div>
 
           {/* 4. Price + Tags + Condition + Delivery */}
@@ -587,7 +587,7 @@ export default function ProductDetailsClient({ id }: { id: string }) {
           </div>
 
           {/* 5. Description */}
-          <p className={`text-sm leading-relaxed text-slate-300 whitespace-pre-line break-words ${!descExpanded ? 'line-clamp-6' : ''}`}>
+          <p className={`max-w-[95%] text-sm leading-relaxed text-slate-300 whitespace-pre-line break-words ${!descExpanded ? 'line-clamp-6' : ''}`}>
             {ad.description}
           </p>
           {ad.description.length > 300 && !descExpanded && (
@@ -694,11 +694,11 @@ export default function ProductDetailsClient({ id }: { id: string }) {
                   const img = (sp as any).image_url || (sp as any).images?.[0] || undefined;
                   return (
                     <Link key={sp.id} href={`/products/${sp.id}?seller_id=${ad.seller_id}`} className="shrink-0 w-[130px]">
-                      <div className="flex h-[136px] flex-col overflow-hidden rounded-xl border border-[#2a3f55] bg-[#0b1727] transition hover:border-[#4d6fad]">
+                      <div className="flex h-[142px] flex-col overflow-hidden rounded-xl border border-[#2a3f55] bg-[#0b1727] transition hover:border-[#4d6fad]">
                         <div className="h-24 w-full shrink-0 overflow-hidden">
                           <img src={img || 'https://picsum.photos/640/480?grayscale&blur=1'} alt={sp.title} className="h-full w-full object-cover" />
                         </div>
-                        <div className="flex flex-1 flex-col px-1.5 pb-1.5 pt-[3px]">
+                        <div className="flex flex-1 flex-col px-1.5 pb-1.5 pt-[10px]">
                           <p className="truncate text-xs font-semibold text-white">{sp.title}</p>
                           <p className="whitespace-nowrap text-xs font-bold text-red-400">{sp.price.toLocaleString()} <span className="text-white">€</span></p>
                         </div>
@@ -715,8 +715,8 @@ export default function ProductDetailsClient({ id }: { id: string }) {
             <button type="button" onClick={handleMobileFavorite} className={`inline-flex h-8 items-center justify-center gap-2 rounded-lg border text-xs font-bold transition ${isSaved ? 'border-red-500/30 bg-red-500/10 text-red-300' : 'border-white/20 bg-[#0f1a2b] text-white hover:bg-[#13243c]'}`}>
               <Heart className={`h-3.5 w-3.5 ${isSaved ? 'fill-current' : ''}`} /> {isSaved ? 'Зачувано' : 'Зачувај'}
             </button>
-            <button type="button" onClick={onCopyLink} className={`inline-flex h-8 items-center justify-center gap-2 rounded-lg border text-xs font-bold transition ${copiedLink ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-300' : 'border-white/20 bg-[#0f1a2b] text-white hover:bg-[#13243c]'}`}>
-              <Copy className="h-3.5 w-3.5" /> {copiedLink ? 'Копирано' : 'Линк'}
+            <button type="button" onClick={onCopyLink} className={`inline-flex h-8 items-center justify-center gap-2 rounded-lg border text-xs font-bold leading-none transition ${copiedLink ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-300' : 'border-white/20 bg-[#0f1a2b] text-white hover:bg-[#13243c]'}`}>
+              <span className="flex items-center justify-center"><Copy className="h-3.5 w-3.5" /></span> {copiedLink ? 'Копирано' : 'Линк'}
             </button>
             <button type="button" onClick={onShareFacebook} className="inline-flex h-8 items-center justify-center gap-2 rounded-lg border border-white/20 bg-[#0f1a2b] text-xs font-bold text-white hover:bg-[#13243c] transition">
               <Share2 className="h-3.5 w-3.5" /> Сподели
@@ -847,7 +847,7 @@ export default function ProductDetailsClient({ id }: { id: string }) {
                               className="h-full w-full object-cover"
                             />
                           </div>
-                          <div className="flex flex-col px-2 pb-1.5 pt-1">
+                          <div className="flex flex-col px-2 pb-1.5 pt-[10px]">
                             <p className="truncate text-sm font-semibold text-white">{sp.title}</p>
                             <p className="whitespace-nowrap text-sm font-bold text-red-400">{sp.price.toLocaleString()} <span className="text-white">€</span></p>
                           </div>
