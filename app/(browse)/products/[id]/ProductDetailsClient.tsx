@@ -518,7 +518,7 @@ export default function ProductDetailsClient({ id }: { id: string }) {
         </div>
 
         {ad.status === 'pending' && (
-          <div className="mx-auto mb-5 max-w-2xl rounded-xl border border-amber-500/20 bg-amber-500/[0.06] p-5 sm:p-6">
+          <div className="mx-auto mb-5 max-w-2xl rounded-xl border border-amber-500/20 bg-amber-500/[0.06] px-5 py-4 sm:px-6 sm:py-4">
             <div className="flex flex-col items-center gap-2">
               <div className="flex items-center gap-2">
                 <CheckCircle className="h-5 w-5 shrink-0 text-emerald-400" />
