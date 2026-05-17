@@ -1019,12 +1019,6 @@ export default function ProductDetailsClient({ id }: { id: string }) {
                                     </a>
                                     {!telegramEnabled && <span className="text-[10px] text-slate-600">Не користи Telegram</span>}
                                   </div>
-                                  <a href={whatsappEnabled ? waUrl(sellerPhone) : '#'} target={whatsappEnabled ? '_blank' : undefined} rel={whatsappEnabled ? 'noopener noreferrer' : undefined} className={`flex-1 justify-center inline-flex items-center gap-1 rounded-lg px-1.5 py-1.5 text-[11px] font-bold transition ${whatsappEnabled ? 'bg-emerald-900/40 text-emerald-300 hover:bg-emerald-800/50' : 'bg-slate-800/40 text-slate-600 cursor-default pointer-events-none'}`}>
-                                    <WhatsAppIcon className="h-2.5 w-2.5" /> WhatsApp
-                                  </a>
-                                  <a href={telegramEnabled ? tgUrl(sellerPhone) : '#'} target={telegramEnabled ? '_blank' : undefined} rel={telegramEnabled ? 'noopener noreferrer' : undefined} className={`flex-1 justify-center inline-flex items-center gap-1 rounded-lg px-1.5 py-1.5 text-[11px] font-bold transition ${telegramEnabled ? 'bg-sky-900/40 text-sky-300 hover:bg-sky-800/50' : 'bg-slate-800/40 text-slate-600 cursor-default pointer-events-none'}`}>
-                                  <TelegramIcon className="h-2.5 w-2.5" /> Telegram
-                                  </a>
                                 </div>
                               </div>
                           )}
