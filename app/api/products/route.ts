@@ -145,7 +145,7 @@ export async function GET(request: NextRequest) {
       total: countResult.count,
       limit,
       offset
-    }, { status: 200 });
+    }, { status: 200, headers: { 'Cache-Control': 'no-store, max-age=0' } });
   } catch (error) {
     console.error('Error fetching products:', error);
     return NextResponse.json(

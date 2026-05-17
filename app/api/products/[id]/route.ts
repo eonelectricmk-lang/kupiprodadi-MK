@@ -87,7 +87,7 @@ export async function GET(
       is_crm: systemUser ? (product as any).seller_id === systemUser.id : false,
       prevProduct: prevProduct ? { id: prevProduct.id, title: prevProduct.title } : null,
       nextProduct: nextProduct ? { id: nextProduct.id, title: nextProduct.title } : null,
-    }, { status: 200 });
+    }, { status: 200, headers: { 'Cache-Control': 'no-store, max-age=0' } });
   } catch (error) {
     console.error('Error fetching product:', error);
     return NextResponse.json(
@@ -140,7 +140,12 @@ export async function PATCH(
     const imageList: string[] = Array.isArray(payload?.images)
       ? payload.images.filter((image: unknown): image is string => typeof image === 'string' && image.length > 0).slice(0, 8)
       : [];
-    const primaryImage = payload?.image_url || imageList[0] || null;
+
+    // Preserve existing images when editing and no new images sent
+    const existingRow = payload?.images === undefined
+      ? db.prepare(`SELECT image_url FROM products WHERE id = ?`).get(id) as { image_url: string | null } | undefined
+      : null;
+    const resolvedImageUrl = existingRow?.image_url || payload?.image_url || imageList[0] || null;
     const resolvedLocation = payload?.location || [payload?.city, payload?.neighborhood].filter(Boolean).join(', ');
 
     if (!payload?.title || !payload?.description || !payload?.price || !normalizedCategory || (!resolvedLocation && !payload?.city)) {
@@ -209,13 +214,16 @@ export async function PATCH(
         payload.has_telegram ? 1 : 0,
         payload.trade_possible ? 1 : 0,
         payload.hide_phone ? 1 : 0,
-        primaryImage,
+        resolvedImageUrl,
         'pending',
         id,
       );
 
-      deleteImages.run(id);
-      imageList.forEach((image: string, index: number) => insertImage.run(id, image, index));
+      const hasNewImages = Array.isArray(payload?.images);
+      if (hasNewImages) {
+        deleteImages.run(id);
+        imageList.forEach((image: string, index: number) => insertImage.run(id, image, index));
+      }
     });
 
     update();

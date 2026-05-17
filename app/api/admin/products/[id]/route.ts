@@ -40,7 +40,7 @@ export async function PATCH(request: NextRequest, context: { params: Promise<{ i
       }
     }
 
-    return NextResponse.json({ message: 'Ажурирано' });
+    return NextResponse.json({ message: 'Ажурирано' }, { headers: { 'Cache-Control': 'no-store, max-age=0' } });
   } catch (error) {
     if (error instanceof Error && error.message === 'UNAUTHORIZED_ADMIN') {
       return NextResponse.json({ error: 'Нема дозвола' }, { status: 401 });
