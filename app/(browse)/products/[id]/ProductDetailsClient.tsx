@@ -564,14 +564,14 @@ export default function ProductDetailsClient({ id }: { id: string }) {
           </div>
 
           {/* 4. Price + Tags + Condition + Delivery */}
-          <div className="flex items-center justify-between gap-2">
-            <div className="flex flex-wrap items-center gap-2">
-              <p className="text-lg font-bold text-red-500">{ad.price.toLocaleString('mk-MK')} <span className="text-white">{ad.currency || '€'}</span></p>
-              {Boolean(ad.negotiable) && <span className="text-xs text-slate-400 uppercase">По договор</span>}
-              {Boolean(ad.negotiable) && Boolean(ad.trade_possible) && <span className="text-xs text-slate-400"> | </span>}
-              {!ad.negotiable && <span className="text-xs text-slate-400 uppercase">Фиксна</span>}
-              {!ad.negotiable && Boolean(ad.trade_possible) && <span className="text-xs text-slate-400"> | </span>}
-              {Boolean(ad.trade_possible) && <span className="text-xs text-slate-400 uppercase">Замена</span>}
+          <div className="flex flex-wrap items-center justify-between gap-x-2 gap-y-1">
+            <div className="flex items-center gap-1.5">
+              <p className="shrink-0 whitespace-nowrap text-lg font-bold text-red-500">{ad.price.toLocaleString('mk-MK')} <span className="text-white">{ad.currency || '€'}</span></p>
+              {Boolean(ad.negotiable) && <span className="shrink truncate text-xs text-slate-400 uppercase">По договор</span>}
+              {Boolean(ad.negotiable) && Boolean(ad.trade_possible) && <span className="shrink-0 text-xs text-slate-400"> | </span>}
+              {!ad.negotiable && <span className="shrink truncate text-xs text-slate-400 uppercase">Фиксна</span>}
+              {!ad.negotiable && Boolean(ad.trade_possible) && <span className="shrink-0 text-xs text-slate-400"> | </span>}
+              {Boolean(ad.trade_possible) && <span className="shrink truncate text-xs text-slate-400 uppercase">Замена</span>}
             </div>
             <div className="flex flex-wrap items-center gap-x-2 justify-end">
               <span className="text-xs text-slate-400">Состојба: {ad.condition || 'Многу добро'}</span>
