@@ -185,12 +185,12 @@ export function AdCard({
               <span className="ml-auto text-yellow-400">KP:{card.id}</span>
             </p>
 
-            <p className="mt-1 line-clamp-2 text-xs leading-5 text-slate-300">
+            <p className="mt-1 min-w-0 line-clamp-2 text-xs leading-5 text-slate-300">
               {card.description || 'Краток преглед на огласот со повеќе детали, состојба и клучни информации.'}
             </p>
 
-            <div className="mt-1 flex items-center justify-between">
-              <p className="text-xl font-bold leading-none text-red-500">{card.price.toLocaleString()} <span className="text-white">€</span></p>
+            <div className="mt-1 flex items-center justify-between gap-3">
+              <p className="shrink-0 min-w-fit whitespace-nowrap text-xl font-bold leading-none text-red-500">{card.price.toLocaleString()} <span className="text-white">€</span></p>
               <div className="flex items-center gap-2">
                 <p className="text-[11px] font-medium text-slate-400">Објавен: {postedLabel}</p>
                 {resolvedVerified && (
@@ -266,8 +266,8 @@ export function AdCard({
           </div>
         </div>
         <h3 className="mt-1 truncate text-[14px] font-semibold leading-[1.2] text-white">{card.title}</h3>
-        <div className="mt-1 flex items-end justify-between gap-1">
-          <p className="whitespace-nowrap text-xl font-bold leading-none text-red-500">{card.price.toLocaleString()} <span className="text-white">€</span></p>
+        <div className="mt-1 flex items-end justify-between gap-3">
+          <p className="shrink-0 min-w-fit whitespace-nowrap text-xl font-bold leading-none text-red-500">{card.price.toLocaleString()} <span className="text-white">€</span></p>
           <div className="flex shrink-0 items-center gap-1">
             <p className="shrink-0 text-[10px] text-slate-500">{postedLabel}</p>
             {onRemove && (
