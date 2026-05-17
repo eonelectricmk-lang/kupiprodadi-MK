@@ -518,18 +518,18 @@ export default function ProductDetailsClient({ id }: { id: string }) {
         </div>
 
         {ad.status === 'pending' && (
-          <div className="mb-5 rounded-xl border border-amber-500/30 bg-amber-500/10 p-4">
-            <div className="flex flex-col items-center gap-2">
+          <div className="mb-5 rounded-xl border border-amber-500/20 bg-amber-500/[0.06] p-5">
+            <div className="mx-auto flex max-w-md flex-col items-center gap-3">
               <div className="flex items-center gap-2">
-                <CheckCircle className="h-6 w-6 shrink-0 text-emerald-400" />
-                <p className="text-sm font-semibold text-amber-200">Ова е вашиот оглас. Се чека на одобрување од администратор.</p>
+                <CheckCircle className="h-5 w-5 shrink-0 text-emerald-400" />
+                <p className="text-sm font-semibold text-amber-100">Ова е вашиот оглас. Се чека на одобрување од администратор.</p>
               </div>
-              <p className="text-xs text-amber-300/70">Огласот е испратен на преглед и ќе биде објавен веднаш штом биде одобрен.</p>
-              <div className="flex flex-wrap justify-center gap-3">
-                <Link href={`/sell?edit=${ad.id}`} className="inline-flex items-center gap-2 rounded-lg bg-amber-600 px-4 py-2 text-sm font-semibold text-white hover:bg-amber-500 transition">
+              <p className="text-center text-xs text-amber-300/60">Огласот е испратен на преглед и ќе биде објавен веднаш штом биде одобрен.</p>
+              <div className="flex w-full flex-col gap-2 sm:flex-row sm:w-auto">
+                <Link href={`/sell?edit=${ad.id}`} className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-amber-700 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-amber-600 sm:w-auto">
                   Измени повторно
                 </Link>
-                <Link href="/profile" className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-500 transition">
+                <Link href="/profile" className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-slate-700 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-slate-600 sm:w-auto">
                   Врати се на профил
                 </Link>
               </div>
