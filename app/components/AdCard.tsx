@@ -177,7 +177,7 @@ export function AdCard({
               </button>
             </div>
 
-            <p className="mt-1 flex items-center gap-1 text-xs text-slate-400">
+            <p className="mt-0.5 flex items-center gap-1 text-xs text-slate-400">
               <span className="flex items-center gap-1">
                 <MapPin className="h-3.5 w-3.5" />
                 {card.location || 'Македонија'}
@@ -185,7 +185,7 @@ export function AdCard({
               <span className="ml-auto text-yellow-400">KP:{card.id}</span>
             </p>
 
-            <p className="mt-1 min-w-0 flex-1 overflow-hidden line-clamp-2 text-xs leading-5 text-slate-300">
+            <p className="mt-0.5 min-w-0 flex-1 overflow-hidden line-clamp-2 text-xs leading-5 text-slate-300">
               {card.description || 'Краток преглед на огласот со повеќе детали, состојба и клучни информации.'}
             </p>
 
