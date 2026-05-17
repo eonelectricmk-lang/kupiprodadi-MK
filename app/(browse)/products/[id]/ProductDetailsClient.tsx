@@ -681,8 +681,8 @@ export default function ProductDetailsClient({ id }: { id: string }) {
                                     <ViberIcon className="h-3 w-3" /> Viber
                                   </a>
                                 ) : (
-                                  <div className="flex w-full items-center justify-center rounded-lg border border-slate-600/40 bg-slate-800/20 px-1.5 py-2 text-[11px] font-bold text-slate-500/80">
-                                    <ViberIcon className="h-3 w-3 opacity-60" /> <span className="opacity-60">Viber</span>
+                                  <div className="flex w-full items-center justify-center rounded-lg border border-slate-600/40 bg-slate-800/20 px-1.5 py-2 text-[11px] font-bold text-slate-500">
+                                    <ViberIcon className="h-3 w-3 opacity-70" /> Viber
                                   </div>
                                 )}
                                 <span className={`text-[11px] ${viberEnabled ? 'text-slate-300' : 'text-slate-600'}`}>{viberEnabled ? 'достапно' : 'недостапно'}</span>
@@ -693,11 +693,11 @@ export default function ProductDetailsClient({ id }: { id: string }) {
                                     <WhatsAppIcon className="h-3 w-3" /> WhatsApp
                                   </a>
                                 ) : (
-                                  <div className="flex w-full items-center justify-center rounded-lg border border-slate-600/50 bg-slate-800/30 px-1.5 py-2 text-[11px] font-bold text-slate-300">
-                                    <WhatsAppIcon className="h-3 w-3" /> WhatsApp
+                                  <div className="flex w-full items-center justify-center rounded-lg border border-slate-600/40 bg-slate-800/20 px-1.5 py-2 text-[11px] font-bold text-slate-500">
+                                    <WhatsAppIcon className="h-3 w-3 opacity-70" /> WhatsApp
                                   </div>
                                 )}
-                                <span className={`text-[11px] ${whatsappEnabled ? 'text-slate-300' : 'text-slate-500'}`}>{whatsappEnabled ? 'достапно' : 'недостапно'}</span>
+                                <span className={`text-[11px] ${whatsappEnabled ? 'text-slate-300' : 'text-slate-600'}`}>{whatsappEnabled ? 'достапно' : 'недостапно'}</span>
                               </div>
                               <div className="flex flex-1 flex-col items-center gap-px">
                                 {telegramEnabled ? (
@@ -705,11 +705,11 @@ export default function ProductDetailsClient({ id }: { id: string }) {
                                     <TelegramIcon className="h-3 w-3" /> Telegram
                                   </a>
                                 ) : (
-                                  <div className="flex w-full items-center justify-center rounded-lg border border-slate-600/50 bg-slate-800/30 px-1.5 py-2 text-[11px] font-bold text-slate-300">
-                                    <TelegramIcon className="h-3 w-3" /> Telegram
+                                  <div className="flex w-full items-center justify-center rounded-lg border border-slate-600/40 bg-slate-800/20 px-1.5 py-2 text-[11px] font-bold text-slate-500">
+                                    <TelegramIcon className="h-3 w-3 opacity-70" /> Telegram
                                   </div>
                                 )}
-                                <span className={`text-[11px] ${telegramEnabled ? 'text-slate-300' : 'text-slate-500'}`}>{telegramEnabled ? 'достапно' : 'недостапно'}</span>
+                                <span className={`text-[11px] ${telegramEnabled ? 'text-slate-300' : 'text-slate-600'}`}>{telegramEnabled ? 'достапно' : 'недостапно'}</span>
                               </div>
                             </div>
                           )}
