@@ -217,7 +217,7 @@ export function AdCard({
 
   return (
     <div className="h-full overflow-hidden rounded-2xl border border-white/20 bg-[#0f1a2b] transition duration-200 hover:-translate-y-1 hover:shadow-xl hover:shadow-red-950/20">
-      <div className="relative h-36 overflow-hidden">
+      <div className="relative h-32 overflow-hidden">
         <img
           src={imageSrc}
           alt={card.title}
