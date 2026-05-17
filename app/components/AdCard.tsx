@@ -160,7 +160,7 @@ export function AdCard({
         )}
       </div>
 
-      <div className="grid min-w-0 flex-1 grid-rows-[auto_1fr_auto]">
+      <div className="grid min-w-0 flex-1 grid-rows-[auto_1fr_auto] gap-1">
             <div className="flex min-w-0 items-start gap-2">
               <h3 className="min-w-0 flex-1 truncate text-base font-semibold leading-[1.2] text-white">{card.title}</h3>
               <div className="flex shrink-0 items-center gap-1.5">
