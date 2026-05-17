@@ -675,7 +675,7 @@ export default function ProductDetailsClient({ id }: { id: string }) {
 
                           {!Boolean(ad.hide_phone) && (
                             <div className="flex gap-1">
-                              <div className="flex flex-1 flex-col items-center gap-0.5">
+                              <div className="flex flex-1 flex-col items-center gap-px">
                                 {viberEnabled ? (
                                   <a href={viberUrl(sellerPhone)} target="_blank" rel="noopener noreferrer" className="flex w-full items-center justify-center gap-1 rounded-lg border border-transparent bg-purple-800 px-1.5 py-2 text-[11px] font-bold text-white transition hover:bg-purple-700">
                                     <ViberIcon className="h-3 w-3" /> Viber
@@ -685,9 +685,9 @@ export default function ProductDetailsClient({ id }: { id: string }) {
                                     <ViberIcon className="h-3 w-3" /> Viber
                                   </div>
                                 )}
-                                <span className="text-[11px] text-slate-500">{viberEnabled ? 'достапно' : 'недостапно'}</span>
+                                <span className={`text-[11px] ${viberEnabled ? 'text-slate-300' : 'text-slate-500'}`}>{viberEnabled ? 'достапно' : 'недостапно'}</span>
                               </div>
-                              <div className="flex flex-1 flex-col items-center gap-0.5">
+                              <div className="flex flex-1 flex-col items-center gap-px">
                                 {whatsappEnabled ? (
                                   <a href={waUrl(sellerPhone)} target="_blank" rel="noopener noreferrer" className="flex w-full items-center justify-center gap-1 rounded-lg border border-transparent bg-emerald-800 px-1.5 py-2 text-[11px] font-bold text-white transition hover:bg-emerald-700">
                                     <WhatsAppIcon className="h-3 w-3" /> WhatsApp
@@ -697,9 +697,9 @@ export default function ProductDetailsClient({ id }: { id: string }) {
                                     <WhatsAppIcon className="h-3 w-3" /> WhatsApp
                                   </div>
                                 )}
-                                <span className="text-[11px] text-slate-500">{whatsappEnabled ? 'достапно' : 'недостапно'}</span>
+                                <span className={`text-[11px] ${whatsappEnabled ? 'text-slate-300' : 'text-slate-500'}`}>{whatsappEnabled ? 'достапно' : 'недостапно'}</span>
                               </div>
-                              <div className="flex flex-1 flex-col items-center gap-0.5">
+                              <div className="flex flex-1 flex-col items-center gap-px">
                                 {telegramEnabled ? (
                                   <a href={tgUrl(sellerPhone)} target="_blank" rel="noopener noreferrer" className="flex w-full items-center justify-center gap-1 rounded-lg border border-transparent bg-sky-800 px-1.5 py-2 text-[11px] font-bold text-white transition hover:bg-sky-700">
                                     <TelegramIcon className="h-3 w-3" /> Telegram
@@ -709,7 +709,7 @@ export default function ProductDetailsClient({ id }: { id: string }) {
                                     <TelegramIcon className="h-3 w-3" /> Telegram
                                   </div>
                                 )}
-                                <span className="text-[11px] text-slate-500">{telegramEnabled ? 'достапно' : 'недостапно'}</span>
+                                <span className={`text-[11px] ${telegramEnabled ? 'text-slate-300' : 'text-slate-500'}`}>{telegramEnabled ? 'достапно' : 'недостапно'}</span>
                               </div>
                             </div>
                           )}
