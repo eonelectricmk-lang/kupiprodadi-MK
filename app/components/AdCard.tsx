@@ -191,7 +191,7 @@ export function AdCard({
               {card.description || 'Краток преглед на огласот со повеќе детали, состојба и клучни информации.'}
             </p>
 
-            <div className="mt-1 flex items-center justify-between gap-3">
+            <div className="mt-auto flex items-center justify-between gap-3">
               <p className="shrink-0 min-w-fit whitespace-nowrap text-xl font-bold leading-none text-red-500">{card.price.toLocaleString()} <span className="text-white">€</span></p>
               <div className="flex items-center gap-2">
                 <p className="text-[11px] font-medium text-slate-400">Објавен: {postedLabel}</p>
