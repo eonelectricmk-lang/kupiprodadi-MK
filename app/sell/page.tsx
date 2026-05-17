@@ -67,7 +67,7 @@ const INITIAL_FORM: FormData = {
 const CONDITIONS = ['Ново', 'Како ново', 'Многу добро', 'Добро', 'Користено', 'За делови'];
 const CURRENCIES = ['€', 'ден', '$'];
 const DELIVERY_OPTIONS = ['Лично', 'Карго', 'По договор'];
-const CONTACT_OPTIONS = ['Телефон', 'Порака во апликација', 'Телефон и порака'];
+const CONTACT_OPTIONS = ['Телефон и порака', 'Телефон', 'Порака во апликација'];
 const CITIES = [
   'Скопје',
   'Битола',
