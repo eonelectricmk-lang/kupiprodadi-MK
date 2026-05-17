@@ -597,7 +597,7 @@ export default function ProductDetailsClient({ id }: { id: string }) {
           <div className="space-y-0.5">
             <div className="flex items-start justify-between gap-2">
               <h1 className="text-xl font-bold leading-tight text-white">{ad.title}</h1>
-              <span className="shrink-0 mt-[5px] rounded-lg border border-yellow-500/20 bg-yellow-500/5 px-2 py-1 text-xs font-bold text-yellow-500/90">KP:{ad.id}</span>
+              <span className="shrink-0 mt-[5px] rounded-lg border border-yellow-500/10 bg-yellow-500/5 px-2 py-1 text-xs font-bold text-yellow-500/90">KP:{ad.id}</span>
             </div>
 
             <div className="flex flex-wrap items-center justify-between gap-x-2">
@@ -659,7 +659,7 @@ export default function ProductDetailsClient({ id }: { id: string }) {
                       <button
                         type="button"
                         onClick={() => setShowSellerPhone((prev) => !prev)}
-                        className={`flex h-9 w-full items-center justify-center gap-2 rounded-lg text-sm font-bold transition ${
+                        className={`flex h-9 w-full items-center justify-center gap-2 rounded-lg px-3 text-sm font-bold transition ${
                           showSellerPhone
                             ? 'border border-emerald-700/55 bg-emerald-900/20 text-emerald-400 hover:bg-emerald-900/30'
                             : 'bg-emerald-800 text-white hover:bg-emerald-700'
@@ -928,7 +928,7 @@ export default function ProductDetailsClient({ id }: { id: string }) {
           <div className="min-w-0 rounded-2xl border border-white/20 bg-[#0e1828] p-3 pb-1">
             <div className="flex items-start justify-between gap-3">
               <h1 className="text-3xl font-bold leading-tight">{ad.title}</h1>
-              <span className="shrink-0 inline-flex items-center gap-1 rounded-lg border border-yellow-500/20 bg-yellow-500/5 px-2 py-1 text-xs text-yellow-500/80">
+              <span className="shrink-0 inline-flex items-center gap-1 rounded-lg border border-yellow-500/10 bg-yellow-500/5 px-2 py-1 text-xs text-yellow-500/80">
                 KP:{ad.id}
               </span>
             </div>
@@ -992,7 +992,7 @@ export default function ProductDetailsClient({ id }: { id: string }) {
                       <button
                         type="button"
                         onClick={() => setShowSellerPhone((prev) => !prev)}
-                        className="mx-auto mt-2 flex h-11 w-full max-w-[220px] items-center justify-center gap-1 rounded-xl bg-emerald-800 px-1 py-2.5 text-sm font-bold text-white transition hover:bg-emerald-700"
+                        className="mx-auto mt-2 flex h-11 w-full max-w-[220px] items-center justify-center gap-1 rounded-xl bg-emerald-800 px-4 py-2.5 text-sm font-bold text-white transition hover:bg-emerald-700"
                       >
                         {!showSellerPhone && <Phone className="h-4 w-4" />}{showSellerPhone ? (Boolean(ad.hide_phone) ? 'Прати порака' : sellerPhone) : 'Прикажи контакт'}
                       </button>
