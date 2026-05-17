@@ -521,8 +521,8 @@ export default function ProductDetailsClient({ id }: { id: string }) {
           <div className="mb-5 rounded-xl border border-amber-500/30 bg-amber-500/10 p-4">
             <div className="flex flex-col items-center gap-2">
               <div className="flex items-center gap-2">
-                <CheckCircle className="h-6 w-6 shrink-0 text-emerald-400" />
                 <p className="text-sm font-semibold text-amber-200">Ова е вашиот оглас. Се чека на одобрување од администратор.</p>
+                <CheckCircle className="h-6 w-6 shrink-0 text-emerald-400" />
               </div>
               <p className="text-xs text-amber-300/70">Огласот е испратен на преглед и ќе биде објавен веднаш штом биде одобрен.</p>
               <div className="flex flex-wrap justify-center gap-3">
