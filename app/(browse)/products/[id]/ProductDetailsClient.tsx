@@ -1054,25 +1054,6 @@ export default function ProductDetailsClient({ id }: { id: string }) {
               </div>
             </div>
 
-            <div className="mt-3 space-y-2">
-              <div className="grid grid-cols-2 gap-2">
-                <button type="button" onClick={onToggleFavorite} className={`inline-flex h-9 items-center justify-center gap-2 rounded-lg border text-sm font-bold transition ${isSaved ? 'border-red-500/30 bg-red-500/10 text-red-300' : 'border-white/20 bg-[#0f1a2b] text-white hover:bg-[#13243c]'}`}>
-                  <Heart className={`h-3.5 w-3.5 ${isSaved ? 'fill-current' : ''}`} /> {isSaved ? 'Зачувано' : 'Зачувај'}
-                </button>
-                <button type="button" onClick={onCopyLink} className={`inline-flex h-9 items-center justify-center gap-2 rounded-lg border text-sm font-bold transition ${copiedLink ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-300' : 'border-white/20 bg-[#0f1a2b] text-white hover:bg-[#13243c]'}`}>
-                  <Copy className="h-3.5 w-3.5" /> {copiedLink ? 'Копирано' : 'Линк'}
-                </button>
-              </div>
-              <div className="grid grid-cols-2 gap-2">
-                <button type="button" onClick={onShareFacebook} className="inline-flex h-9 items-center justify-center gap-2 rounded-lg border border-white/20 bg-[#0f1a2b] text-sm font-bold text-white hover:bg-[#13243c]">
-                  <Share2 className="h-3.5 w-3.5" /> Сподели
-                </button>
-                <button type="button" onClick={onReport} className={`inline-flex h-9 items-center justify-center gap-2 rounded-lg border text-sm font-bold transition ${reported ? 'border-amber-500/30 bg-amber-500/10 text-amber-300' : 'border-red-500/40 bg-[#0f1a2b] text-white hover:bg-[#13243c]'}`}>
-                  <AlertTriangle className="h-3.5 w-3.5" /> {reported ? 'Пријавено' : 'Пријави'}
-                </button>
-              </div>
-            </div>
-
             <div className="mt-3 rounded-xl border border-white/20 overflow-hidden">
               <div className="grid grid-cols-2 lg:grid-cols-4 bg-white/10 gap-px">
                 <div className="bg-[#101f33] py-2 px-3">
@@ -1104,6 +1085,25 @@ export default function ProductDetailsClient({ id }: { id: string }) {
                     </div>
                   </div>
                 </div>
+              </div>
+            </div>
+
+            <div className="mt-3 space-y-2">
+              <div className="grid grid-cols-2 gap-2">
+                <button type="button" onClick={onToggleFavorite} className={`inline-flex h-9 items-center justify-center gap-2 rounded-lg border text-sm font-bold transition ${isSaved ? 'border-red-500/30 bg-red-500/10 text-red-300' : 'border-white/20 bg-[#0f1a2b] text-white hover:bg-[#13243c]'}`}>
+                  <Heart className={`h-3.5 w-3.5 ${isSaved ? 'fill-current' : ''}`} /> {isSaved ? 'Зачувано' : 'Зачувај'}
+                </button>
+                <button type="button" onClick={onCopyLink} className={`inline-flex h-9 items-center justify-center gap-2 rounded-lg border text-sm font-bold transition ${copiedLink ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-300' : 'border-white/20 bg-[#0f1a2b] text-white hover:bg-[#13243c]'}`}>
+                  <Copy className="h-3.5 w-3.5" /> {copiedLink ? 'Копирано' : 'Линк'}
+                </button>
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                <button type="button" onClick={onShareFacebook} className="inline-flex h-9 items-center justify-center gap-2 rounded-lg border border-white/20 bg-[#0f1a2b] text-sm font-bold text-white hover:bg-[#13243c]">
+                  <Share2 className="h-3.5 w-3.5" /> Сподели
+                </button>
+                <button type="button" onClick={onReport} className={`inline-flex h-9 items-center justify-center gap-2 rounded-lg border text-sm font-bold transition ${reported ? 'border-amber-500/30 bg-amber-500/10 text-amber-300' : 'border-red-500/40 bg-[#0f1a2b] text-white hover:bg-[#13243c]'}`}>
+                  <AlertTriangle className="h-3.5 w-3.5" /> {reported ? 'Пријавено' : 'Пријави'}
+                </button>
               </div>
             </div>
 
