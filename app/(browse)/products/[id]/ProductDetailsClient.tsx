@@ -119,6 +119,8 @@ type CategoryOption = {
   subcategories: Array<{ id: number; name: string; slug: string }>;
 };
 
+const cleanLoc = (v: string | null | undefined) => (v || '').replace(/^\/\s*/, '');
+
 const FALLBACK_IMAGE = 'https://picsum.photos/900/700?grayscale&blur=1';
 
 function formatPostedAt(value?: string) {
@@ -270,7 +272,7 @@ export default function ProductDetailsClient({ id }: { id: string }) {
       title: ad.title,
       price: ad.price,
       currency: ad.currency || '€',
-      location: ad.location || ad.city || 'Македонија',
+      location: cleanLoc(ad.location) || cleanLoc(ad.city) || 'Македонија',
       image_url: images[0] || ad.image_url || null,
       viewedAt: new Date().toISOString(),
     };
@@ -607,7 +609,7 @@ export default function ProductDetailsClient({ id }: { id: string }) {
             </div>
 
             <div className="flex flex-wrap items-center gap-x-3 text-xs text-slate-400">
-              <span className="inline-flex items-center gap-1"><MapPin className="h-3 w-3" /> {ad.city || ad.location || 'Македонија'}{ad.neighborhood ? `, ${ad.neighborhood}` : ''}</span>
+              <span className="inline-flex items-center gap-1"><MapPin className="h-3 w-3" /> {cleanLoc(ad.city) || cleanLoc(ad.location) || 'Македонија'}{ad.neighborhood ? `, ${cleanLoc(ad.neighborhood)}` : ''}</span>
               <span className="inline-flex items-center gap-1"><CalendarDays className="h-3 w-3" /> {formatPostedAt(ad.created_at)}</span>
               <span className="inline-flex items-center gap-1"><Eye className="h-3 w-3" /> {Number(ad.views || 0).toLocaleString('mk-MK')} прегледи</span>
             </div>
@@ -1083,8 +1085,8 @@ export default function ProductDetailsClient({ id }: { id: string }) {
                     <MapPin className="h-3.5 w-3.5 text-emerald-400" /> Локација
                   </p>
                   <p className="mt-0.5">
-                    {ad.city || ad.location || 'Македонија'}
-                    {ad.neighborhood ? `, ${ad.neighborhood}` : ''}
+                    {cleanLoc(ad.city) || cleanLoc(ad.location) || 'Македонија'}
+                    {ad.neighborhood ? `, ${cleanLoc(ad.neighborhood)}` : ''}
                   </p>
                 </div>
                 <div className="py-2 px-3">
