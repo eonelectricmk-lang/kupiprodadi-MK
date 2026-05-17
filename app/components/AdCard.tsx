@@ -160,7 +160,7 @@ export function AdCard({
         )}
       </div>
 
-      <div className="min-w-0 flex-1">
+      <div className="flex min-w-0 flex-1 flex-col">
             <div className="flex items-start justify-between gap-2">
               <h3 className="line-clamp-2 text-base font-semibold leading-[1.2] text-white">{card.title}</h3>
               <button
@@ -177,7 +177,7 @@ export function AdCard({
               </button>
             </div>
 
-            <p className="mt-1.5 flex items-center gap-1 text-xs text-slate-400">
+            <p className="mt-1 flex items-center gap-1 text-xs text-slate-400">
               <span className="flex items-center gap-1">
                 <MapPin className="h-3.5 w-3.5" />
                 {card.location || 'Македонија'}
@@ -185,11 +185,11 @@ export function AdCard({
               <span className="ml-auto text-yellow-400">KP:{card.id}</span>
             </p>
 
-            <p className="mt-2 line-clamp-2 text-xs leading-5 text-slate-300">
+            <p className="mt-1 line-clamp-2 text-xs leading-5 text-slate-300">
               {card.description || 'Краток преглед на огласот со повеќе детали, состојба и клучни информации.'}
             </p>
 
-            <div className="mt-3 flex items-center justify-between">
+            <div className="mt-auto flex items-center justify-between">
               <p className="text-xl font-bold leading-none text-red-500">{card.price.toLocaleString()} <span className="text-white">€</span></p>
               <div className="flex items-center gap-2">
                 <p className="text-[11px] font-medium text-slate-400">Објавен: {postedLabel}</p>
@@ -248,7 +248,7 @@ export function AdCard({
         </button>
       </div>
 
-      <div className="flex h-[88px] flex-col px-3 pb-2 pt-1.5">
+      <div className="flex h-[98px] flex-col px-3 pb-3 pt-2.5">
         <div className="flex items-center justify-between gap-1">
           <p className="flex items-center gap-1 truncate text-[11px] text-slate-400">
             <MapPin className="h-3.5 w-3.5 shrink-0" />
@@ -265,7 +265,7 @@ export function AdCard({
             )}
           </div>
         </div>
-        <h3 className="line-clamp-2 text-[14px] font-semibold leading-[1.2] text-white">{card.title}</h3>
+        <h3 className="mt-0.5 line-clamp-2 text-[14px] font-semibold leading-[1.2] text-white">{card.title}</h3>
         <div className="mt-auto flex items-end justify-between gap-1 pt-0">
           <p className="whitespace-nowrap text-xl font-bold leading-none text-red-500">{card.price.toLocaleString()} <span className="text-white">€</span></p>
           <div className="flex shrink-0 items-center gap-1">
