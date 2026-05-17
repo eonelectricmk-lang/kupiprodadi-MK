@@ -653,7 +653,7 @@ export default function ProductDetailsClient({ id }: { id: string }) {
                       <button
                         type="button"
                         onClick={() => setShowSellerPhone((prev) => !prev)}
-                        className={`flex h-11 w-full items-center justify-center gap-2 rounded-xl text-sm font-bold transition ${
+                        className={`flex h-9 w-full items-center justify-center gap-2 rounded-lg text-sm font-bold transition ${
                           showSellerPhone
                             ? 'border border-emerald-700/55 bg-emerald-900/20 text-emerald-400 hover:bg-emerald-900/30'
                             : 'bg-emerald-800 text-white hover:bg-emerald-700'
