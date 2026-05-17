@@ -181,7 +181,7 @@ export function AdCard({
                 </div>
               </div>
 
-              <p className="mt-1 flex items-center gap-1 text-xs text-slate-400">
+              <p className="mt-0.5 flex items-center gap-1 text-xs text-slate-400">
                 <span className="flex items-center gap-1">
                   <MapPin className="h-3.5 w-3.5" />
                   {card.location || 'Македонија'}
