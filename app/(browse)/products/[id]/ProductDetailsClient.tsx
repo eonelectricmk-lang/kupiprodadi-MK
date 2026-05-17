@@ -519,19 +519,19 @@ export default function ProductDetailsClient({ id }: { id: string }) {
 
         {ad.status === 'pending' && (
           <div className="mb-5 rounded-xl border border-amber-500/30 bg-amber-500/10 p-4">
-            <div className="flex items-start gap-3">
-              <CheckCircle className="mt-0.5 h-6 w-6 shrink-0 text-emerald-400" />
-              <div className="min-w-0">
+            <div className="flex flex-col items-center gap-2">
+              <div className="flex items-center gap-2">
+                <CheckCircle className="h-6 w-6 shrink-0 text-emerald-400" />
                 <p className="text-sm font-semibold text-amber-200">Ова е вашиот оглас. Се чека на одобрување од администратор.</p>
-                <p className="mt-1 text-xs text-amber-300/70">Огласот е испратен на преглед и ќе биде објавен веднаш штом биде одобрен.</p>
-                <div className="mt-4 flex flex-wrap gap-3">
-                  <Link href={`/sell?edit=${ad.id}`} className="inline-flex items-center gap-2 rounded-lg bg-amber-600 px-4 py-2 text-sm font-semibold text-white hover:bg-amber-500 transition">
-                    Измени повторно
-                  </Link>
-                  <Link href="/profile" className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-500 transition">
-                    Врати се на профил
-                  </Link>
-                </div>
+              </div>
+              <p className="text-xs text-amber-300/70">Огласот е испратен на преглед и ќе биде објавен веднаш штом биде одобрен.</p>
+              <div className="flex flex-wrap justify-center gap-3">
+                <Link href={`/sell?edit=${ad.id}`} className="inline-flex items-center gap-2 rounded-lg bg-amber-600 px-4 py-2 text-sm font-semibold text-white hover:bg-amber-500 transition">
+                  Измени повторно
+                </Link>
+                <Link href="/profile" className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-500 transition">
+                  Врати се на профил
+                </Link>
               </div>
             </div>
           </div>
