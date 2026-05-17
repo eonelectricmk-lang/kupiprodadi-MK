@@ -518,18 +518,18 @@ export default function ProductDetailsClient({ id }: { id: string }) {
         </div>
 
         {ad.status === 'pending' && (
-          <div className="mb-5 rounded-xl border border-amber-500/20 bg-amber-500/[0.06] p-5">
-            <div className="mx-auto flex max-w-md flex-col items-center gap-3">
+          <div className="mx-auto mb-5 max-w-2xl rounded-xl border border-amber-500/20 bg-amber-500/[0.06] p-5 sm:p-6">
+            <div className="flex flex-col items-center gap-2.5">
               <div className="flex items-center gap-2">
                 <CheckCircle className="h-5 w-5 shrink-0 text-emerald-400" />
                 <p className="text-sm font-semibold text-amber-100">Ова е вашиот оглас. Се чека на одобрување од администратор.</p>
               </div>
               <p className="text-center text-xs text-amber-300/60">Огласот е испратен на преглед и ќе биде објавен веднаш штом биде одобрен.</p>
-              <div className="flex w-full flex-col gap-2 sm:flex-row sm:w-auto">
-                <Link href={`/sell?edit=${ad.id}`} className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-amber-700 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-amber-600 sm:w-auto">
+              <div className="flex w-full flex-col gap-2.5 sm:w-auto sm:flex-row">
+                <Link href={`/sell?edit=${ad.id}`} className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-amber-800 px-6 py-3 text-sm font-semibold text-white transition hover:bg-amber-700 sm:w-auto sm:min-w-[160px]">
                   Измени повторно
                 </Link>
-                <Link href="/profile" className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-slate-700 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-slate-600 sm:w-auto">
+                <Link href="/profile" className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-slate-600 px-6 py-3 text-sm font-semibold text-white transition hover:bg-slate-500 sm:w-auto sm:min-w-[160px]">
                   Врати се на профил
                 </Link>
               </div>
