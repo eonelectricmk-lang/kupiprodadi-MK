@@ -696,7 +696,7 @@ export default function ProductDetailsClient({ id }: { id: string }) {
                         <div className="h-24 w-full shrink-0 overflow-hidden">
                           <img src={img || 'https://picsum.photos/640/480?grayscale&blur=1'} alt={sp.title} className="h-full w-full object-cover" />
                         </div>
-                        <div className="flex flex-1 flex-col p-1.5">
+                        <div className="flex flex-1 flex-col px-1.5 pb-1">
                           <p className="truncate text-xs font-semibold text-white">{sp.title}</p>
                           <p className="whitespace-nowrap text-xs font-bold text-red-400">{sp.price.toLocaleString()} <span className="text-white">€</span></p>
                         </div>
@@ -845,7 +845,7 @@ export default function ProductDetailsClient({ id }: { id: string }) {
                               className="h-full w-full object-cover"
                             />
                           </div>
-                          <div className="flex flex-col p-2">
+                          <div className="flex flex-col px-2 pb-1.5 pt-1">
                             <p className="truncate text-sm font-semibold text-white">{sp.title}</p>
                             <p className="whitespace-nowrap text-sm font-bold text-red-400">{sp.price.toLocaleString()} <span className="text-white">€</span></p>
                           </div>
