@@ -185,7 +185,7 @@ export function AdCard({
               <span className="ml-auto text-yellow-400">KP:{card.id}</span>
             </p>
 
-            <p className="mt-1 truncate text-xs leading-5 text-slate-300">
+            <p className="mt-1 line-clamp-2 text-xs leading-5 text-slate-300">
               {card.description || 'Краток преглед на огласот со повеќе детали, состојба и клучни информации.'}
             </p>
 
