@@ -692,13 +692,13 @@ export default function ProductDetailsClient({ id }: { id: string }) {
                   const img = (sp as any).image_url || (sp as any).images?.[0] || undefined;
                   return (
                     <Link key={sp.id} href={`/products/${sp.id}?seller_id=${ad.seller_id}`} className="shrink-0 w-[130px]">
-                      <div className="overflow-hidden rounded-xl border border-[#2a3f55] bg-[#0b1727] transition hover:border-[#4d6fad]">
-                        <div className="aspect-[4/3] overflow-hidden">
+                      <div className="flex h-40 flex-col overflow-hidden rounded-xl border border-[#2a3f55] bg-[#0b1727] transition hover:border-[#4d6fad]">
+                        <div className="h-24 w-full shrink-0 overflow-hidden">
                           <img src={img || 'https://picsum.photos/640/480?grayscale&blur=1'} alt={sp.title} className="h-full w-full object-cover" />
                         </div>
-                        <div className="p-1.5">
-                          <p className="line-clamp-2 text-xs font-semibold text-white">{sp.title}</p>
-                          <p className="text-xs font-bold text-red-400">{sp.price.toLocaleString()} <span className="text-white">€</span></p>
+                        <div className="flex flex-1 flex-col p-1.5">
+                          <p className="truncate text-xs font-semibold text-white">{sp.title}</p>
+                          <p className="whitespace-nowrap text-xs font-bold text-red-400">{sp.price.toLocaleString()} <span className="text-white">€</span></p>
                         </div>
                       </div>
                     </Link>
@@ -837,17 +837,17 @@ export default function ProductDetailsClient({ id }: { id: string }) {
                     const img = (sp as any).image_url || (sp as any).images?.[0] || undefined;
                     return (
                       <Link key={sp.id} href={`/products/${sp.id}?seller_id=${ad.seller_id}`}>
-                        <div className="overflow-hidden rounded-xl border border-[#2a3f55] bg-[#0b1727] transition hover:border-[#4d6fad] hover:bg-[#122038]">
-                          <div className="aspect-[4/3] overflow-hidden">
+                        <div className="flex flex-col overflow-hidden rounded-xl border border-[#2a3f55] bg-[#0b1727] transition hover:border-[#4d6fad] hover:bg-[#122038]">
+                          <div className="aspect-[4/3] w-full shrink-0 overflow-hidden">
                             <img
                               src={img || 'https://picsum.photos/640/480?grayscale&blur=1'}
                               alt={sp.title}
                               className="h-full w-full object-cover"
                             />
                           </div>
-                          <div className="p-2">
-                            <p className="line-clamp-1 text-sm font-semibold text-white">{sp.title}</p>
-                             <p className="mt-0.5 text-sm font-bold text-red-400">{sp.price.toLocaleString()} <span className="text-white">€</span></p>
+                          <div className="flex flex-col p-2">
+                            <p className="truncate text-sm font-semibold text-white">{sp.title}</p>
+                            <p className="whitespace-nowrap text-sm font-bold text-red-400">{sp.price.toLocaleString()} <span className="text-white">€</span></p>
                           </div>
                         </div>
                       </Link>

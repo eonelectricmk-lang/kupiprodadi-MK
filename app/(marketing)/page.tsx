@@ -89,7 +89,7 @@ export default function Home() {
             <p className="mt-1 text-sm text-slate-400">Се вчитуваат директно од базата.</p>
           </div>
           <Link href="/products" className="text-sm font-semibold text-red-300 hover:text-red-200">
-            Види ги сите →
+            Види ги сите &gt;
           </Link>
         </div>
         <div className="grid gap-2.5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6">
