@@ -30,7 +30,7 @@ export default function CartPage() {
               <div key={item.id} className="flex justify-between items-center bg-white p-4 border rounded-lg shadow-sm">
                 <div>
                   <h3 className="font-bold">{item.name}</h3>
-                  <p className="text-gray-600">{item.price.toLocaleString()}</p>
+                  <p className="text-gray-600">{item.price.toLocaleString()} €</p>
                 </div>
                 <div className="flex items-center gap-4">
                   <span>Количина: {item.quantity}</span>
@@ -45,7 +45,7 @@ export default function CartPage() {
             ))}
             <div className="mt-8 border-t pt-4 flex justify-between items-center text-xl font-bold">
               <span>Вкупно:</span>
-              <span>{total.toLocaleString()}</span>
+              <span>{total.toLocaleString()} €</span>
             </div>
             <button className="w-full mt-6 bg-green-600 text-white py-3 rounded-lg font-bold hover:bg-green-700 transition">
               Продолжи кон наплата

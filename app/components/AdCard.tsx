@@ -190,7 +190,7 @@ export function AdCard({
             </p>
 
             <div className="mt-3 flex items-center justify-between">
-              <p className="text-xl font-bold leading-none text-red-500">{card.price.toLocaleString()}</p>
+              <p className="text-xl font-bold leading-none text-red-500">{card.price.toLocaleString()} <span className="text-white">€</span></p>
               <div className="flex items-center gap-2">
                 <p className="text-[11px] font-medium text-slate-400">Објавен: {postedLabel}</p>
                 {resolvedVerified && (
@@ -267,7 +267,7 @@ export function AdCard({
         </div>
         <h3 className="mt-0.5 line-clamp-2 text-[14px] font-semibold leading-[1.2] text-white">{card.title}</h3>
         <div className="mt-auto flex items-end justify-between gap-1 pt-0">
-          <p className="whitespace-nowrap text-base font-bold leading-none text-red-500">{card.price.toLocaleString()}</p>
+          <p className="whitespace-nowrap text-xl font-bold leading-none text-red-500">{card.price.toLocaleString()} <span className="text-white">€</span></p>
           <div className="flex shrink-0 items-center gap-1">
             <p className="shrink-0 text-[10px] text-slate-500">{postedLabel}</p>
             {onRemove && (

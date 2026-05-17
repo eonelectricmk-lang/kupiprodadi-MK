@@ -92,6 +92,7 @@ interface ProductDetails {
   has_viber?: number | boolean;
   has_whatsapp?: number | boolean;
   has_telegram?: number | boolean;
+  hide_phone?: number | boolean;
   trade_possible?: number | boolean;
   image_url?: string | null;
   images?: string[];
@@ -105,6 +106,7 @@ interface ProductDetails {
   seller_rating?: number;
   seller_avatar_url?: string | null;
   seller_is_active?: number | boolean;
+  is_crm?: boolean;
   prevProduct?: { id: number; title: string } | null;
   nextProduct?: { id: number; title: string } | null;
 }
@@ -151,6 +153,7 @@ export default function ProductDetailsClient({ id }: { id: string }) {
   const [sellerProducts, setSellerProducts] = useState<ProductDetails[]>([]);
   const [descExpanded, setDescExpanded] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [showSellerPhone, setShowSellerPhone] = useState(false);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -175,6 +178,7 @@ export default function ProductDetailsClient({ id }: { id: string }) {
         const data = await response.json();
         setAd(data);
         setActiveImage(0);
+        setShowSellerPhone(false);
 
         if (data.seller_id) {
           try {
@@ -444,12 +448,15 @@ export default function ProductDetailsClient({ id }: { id: string }) {
 
   const sellerPhone = ad.contact_phone || ad.seller_phone || '';
   const sellerName = ad.contact_name || ad.seller_name || 'Продавач';
-  const sellerRating = Number(ad.seller_rating || 0);
   const sellerEmail = ad.contact_email || ad.seller_email || '';
+  const sellerRating = Number(ad.seller_rating || 0);
   const sellerAvatarUrl = (loggedInUser?.id === ad.seller_id && loggedInUser?.avatar_url)
     ? loggedInUser.avatar_url
     : (ad.seller_avatar_url || null);
   const isCrmPublished = ad.seller_email === 'kupiprodadi@system.mk';
+  const viberEnabled = Boolean(ad.has_viber) && Boolean(sellerPhone) && showSellerPhone;
+  const whatsappEnabled = Boolean(ad.has_whatsapp) && Boolean(sellerPhone) && showSellerPhone;
+  const telegramEnabled = Boolean(ad.has_telegram) && Boolean(sellerPhone) && showSellerPhone;
   const categoryLink = categoryTrail?.category ? `/categories/${categoryTrail.category.slug}` : null;
   const subcategoryLink = categoryTrail?.subcategory ? `/categories/${categoryTrail.subcategory.slug}` : null;
 
@@ -491,9 +498,9 @@ export default function ProductDetailsClient({ id }: { id: string }) {
               <Link href="/profile" className="inline-flex items-center gap-2 rounded-lg bg-[#0f1a2b] px-4 py-2 text-sm font-semibold text-white hover:bg-[#13243c] transition">
                 Врати се на профил
               </Link>
-            </div>
-          </div>
-        )}
+                                </div>
+                              </div>
+                          )}
 
         {/* MOBILE - below lg */}
         <div className="lg:hidden space-y-2 pb-3">
@@ -556,63 +563,39 @@ export default function ProductDetailsClient({ id }: { id: string }) {
             <span className="shrink-0 mt-0.5 rounded-lg border border-yellow-500/20 bg-yellow-500/5 px-2 py-1 text-xs font-bold text-yellow-500/90">KP:{ad.id}</span>
           </div>
 
-          {/* 4. Price + Tags */}
-          <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-            <p className="text-2xl font-black text-red-500">{ad.price.toLocaleString('mk-MK')}</p>
-            <div className="flex flex-wrap gap-1.5">
+          {/* 4. Price + Tags + Condition + Delivery */}
+          <div className="flex flex-wrap items-center justify-between gap-y-1">
+            <div className="flex flex-wrap items-center gap-1">
+              <p className="text-2xl font-black text-red-500">{ad.price.toLocaleString('mk-MK')} <span className="text-white">{ad.currency || '€'}</span></p>
               {Boolean(ad.negotiable) && <span className="rounded bg-orange-500/20 px-1.5 py-0.5 text-[10px] font-bold text-orange-300 uppercase">По договор</span>}
               {!ad.negotiable && <span className="rounded bg-red-500/20 px-1.5 py-0.5 text-[10px] font-bold text-red-300 uppercase">Фиксна</span>}
               {Boolean(ad.trade_possible) && <span className="rounded bg-emerald-500/20 px-1.5 py-0.5 text-[10px] font-bold text-emerald-300 uppercase">Замена</span>}
             </div>
+            <div className="flex flex-wrap gap-1 justify-end">
+              <span className="text-xs font-light text-slate-400">Состојба: {ad.condition || 'Многу добро'}</span>
+              <span className="text-xs font-light text-slate-400">|</span>
+              <span className="text-xs font-light text-slate-400">Превземање: {ad.delivery || 'Лично'}</span>
+            </div>
           </div>
 
           <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-slate-400">
-            <span className="inline-flex items-center gap-1"><MapPin className="h-3 w-3" /> {ad.city || ad.location || 'Македонија'}</span>
+            <span className="inline-flex items-center gap-1"><MapPin className="h-3 w-3" /> {ad.city || ad.location || 'Македонија'}{ad.neighborhood ? `, ${ad.neighborhood}` : ''}</span>
             <span className="inline-flex items-center gap-1"><CalendarDays className="h-3 w-3" /> {formatPostedAt(ad.created_at)}</span>
             <span className="inline-flex items-center gap-1"><Eye className="h-3 w-3" /> {Number(ad.views || 0).toLocaleString('mk-MK')} прегледи</span>
           </div>
 
           {/* 5. Description */}
-          <div className="rounded-xl border border-white/10 bg-[#0e1828] p-3">
-            <p className={`text-sm leading-relaxed text-slate-300 whitespace-pre-line break-words ${!descExpanded ? 'line-clamp-4' : ''}`}>
-              {ad.description}
-            </p>
-            {ad.description.length > 200 && !descExpanded && (
-              <button type="button" onClick={() => setDescExpanded(true)} className="mt-1 text-xs font-bold text-blue-400 hover:text-blue-300 transition">Прикажи повеќе</button>
-            )}
-            {descExpanded && (
-              <button type="button" onClick={() => setDescExpanded(false)} className="mt-1 text-xs font-bold text-slate-400 hover:text-slate-300 transition">Прикажи помалку</button>
-            )}
-          </div>
-
-          {/* 6. Specifications */}
-          {(ad.condition || ad.delivery || ad.neighborhood) && (
-            <div className="rounded-xl border border-white/10 bg-[#0b1727] p-3">
-              <h3 className="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-2">Детали</h3>
-              <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
-                {ad.condition && (
-                  <div>
-                    <p className="text-[10px] text-slate-500/70 uppercase">Состојба</p>
-                    <p className="font-semibold text-white">{ad.condition}</p>
-                  </div>
-                )}
-                {ad.delivery && (
-                  <div>
-                    <p className="text-[10px] text-slate-500/70 uppercase">Достава</p>
-                    <p className="font-semibold text-white">{ad.delivery}</p>
-                  </div>
-                )}
-                {ad.neighborhood && (
-                  <div>
-                    <p className="text-[10px] text-slate-500/70 uppercase">Место</p>
-                    <p className="font-semibold text-white">{ad.neighborhood}</p>
-                  </div>
-                )}
-              </div>
-            </div>
+          <p className={`text-sm leading-relaxed text-slate-300 whitespace-pre-line break-words ${!descExpanded ? 'line-clamp-6' : ''}`}>
+            {ad.description}
+          </p>
+          {ad.description.length > 300 && !descExpanded && (
+            <button type="button" onClick={() => setDescExpanded(true)} className="text-xs font-bold text-blue-400 hover:text-blue-300 transition">Прикажи повеќе</button>
+          )}
+          {descExpanded && (
+            <button type="button" onClick={() => setDescExpanded(false)} className="text-xs font-bold text-slate-400 hover:text-slate-300 transition">Прикажи помалку</button>
           )}
 
-          {/* 7. Seller & Contact */}
+          {/* 6. Seller & Contact */}
           <div className="rounded-xl border border-white/10 bg-[#101f33] p-3 space-y-3">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
@@ -635,56 +618,69 @@ export default function ProductDetailsClient({ id }: { id: string }) {
               <span className="shrink-0 rounded bg-blue-500/10 px-2 py-0.5 text-xs font-bold text-blue-400">IDP:{ad.seller_id}</span>
             </div>
 
-            {sellerPhone && (
-              <a href={`tel:${sellerPhone}`} className="flex items-center justify-center gap-2 rounded-lg bg-blue-600/20 border border-blue-500/20 py-2.5 text-sm font-bold text-blue-400 transition hover:bg-blue-600/30">
-                <Phone className="h-4 w-4" /> {sellerPhone}
-              </a>
-            )}
+                {sellerPhone ? (
+                  <div className="overflow-hidden rounded-lg border border-emerald-700/55 bg-[#101a2b] transition">
+                    <div className="px-4 pb-3 pt-2">
+                      <p className="flex items-center justify-center gap-1.5 text-center text-base font-bold text-emerald-500">
+                        Контактирајте го огласувачот
+                      </p>
 
-            {sellerPhone && (
-              <div className="flex gap-1">
-                <a href={Boolean(ad.has_viber) ? viberUrl(sellerPhone) : '#'} target={Boolean(ad.has_viber) ? '_blank' : undefined} rel={Boolean(ad.has_viber) ? 'noopener noreferrer' : undefined} className={`flex-1 flex items-center justify-center gap-1 rounded-lg px-1.5 py-2 text-[11px] font-bold transition ${Boolean(ad.has_viber) ? 'bg-purple-900/40 text-purple-300 hover:bg-purple-800/50' : 'bg-slate-800/40 text-slate-600 cursor-default pointer-events-none'}`}>
-                  <ViberIcon className="h-3 w-3" /> Viber
-                </a>
-                <a href={Boolean(ad.has_whatsapp) ? waUrl(sellerPhone) : '#'} target={Boolean(ad.has_whatsapp) ? '_blank' : undefined} rel={Boolean(ad.has_whatsapp) ? 'noopener noreferrer' : undefined} className={`flex-1 flex items-center justify-center gap-1 rounded-lg px-1.5 py-2 text-[11px] font-bold transition ${Boolean(ad.has_whatsapp) ? 'bg-emerald-900/40 text-emerald-300 hover:bg-emerald-800/50' : 'bg-slate-800/40 text-slate-600 cursor-default pointer-events-none'}`}>
-                  <WhatsAppIcon className="h-3 w-3" /> WhatsApp
-                </a>
-                <a href={Boolean(ad.has_telegram) ? tgUrl(sellerPhone) : '#'} target={Boolean(ad.has_telegram) ? '_blank' : undefined} rel={Boolean(ad.has_telegram) ? 'noopener noreferrer' : undefined} className={`flex-1 flex items-center justify-center gap-1 rounded-lg px-1.5 py-2 text-[11px] font-bold transition ${Boolean(ad.has_telegram) ? 'bg-sky-900/40 text-sky-300 hover:bg-sky-800/50' : 'bg-slate-800/40 text-slate-600 cursor-default pointer-events-none'}`}>
-                  <TelegramIcon className="h-3 w-3" /> Telegram
-                </a>
-              </div>
-            )}
+                      <button
+                        type="button"
+                        onClick={() => setShowSellerPhone((prev) => !prev)}
+                        className="mx-auto mt-2 flex h-11 w-full max-w-[182px] items-center justify-center gap-1 rounded-xl bg-emerald-800 px-1 py-2.5 text-sm font-bold text-white transition hover:bg-emerald-700"
+                      >
+                        {!showSellerPhone && <Phone className="h-4 w-4" />}{showSellerPhone ? (Boolean(ad.hide_phone) ? 'Прати порака' : sellerPhone) : 'Прикажи контакт'}
+                      </button>
 
-            {!isCrmPublished && sellerEmail && (
-              <a href={`mailto:${sellerEmail}`} className="flex items-center justify-center gap-2 rounded-lg border border-white/5 bg-[#0f1a2b] px-3 py-2 text-sm font-semibold text-slate-300 hover:bg-[#13243c] transition">
-                <Mail className="h-3 w-3" /> {sellerEmail}
-              </a>
-            )}
+                      {showSellerPhone && (
+                        <>
+                          {!Boolean(ad.hide_phone) && (
+                            <div className="border-t border-white/10 pt-3 mt-4">
+                              <div className="flex gap-1">
+                                  <a href={viberEnabled ? viberUrl(sellerPhone) : '#'} target={viberEnabled ? '_blank' : undefined} rel={viberEnabled ? 'noopener noreferrer' : undefined} className={`flex-1 flex items-center justify-center gap-1 rounded-lg px-1.5 py-2 text-[11px] font-bold transition ${viberEnabled ? 'bg-purple-900/40 text-purple-300 hover:bg-purple-800/50' : 'bg-slate-800/40 text-slate-600 cursor-default pointer-events-none'}`}>
+                                    <ViberIcon className="h-3 w-3" /> Viber
+                                  </a>
+                                  <a href={whatsappEnabled ? waUrl(sellerPhone) : '#'} target={whatsappEnabled ? '_blank' : undefined} rel={whatsappEnabled ? 'noopener noreferrer' : undefined} className={`flex-1 flex items-center justify-center gap-1 rounded-lg px-1.5 py-2 text-[11px] font-bold transition ${whatsappEnabled ? 'bg-emerald-900/40 text-emerald-300 hover:bg-emerald-800/50' : 'bg-slate-800/40 text-slate-600 cursor-default pointer-events-none'}`}>
+                                    <WhatsAppIcon className="h-3 w-3" /> WhatsApp
+                                  </a>
+                                  <a href={telegramEnabled ? tgUrl(sellerPhone) : '#'} target={telegramEnabled ? '_blank' : undefined} rel={telegramEnabled ? 'noopener noreferrer' : undefined} className={`flex-1 flex items-center justify-center gap-1 rounded-lg px-1.5 py-2 text-[11px] font-bold transition ${telegramEnabled ? 'bg-sky-900/40 text-sky-300 hover:bg-sky-800/50' : 'bg-slate-800/40 text-slate-600 cursor-default pointer-events-none'}`}>
+                                    <TelegramIcon className="h-3 w-3" /> Telegram
+                                  </a>
+                                </div>
+                              </div>
+                          )}
 
-            {loggedInUser?.id !== ad.seller_id && isCrmPublished && sellerPhone && (
-              <div className="rounded-lg border border-emerald-500/60 bg-emerald-500/5 p-2.5 text-center">
-                <p className="text-xs font-bold text-emerald-400 mb-1">📞 Контактирајте го огласувачот</p>
-                <a href={`tel:${sellerPhone}`} className="inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-4 py-1.5 text-sm font-black text-white">{sellerPhone}</a>
-              </div>
-            )}
-
-            {loggedInUser?.id !== ad.seller_id && !isCrmPublished && (
-              <form onSubmit={onSendMessage} className="space-y-2">
-                <h3 className="flex items-center gap-2 text-xs font-bold text-white uppercase tracking-wider">
-                  <MessageCircle className="h-3 w-3 text-red-500" /> Порака
-                </h3>
-                <textarea required minLength={5} value={contactMessage} onChange={e => setContactMessage(e.target.value)} placeholder={`Здраво, заинтересиран сум за огласов...`}
-                  className="min-h-[72px] w-full resize-none rounded-lg border border-[#2a3f60] bg-[#0f1a2b] px-3 py-2 text-sm leading-snug text-white outline-none placeholder:text-slate-500 focus:border-red-500/50" />
-                <button type="submit" disabled={sendingMessage || !loggedInUser}
-                  className="flex h-9 w-full items-center justify-center gap-2 rounded-lg bg-red-600 text-sm font-bold text-white transition hover:bg-red-500 disabled:cursor-not-allowed disabled:opacity-50">
-                  <Send className="h-3.5 w-3.5" /> {sendingMessage ? '...' : 'Испрати'}
-                </button>
-                {contactStatus && <p className="text-center text-xs text-slate-400">{contactStatus}</p>}
-              </form>
-            )}
+                          <div className={`${!Boolean(ad.hide_phone) ? 'border-t border-white/10 mt-4' : ''} pt-3`}>
+                            {!ad.is_crm && (
+                            <form onSubmit={onSendMessage} className="space-y-3">
+                              <textarea
+                                required
+                                minLength={5}
+                                value={contactMessage}
+                                onChange={e => setContactMessage(e.target.value)}
+                                placeholder="Здраво, заинтересиран сум за огласов..."
+                                className="min-h-[88px] w-full resize-none rounded-lg border border-[#2a3f60] bg-[#0f1a2b] px-3 py-2.5 text-sm leading-snug text-white outline-none placeholder:text-slate-500 focus:border-red-500/50"
+                              />
+                              <button
+                                type="submit"
+                                disabled={sendingMessage || !loggedInUser || loggedInUser?.id === ad.seller_id}
+                                className="flex h-9 w-full items-center justify-center gap-2 rounded-lg bg-red-600 text-sm font-bold text-white transition hover:bg-red-500 disabled:cursor-not-allowed disabled:bg-red-700/90 disabled:text-white/80"
+                              >
+                                <Send className="h-3.5 w-3.5" /> {sendingMessage ? '...' : 'Испрати'}
+                              </button>
+                              {contactStatus && <p className="text-center text-xs text-slate-400">{contactStatus}</p>}
+                            </form>
+                            )}
+                          </div>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                ) : null}
           </div>
 
-          {/* 8. Other ads from seller */}
+          {/* 7. Other ads from seller */}
           {ad.seller_id && sellerProducts.length > 0 && (
             <div>
               <div className="flex items-center justify-between mb-2">
@@ -701,8 +697,8 @@ export default function ProductDetailsClient({ id }: { id: string }) {
                           <img src={img || 'https://picsum.photos/640/480?grayscale&blur=1'} alt={sp.title} className="h-full w-full object-cover" />
                         </div>
                         <div className="p-1.5">
-                          <p className="line-clamp-1 text-xs font-semibold text-white">{sp.title}</p>
-                          <p className="text-xs font-bold text-red-400">{sp.price.toLocaleString()}</p>
+                          <p className="line-clamp-2 text-xs font-semibold text-white">{sp.title}</p>
+                          <p className="text-xs font-bold text-red-400">{sp.price.toLocaleString()} <span className="text-white">€</span></p>
                         </div>
                       </div>
                     </Link>
@@ -712,7 +708,7 @@ export default function ProductDetailsClient({ id }: { id: string }) {
             </div>
           )}
 
-          {/* 9. Bottom actions */}
+          {/* 8. Bottom actions */}
           <div className="grid grid-cols-2 gap-1.5">
             <button type="button" onClick={handleMobileFavorite} className={`inline-flex h-8 items-center justify-center gap-2 rounded-lg border text-xs font-bold transition ${isSaved ? 'border-red-500/30 bg-red-500/10 text-red-300' : 'border-white/20 bg-[#0f1a2b] text-white hover:bg-[#13243c]'}`}>
               <Heart className={`h-3.5 w-3.5 ${isSaved ? 'fill-current' : ''}`} /> {isSaved ? 'Зачувано' : 'Зачувај'}
@@ -728,23 +724,20 @@ export default function ProductDetailsClient({ id }: { id: string }) {
             </button>
           </div>
 
+          {/* 9. Prev/Next */}
           <div className="border-t border-[#2a3f55]/70" />
-
-          {/* 10. Prev/Next */}
-          {(ad.prevProduct || ad.nextProduct) && (
-            <div className="flex items-center gap-1.5">
-              {ad.prevProduct ? (
-                <Link href={`/products/${ad.prevProduct.id}`} className="flex-1 rounded-lg border border-blue-500/40 bg-blue-500/10 px-3 py-1.5 text-xs font-semibold text-blue-400 hover:bg-blue-500/20 transition text-center">← Претходен</Link>
-              ) : (
-                <span className="flex-1 rounded-lg border border-[#2a3f55]/30 bg-[#081223]/50 px-3 py-1.5 text-xs font-semibold text-slate-600 text-center cursor-not-allowed">← Претходен</span>
-              )}
-              {ad.nextProduct ? (
-                <Link href={`/products/${ad.nextProduct.id}`} className="flex-1 rounded-lg border border-emerald-500/40 bg-emerald-500/10 px-3 py-1.5 text-xs font-semibold text-emerald-400 hover:bg-emerald-500/20 transition text-center">Следен →</Link>
-              ) : (
-                <span className="flex-1 rounded-lg border border-[#2a3f55]/30 bg-[#081223]/50 px-3 py-1.5 text-xs font-semibold text-slate-600 text-center cursor-not-allowed">Следен →</span>
-              )}
-            </div>
-          )}
+          <div className="flex items-center gap-1.5">
+            {ad.prevProduct ? (
+              <Link href={`/products/${ad.prevProduct.id}`} className="flex-1 rounded-lg border border-blue-500/40 bg-blue-500/10 px-3 py-1.5 text-xs font-semibold text-blue-400 hover:bg-blue-500/20 transition text-center">← Претходен</Link>
+            ) : (
+              <span className="flex-1 rounded-lg border border-[#2a3f55]/30 bg-[#081223]/50 px-3 py-1.5 text-xs font-semibold text-slate-600 text-center cursor-not-allowed">← Претходен</span>
+            )}
+            {ad.nextProduct ? (
+              <Link href={`/products/${ad.nextProduct.id}`} className="flex-1 rounded-lg border border-emerald-500/40 bg-emerald-500/10 px-3 py-1.5 text-xs font-semibold text-emerald-400 hover:bg-emerald-500/20 transition text-center">Следен →</Link>
+            ) : (
+              <span className="flex-1 rounded-lg border border-[#2a3f55]/30 bg-[#081223]/50 px-3 py-1.5 text-xs font-semibold text-slate-600 text-center cursor-not-allowed">Следен →</span>
+            )}
+          </div>
         </div>
 
         {toastMessage && (
@@ -854,7 +847,7 @@ export default function ProductDetailsClient({ id }: { id: string }) {
                           </div>
                           <div className="p-2">
                             <p className="line-clamp-1 text-sm font-semibold text-white">{sp.title}</p>
-                            <p className="mt-0.5 text-sm font-bold text-red-400">{sp.price.toLocaleString()}</p>
+                             <p className="mt-0.5 text-sm font-bold text-red-400">{sp.price.toLocaleString()} <span className="text-white">€</span></p>
                           </div>
                         </div>
                       </Link>
@@ -875,7 +868,7 @@ export default function ProductDetailsClient({ id }: { id: string }) {
 
             <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1">
               <p className="text-3xl font-black text-red-500">
-                {ad.price.toLocaleString('mk-MK')}
+                {ad.price.toLocaleString('mk-MK')} <span className="text-white">{ad.currency || '€'}</span>
               </p>
               <div className="flex flex-wrap gap-1.5">
                 {Boolean(ad.negotiable) && <span className="rounded bg-orange-500/20 px-2 py-0.5 text-xs font-bold text-orange-300 uppercase">По договор</span>}
@@ -890,18 +883,9 @@ export default function ProductDetailsClient({ id }: { id: string }) {
               </span>
             </div>
 
-            <div className="mt-3">
-              {ad.condition && (
-                <div className="inline-flex rounded-lg border border-white/5 bg-[#101f33] py-1.5 px-3">
-                  <p className="text-sm text-slate-400 mr-2">Состојба:</p>
-                  <p className="text-sm font-bold text-white">{ad.condition}</p>
-                </div>
-              )}
-            </div>
-
             <div className="mt-3 rounded-xl border border-white/20 bg-[#101f33] p-3">
               <div className="flex items-center justify-between gap-3">
-                <h2 className="text-base font-bold text-blue-400 uppercase tracking-wider">{isCrmPublished ? 'Продавач' : 'Профил'}</h2>
+                <h2 className="text-base font-bold text-blue-400 uppercase tracking-wider">Профил</h2>
                 <div className="flex items-center gap-2">
                   {ad.seller_is_active && (
                     <span className="inline-flex items-center gap-1 rounded-lg bg-green-500/10 px-2 py-0.5 text-xs font-bold text-green-400 border border-green-500/20">
@@ -932,71 +916,68 @@ export default function ProductDetailsClient({ id }: { id: string }) {
               </div>
 
               <div className="mt-3 grid gap-3">
-                {sellerPhone && (
-                  <a href={`tel:${sellerPhone}`} className="relative flex h-9 w-full items-center justify-center rounded-lg border border-blue-500/20 bg-blue-500/10 px-4 font-bold text-blue-400 hover:bg-blue-500/20 transition leading-none">
-                    <span className="absolute left-3 text-base">
-                      Контакт
-                    </span>
-                    <span className="flex items-center gap-2 text-lg text-white">
-                      <Phone className="h-4 w-4" /> {sellerPhone}
-                    </span>
-                  </a>
-                )}
-                {sellerPhone && (
-                  <div className="flex gap-1 px-1">
-                    <a href={Boolean(ad.has_viber) ? viberUrl(sellerPhone) : '#'} target={Boolean(ad.has_viber) ? '_blank' : undefined} rel={Boolean(ad.has_viber) ? 'noopener noreferrer' : undefined} className={`flex-1 justify-center inline-flex items-center gap-1 rounded-lg px-1.5 py-1.5 text-[11px] font-bold transition ${Boolean(ad.has_viber) ? 'bg-purple-900/40 text-purple-300 hover:bg-purple-800/50' : 'bg-slate-800/40 text-slate-600 cursor-default pointer-events-none'}`}>
-                      <ViberIcon className="h-2.5 w-2.5" /> Viber
-                    </a>
-                    <a href={Boolean(ad.has_whatsapp) ? waUrl(sellerPhone) : '#'} target={Boolean(ad.has_whatsapp) ? '_blank' : undefined} rel={Boolean(ad.has_whatsapp) ? 'noopener noreferrer' : undefined} className={`flex-1 justify-center inline-flex items-center gap-1 rounded-lg px-1.5 py-1.5 text-[11px] font-bold transition ${Boolean(ad.has_whatsapp) ? 'bg-emerald-900/40 text-emerald-300 hover:bg-emerald-800/50' : 'bg-slate-800/40 text-slate-600 cursor-default pointer-events-none'}`}>
-                      <WhatsAppIcon className="h-2.5 w-2.5" /> WhatsApp
-                    </a>
-                    <a href={Boolean(ad.has_telegram) ? tgUrl(sellerPhone) : '#'} target={Boolean(ad.has_telegram) ? '_blank' : undefined} rel={Boolean(ad.has_telegram) ? 'noopener noreferrer' : undefined} className={`flex-1 justify-center inline-flex items-center gap-1 rounded-lg px-1.5 py-1.5 text-[11px] font-bold transition ${Boolean(ad.has_telegram) ? 'bg-sky-900/40 text-sky-300 hover:bg-sky-800/50' : 'bg-slate-800/40 text-slate-600 cursor-default pointer-events-none'}`}>
-                      <TelegramIcon className="h-2.5 w-2.5" /> Telegram
-                    </a>
+                {sellerPhone ? (
+                  <div className="overflow-hidden rounded-lg border border-emerald-700/55 bg-[#101a2b] transition">
+                    <div className="px-4 pb-3 pt-2">
+                      <p className="flex items-center justify-center gap-1.5 text-center text-sm font-bold text-emerald-500">
+                        Контактирајте го огласувачот
+                      </p>
+
+                      <button
+                        type="button"
+                        onClick={() => setShowSellerPhone((prev) => !prev)}
+                        className="mx-auto mt-2 flex h-11 w-full max-w-[220px] items-center justify-center gap-1 rounded-xl bg-emerald-800 px-1 py-2.5 text-sm font-bold text-white transition hover:bg-emerald-700"
+                      >
+                        {!showSellerPhone && <Phone className="h-4 w-4" />}{showSellerPhone ? (Boolean(ad.hide_phone) ? 'Прати порака' : sellerPhone) : 'Прикажи контакт'}
+                      </button>
+
+                      {showSellerPhone && (
+                        <>
+                          {!Boolean(ad.hide_phone) && (
+                              <div className="border-t border-white/10 pt-3 mt-4">
+                                <div className="flex gap-1 px-1">
+                                  <a href={viberEnabled ? viberUrl(sellerPhone) : '#'} target={viberEnabled ? '_blank' : undefined} rel={viberEnabled ? 'noopener noreferrer' : undefined} className={`flex-1 justify-center inline-flex items-center gap-1 rounded-lg px-1.5 py-1.5 text-[11px] font-bold transition ${viberEnabled ? 'bg-purple-900/40 text-purple-300 hover:bg-purple-800/50' : 'bg-slate-800/40 text-slate-600 cursor-default pointer-events-none'}`}>
+                                    <ViberIcon className="h-2.5 w-2.5" /> Viber
+                                  </a>
+                                  <a href={whatsappEnabled ? waUrl(sellerPhone) : '#'} target={whatsappEnabled ? '_blank' : undefined} rel={whatsappEnabled ? 'noopener noreferrer' : undefined} className={`flex-1 justify-center inline-flex items-center gap-1 rounded-lg px-1.5 py-1.5 text-[11px] font-bold transition ${whatsappEnabled ? 'bg-emerald-900/40 text-emerald-300 hover:bg-emerald-800/50' : 'bg-slate-800/40 text-slate-600 cursor-default pointer-events-none'}`}>
+                                    <WhatsAppIcon className="h-2.5 w-2.5" /> WhatsApp
+                                  </a>
+                                  <a href={telegramEnabled ? tgUrl(sellerPhone) : '#'} target={telegramEnabled ? '_blank' : undefined} rel={telegramEnabled ? 'noopener noreferrer' : undefined} className={`flex-1 justify-center inline-flex items-center gap-1 rounded-lg px-1.5 py-1.5 text-[11px] font-bold transition ${telegramEnabled ? 'bg-sky-900/40 text-sky-300 hover:bg-sky-800/50' : 'bg-slate-800/40 text-slate-600 cursor-default pointer-events-none'}`}>
+                                  <TelegramIcon className="h-2.5 w-2.5" /> Telegram
+                                  </a>
+                                </div>
+                              </div>
+                          )}
+
+                          <div className={`${!Boolean(ad.hide_phone) ? 'border-t border-white/10 mt-4' : ''} pt-3`}>
+                            {!ad.is_crm && (
+                            <form onSubmit={onSendMessage} className="space-y-3 px-1">
+                              <textarea
+                                required
+                                minLength={5}
+                                value={contactMessage}
+                                onChange={(event) => setContactMessage(event.target.value)}
+                                placeholder="Здраво, заинтересиран сум за огласов..."
+                                className="min-h-24 w-full resize-none rounded-lg border border-[#2a3f60] bg-[#0f1a2b] px-3 py-2.5 text-sm leading-snug text-white outline-none placeholder:text-slate-500 focus:border-red-500/50"
+                              />
+                              <button
+                                type="submit"
+                                disabled={sendingMessage || !loggedInUser || loggedInUser?.id === ad.seller_id}
+                                className="inline-flex h-9 w-full items-center justify-center gap-2 rounded-lg bg-red-600 px-4 text-sm font-bold text-white transition hover:bg-red-500 disabled:cursor-not-allowed disabled:bg-red-700/90 disabled:text-white/80"
+                              >
+                                <Send className="h-3.5 w-3.5" /> {sendingMessage ? '...' : 'Испрати'}
+                              </button>
+                              {contactStatus && <p className="text-center text-xs text-slate-400">{contactStatus}</p>}
+                            </form>
+                            )}
+                          </div>
+                        </>
+                      )}
+                    </div>
                   </div>
-                )}
-                {!isCrmPublished && sellerEmail && (
-                  <a href={`mailto:${sellerEmail}`} className="inline-flex h-8 items-center justify-center gap-2 rounded-lg border border-white/5 bg-[#0f1a2b] px-3 text-sm font-semibold text-slate-300 hover:bg-[#13243c] transition">
-                    <Mail className="h-3 w-3" /> {sellerEmail}
-                  </a>
-                )}
+                ) : null}
               </div>
             </div>
-
-            {loggedInUser?.id !== ad.seller_id && (
-              isCrmPublished && sellerPhone ? (
-                <div className="mt-3 rounded-xl border border-emerald-500/80 bg-emerald-500/5 pt-2 pb-3 px-4 text-center">
-                  <p className="text-sm font-bold text-emerald-400">📞 Контактирајте го огласувачот</p>
-                  <a href={`tel:${sellerPhone}`} className="mt-2 inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-4 py-2 text-md font-black text-white hover:bg-emerald-500 transition">
-                    <Phone className="h-4 w-4" /> {sellerPhone}
-                  </a>
-                </div>
-              ) : (
-                <form onSubmit={onSendMessage} className="mt-3 rounded-xl border border-white/20 bg-[#101f33] p-3">
-                  <h2 className="flex items-center gap-2 text-base font-bold text-white uppercase tracking-wider">
-                    <MessageCircle className="h-3.5 w-3.5 text-red-500" /> Порака
-                  </h2>
-                  <div className="mt-2.5 grid gap-2.5">
-                    <textarea
-                      required
-                      minLength={5}
-                      value={contactMessage}
-                      onChange={(event) => setContactMessage(event.target.value)}
-                      placeholder={`Здраво, заинтересиран сум за огласов...`}
-                      className="min-h-20 resize-none rounded-lg border border-[#2a3f60] bg-[#0f1a2b] px-3 py-2 text-sm leading-snug text-white outline-none placeholder:text-slate-500 focus:border-red-500/50"
-                    />
-                    <button
-                      type="submit"
-                      disabled={sendingMessage || !loggedInUser}
-                      className="inline-flex h-9 items-center justify-center gap-2 rounded-lg bg-red-600 px-4 text-sm font-bold text-white transition hover:bg-red-500 disabled:cursor-not-allowed disabled:opacity-50"
-                    >
-                      <Send className="h-3.5 w-3.5" /> {sendingMessage ? '...' : 'Испрати'}
-                    </button>
-                    {contactStatus && <p className="text-center text-xs text-slate-400">{contactStatus}</p>}
-                  </div>
-                </form>
-              )
-            )}
 
             <div className="mt-3 space-y-2">
               <div className="grid grid-cols-2 gap-2">
@@ -1017,23 +998,26 @@ export default function ProductDetailsClient({ id }: { id: string }) {
               </div>
             </div>
 
-            {ad.delivery && (
-              <div className="mt-3 rounded-xl border border-white/20 bg-[#101f33] py-2 px-3 text-sm text-slate-400">
-                <p className="flex items-center gap-2 font-bold text-white uppercase tracking-tighter">
-                  <Truck className="h-3.5 w-3.5 text-blue-400" /> Достава
-                </p>
-                <p className="mt-0.5">{ad.delivery}</p>
+            <div className="mt-3 rounded-xl border border-white/20 bg-[#101f33] text-sm text-slate-400">
+              <div className="grid grid-cols-3 divide-x divide-white/10">
+                <div className="py-2 px-3">
+                  <p className="flex items-center gap-2 font-bold text-white uppercase tracking-tighter">
+                    <MapPin className="h-3.5 w-3.5 text-emerald-400" /> Локација
+                  </p>
+                  <p className="mt-0.5">
+                    {ad.city || ad.location || 'Македонија'}
+                    {ad.neighborhood ? `, ${ad.neighborhood}` : ''}
+                  </p>
+                </div>
+                <div className="py-2 px-3">
+                  <p className="font-bold text-white uppercase tracking-tighter">Состојба</p>
+                  <p className="mt-0.5 text-slate-400">{ad.condition || 'Многу добро'}</p>
+                </div>
+                <div className="py-2 px-3">
+                  <p className="font-bold text-white uppercase tracking-tighter">Превземање</p>
+                  <p className="mt-0.5 text-slate-400">{ad.delivery || 'Лично'}</p>
+                </div>
               </div>
-            )}
-
-            <div className="mt-3 rounded-xl border border-white/20 bg-[#101f33] py-2 px-3 text-sm text-slate-400">
-              <p className="flex items-center gap-2 font-bold text-white uppercase tracking-tighter">
-                <MapPin className="h-3.5 w-3.5 text-emerald-400" /> Локација
-              </p>
-              <p className="mt-0.5">
-                {ad.city || ad.location || 'Македонија'}
-                {ad.neighborhood ? `, ${ad.neighborhood}` : ''}
-              </p>
             </div>
 
             <div className="mt-3 flex items-center gap-2 text-xs text-slate-500 px-1">

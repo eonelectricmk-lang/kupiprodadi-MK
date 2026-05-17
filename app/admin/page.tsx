@@ -374,7 +374,7 @@ function CrmDraftsTab() {
                       ))}
                     </div>
                     <div className="mt-0.5 text-sm text-slate-300 truncate">
-                      {draft.price && <span>💰 {draft.price} </span>}
+                      {draft.price && <span>💰 {Number(draft.price).toLocaleString()} <span className="text-white">€</span></span>}
                       {draft.city && <span>📍 {draft.city} </span>}
                       {draft.seller_name && <span>👤 {draft.seller_name} </span>}
                       {draft.phone && <span>📞 {draft.phone} </span>}
@@ -659,7 +659,7 @@ function CrmPublishedTab() {
                       ))}
                     </div>
                     <div className="mt-0.5 text-sm text-slate-300 truncate">
-                      {draft.price && <span>💰 {draft.price} </span>}
+                      {draft.price && <span>💰 {Number(draft.price).toLocaleString()} <span className="text-white">€</span></span>}
                       {draft.city && <span>📍 {draft.city} </span>}
                       {draft.seller_name && <span>👤 {draft.seller_name} </span>}
                       {draft.phone && <span>📞 {draft.phone} </span>}
@@ -1746,7 +1746,7 @@ function AdminPageContent() {
                                   <span className="text-slate-400">{product.contact_phone || 'Нема телефон'}</span>
                                 </p>
                                 <p className="mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-sm text-slate-400">
-                                  <span className="font-semibold text-slate-200">{product.price}</span>
+                                  <span className="font-semibold text-slate-200">{Number(product.price).toLocaleString()} <span className="text-white">€</span></span>
                                   <span className="text-slate-600">/</span>
                                   <span>{product.city || product.location || 'Нема град'}</span>
                                   <span className="text-slate-600">/</span>

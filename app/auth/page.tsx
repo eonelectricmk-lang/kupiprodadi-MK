@@ -34,8 +34,23 @@ export default function AuthPage() {
       <main className={dark ? 'min-h-screen bg-[#040914] text-white' : 'min-h-screen bg-slate-100 text-slate-900'}>
         <Container className="py-8">
           <div className="mx-auto grid max-w-5xl gap-6 lg:grid-cols-[1fr_0.9fr] lg:items-start">
+            {/* MOBILE compact registration prompt */}
+            <section className="lg:hidden rounded-xl border border-[#2a3f55] bg-[#0b1727] p-4 text-center">
+              <p className="text-sm leading-relaxed text-slate-300">
+                Доколку сакаш да зачуваш оглас, треба да се регистрираш. Лесно е — во 2 чекори стани член на КупиПродади.
+              </p>
+              <button
+                type="button"
+                onClick={() => setIsLogin(false)}
+                className="mt-3 inline-flex items-center gap-2 rounded-lg bg-red-600 px-5 py-2 text-sm font-bold text-white hover:bg-red-500 transition"
+              >
+                Регистрирај се
+              </button>
+            </section>
+
+            {/* DESKTOP promo section */}
             <section
-              className={`rounded-[28px] border p-6 shadow-2xl sm:p-8 ${
+              className={`hidden lg:block rounded-[28px] border p-6 shadow-2xl sm:p-8 ${
                 dark
                   ? 'border-[#2a3f55] bg-gradient-to-br from-[#081223] via-[#0b1423] to-[#07101c] shadow-black/20'
                   : 'border-slate-500 bg-white shadow-slate-300/40'

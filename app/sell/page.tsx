@@ -31,19 +31,20 @@ type FormData = {
   delivery: string;
   contactName: string;
   phone: string;
-  email: string;
   preferredContact: string;
   hasViber: boolean;
   hasWhatsapp: boolean;
   hasTelegram: boolean;
+  hidePhone: boolean;
   tradePossible: boolean;
+  emailNotifications: boolean;
 };
 
 const INITIAL_FORM: FormData = {
   title: '',
   category: '',
   subcategory: '',
-  condition: '',
+  condition: 'Многу добро',
   price: '',
   currency: '€',
   negotiable: true,
@@ -52,20 +53,21 @@ const INITIAL_FORM: FormData = {
   city: '',
   neighborhood: '',
   addressNote: '',
-  delivery: 'Лично преземање',
+  delivery: 'Лично',
   contactName: '',
   phone: '',
-  email: '',
-  preferredContact: 'Телефон',
+  preferredContact: 'Телефон и порака',
   hasViber: false,
   hasWhatsapp: false,
   hasTelegram: false,
+  hidePhone: false,
+  emailNotifications: true,
 };
 
 const CONDITIONS = ['Ново', 'Како ново', 'Многу добро', 'Добро', 'Користено', 'За делови'];
 const CURRENCIES = ['€', 'ден', '$'];
-const DELIVERY_OPTIONS = ['Лично преземање', 'Карго', 'Достава во град', 'По договор'];
-const CONTACT_OPTIONS = ['Телефон', 'Порака во апликација', 'Email', 'Телефон и порака'];
+const DELIVERY_OPTIONS = ['Лично', 'Карго', 'По договор'];
+const CONTACT_OPTIONS = ['Телефон', 'Порака во апликација', 'Телефон и порака'];
 const CITIES = [
   'Скопје',
   'Битола',
@@ -112,6 +114,7 @@ export default function SellPage() {
 
   useEffect(() => {
     const user = typeof window !== 'undefined' ? JSON.parse(window.localStorage.getItem('user') || 'null') : null;
+    if (user?.email) setUserEmail(user.email);
     if (!user) {
       router.push('/auth');
     }
@@ -126,6 +129,7 @@ export default function SellPage() {
   const [wasValidated, setWasValidated] = useState(false);
   const [editingProductId, setEditingProductId] = useState<number | null>(null);
   const [loadingEdit, setLoadingEdit] = useState(false);
+  const [userEmail, setUserEmail] = useState('');
   const [categories, setCategories] = useState<CategoryOption[]>(
     CATEGORIES.map((category, index) => ({
       id: index + 1,
@@ -196,15 +200,16 @@ export default function SellPage() {
           city: product.city || '',
           neighborhood: product.neighborhood || '',
           addressNote: product.address_note || '',
-          delivery: product.delivery || 'Лично преземање',
+          delivery: product.delivery || 'Лично',
           contactName: product.contact_name || '',
           phone: product.contact_phone || '',
-          email: product.contact_email || '',
-          preferredContact: product.preferred_contact || 'Телефон',
+          preferredContact: product.preferred_contact || 'Телефон и порака',
           hasViber: Boolean(product.has_viber),
           hasWhatsapp: Boolean(product.has_whatsapp),
           hasTelegram: Boolean(product.has_telegram),
+          hidePhone: Boolean(product.hide_phone),
           tradePossible: Boolean(product.trade_possible),
+          emailNotifications: true,
         });
 
         const loadedImages = Array.isArray(product.images) && product.images.length > 0
@@ -230,12 +235,11 @@ export default function SellPage() {
 
   useEffect(() => {
     const stored = typeof window !== 'undefined' ? JSON.parse(window.localStorage.getItem('user') || '{}') : {};
-    if (stored?.name || stored?.phone || stored?.email || stored?.location) {
+    if (stored?.name || stored?.phone || stored?.location) {
       setFormData(prev => ({
         ...prev,
         contactName: prev.contactName || stored.name || '',
         phone: prev.phone || stored.phone || '',
-        email: prev.email || stored.email || '',
         city: prev.city || stored.location || '',
       }));
     }
@@ -283,6 +287,7 @@ export default function SellPage() {
     try {
       const currentUser = typeof window !== 'undefined' ? JSON.parse(window.localStorage.getItem('user') || '{}') : {};
       const sellerId = currentUser?.id || 1;
+      const resolvedContactPhone = formData.phone.trim() || currentUser?.phone || '';
       const isEditing = Boolean(editingProductId);
       const response = await fetch(isEditing ? `/api/products/${editingProductId}` : '/api/products', {
         method: isEditing ? 'PATCH' : 'POST',
@@ -301,18 +306,14 @@ export default function SellPage() {
           address_note: formData.addressNote,
           delivery: formData.delivery,
           contact_name: formData.contactName,
-          contact_phone: formData.phone,
-          contact_email: formData.email,
+          contact_phone: resolvedContactPhone,
+          contact_email: formData.emailNotifications ? (currentUser.email || null) : null,
           preferred_contact: formData.preferredContact,
-          has_viber: formData.hasViber ? 1 : 0,
-          has_whatsapp: formData.hasWhatsapp ? 1 : 0,
-          has_telegram: formData.hasTelegram ? 1 : 0,
-          trade_possible: formData.tradePossible ? 1 : 0,
-          location: [formData.city, formData.neighborhood].filter(Boolean).join(', '),
-          image_url: imagePreviews[0] || null,
-          images: imagePreviews,
-          seller_id: sellerId,
-          ...(isEditing ? { action: 'update' } : {}),
+          has_viber: formData.hasViber,
+          has_whatsapp: formData.hasWhatsapp,
+          has_telegram: formData.hasTelegram,
+          hide_phone: formData.hidePhone ? 1 : 0,
+          trade_possible: formData.tradePossible,
         }),
       });
 
@@ -592,11 +593,18 @@ export default function SellPage() {
                         <span className="text-sm font-semibold text-sky-300">Telegram</span>
                       </label>
                     </div>
+                    <label className="mt-4 flex items-center gap-2 cursor-pointer">
+                      <input type="checkbox" checked={formData.hidePhone} onChange={(e) => updateField('hidePhone', e.target.checked)} className="h-4 w-4 rounded border-[#3a5276] bg-[#081223]" />
+                      <span className="text-sm text-slate-400">Не прикажувај телефон</span>
+                    </label>
                   </div>
 
                   <div>
-                    <label className={labelClass}>Email</label>
-                    <Input type="email" value={formData.email} onChange={(e) => updateField('email', e.target.value)} placeholder="ime@example.com" className={fieldClass} />
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input type="checkbox" checked={formData.emailNotifications} onChange={(e) => updateField('emailNotifications', e.target.checked)} className="h-4 w-4 rounded border-[#3a5276] bg-[#081223]" />
+                      <span className="text-sm text-slate-400">Испрати ми email известувања</span>
+                    </label>
+                    <p className="mt-1 text-xs text-slate-500">Известувањата ќе се испраќаат на: {userEmail}</p>
                   </div>
 
                   <div className="flex items-end">
@@ -626,7 +634,7 @@ export default function SellPage() {
                   <div className="p-3">
                     <p className="line-clamp-2 font-semibold text-white">{formData.title || 'Наслов на огласот'}</p>
                     <p className="mt-2 text-xl font-bold text-red-500">
-                      {formData.price ? Number(formData.price).toLocaleString() : '0'}
+                      {formData.price ? Number(formData.price).toLocaleString() : '0'} €
                     </p>
                     <p className="mt-2 flex items-center gap-1 text-xs text-slate-400">
                       <MapPin className="h-3.5 w-3.5" /> {formData.city || 'Локација'}

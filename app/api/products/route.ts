@@ -32,15 +32,15 @@ export async function GET(request: NextRequest) {
     }
     if (search) {
       const trimmedSearch = search.trim();
-      const normalizedIdSearch = trimmedSearch.match(/^KP-(\d+)$/i)?.[1] || trimmedSearch.match(/^(\d+)$/)?.[1] || null;
+      const normalizedIdSearch = trimmedSearch.match(/^KP[:\-](\d+)$/i)?.[1] || trimmedSearch.match(/^(\d+)$/)?.[1] || null;
 
       if (normalizedIdSearch) {
         const numericId = Number(normalizedIdSearch);
-        filters.push('(p.id = ? OR printf(\'KP-%06d\', p.id) = ? OR p.title LIKE ? OR p.description LIKE ?)');
-        values.push(numericId, `KP-${String(numericId).padStart(6, '0')}`, `%${trimmedSearch}%`, `%${trimmedSearch}%`);
+        filters.push('(p.id = ? OR p.title LIKE ? OR p.description LIKE ?)');
+        values.push(numericId, `%${trimmedSearch}%`, `%${trimmedSearch}%`);
       } else {
-        filters.push('(p.title LIKE ? OR p.description LIKE ? OR printf(\'KP-%06d\', p.id) LIKE ?)');
-        values.push(`%${trimmedSearch}%`, `%${trimmedSearch}%`, `%${trimmedSearch}%`);
+        filters.push('(p.title LIKE ? OR p.description LIKE ?)');
+        values.push(`%${trimmedSearch}%`, `%${trimmedSearch}%`);
       }
     }
     if (location) {
@@ -179,6 +179,7 @@ export async function POST(request: NextRequest) {
       has_whatsapp,
       has_telegram,
       trade_possible,
+      hide_phone,
       location,
       seller_id,
       image_url,
@@ -224,11 +225,12 @@ export async function POST(request: NextRequest) {
         has_whatsapp,
         has_telegram,
         trade_possible,
+        hide_phone,
         seller_id,
         image_url,
         status
       )
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `);
 
     const insertImage = db.prepare(`
@@ -259,6 +261,7 @@ export async function POST(request: NextRequest) {
         has_whatsapp ? 1 : 0,
         has_telegram ? 1 : 0,
         trade_possible ? 1 : 0,
+        hide_phone ? 1 : 0,
         seller_id,
         primaryImage,
         'pending',

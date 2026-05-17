@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import getDb from '@/lib/db';
 import { normalizeCategorySlug } from '@/lib/category-aliases';
+import { SYSTEM_EMAIL } from '@/lib/crm';
 
 export async function GET(
   request: NextRequest,
@@ -12,6 +13,7 @@ export async function GET(
     const includeAll = request.nextUrl.searchParams.get('all') === '1';
     const sellerId = request.nextUrl.searchParams.get('seller_id');
     const sellerIdNum = sellerId ? Number(sellerId) : 0;
+    const systemUser = db.prepare('SELECT id FROM users WHERE email = ?').get(SYSTEM_EMAIL) as { id: number } | undefined;
     const product = db.prepare(`
       SELECT 
         p.status,
@@ -37,6 +39,7 @@ export async function GET(
         p.has_whatsapp,
         p.has_telegram,
         p.trade_possible,
+        p.hide_phone,
         p.image_url,
         p.views,
         p.created_at,
@@ -81,6 +84,7 @@ export async function GET(
     return NextResponse.json({
       ...prod,
       images: images.map((image) => image.image_url),
+      is_crm: systemUser ? (product as any).seller_id === systemUser.id : false,
       prevProduct: prevProduct ? { id: prevProduct.id, title: prevProduct.title } : null,
       nextProduct: nextProduct ? { id: nextProduct.id, title: nextProduct.title } : null,
     }, { status: 200 });
@@ -169,6 +173,7 @@ export async function PATCH(
           has_whatsapp = ?,
           has_telegram = ?,
           trade_possible = ?,
+          hide_phone = ?,
           image_url = ?,
           status = ?
       WHERE id = ?
@@ -203,6 +208,7 @@ export async function PATCH(
         payload.has_whatsapp ? 1 : 0,
         payload.has_telegram ? 1 : 0,
         payload.trade_possible ? 1 : 0,
+        payload.hide_phone ? 1 : 0,
         primaryImage,
         'pending',
         id,

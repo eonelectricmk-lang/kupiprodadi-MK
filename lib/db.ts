@@ -238,6 +238,7 @@ function initializeDb() {
       ['has_whatsapp', 'BOOLEAN DEFAULT 0'],
       ['has_telegram', 'BOOLEAN DEFAULT 0'],
       ['trade_possible', 'BOOLEAN DEFAULT 0'],
+      ['hide_phone', 'BOOLEAN DEFAULT 0'],
     ];
 
     productColumns.forEach(([column, definition]) => {
