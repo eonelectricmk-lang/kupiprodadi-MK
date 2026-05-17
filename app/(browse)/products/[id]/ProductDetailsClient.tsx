@@ -574,7 +574,7 @@ export default function ProductDetailsClient({ id }: { id: string }) {
           </div>
 
           {images.length > 1 && (
-            <div ref={thumbRef} className="flex gap-2 overflow-x-auto scrollbar-dark">
+            <div ref={thumbRef} className="flex gap-2 overflow-x-auto scrollbar-none">
               {images.slice(0, 8).map((image, idx) => (
                 <button key={`${image}-${idx}`} type="button" onClick={() => setActiveImage(idx)}
                   className={`shrink-0 overflow-hidden rounded-lg border-2 transition ${activeImage === idx ? 'border-red-500' : 'border-transparent'}`}>
@@ -584,32 +584,33 @@ export default function ProductDetailsClient({ id }: { id: string }) {
             </div>
           )}
 
-          {/* 3. Title + KP */}
-          <div className="mt-1 flex items-start justify-between gap-2">
-            <h1 className="text-xl font-bold leading-tight text-white">{ad.title}</h1>
-            <span className="shrink-0 mt-[5px] rounded-lg border border-yellow-500/20 bg-yellow-500/5 px-2 py-1 text-xs font-bold text-yellow-500/90">KP:{ad.id}</span>
-          </div>
-
-          {/* 4. Price + Tags + Condition + Delivery */}
-          <div className="flex flex-wrap items-center justify-between gap-x-2 gap-y-1">
-            <div className="flex items-center gap-1.5">
-              <p className="shrink-0 whitespace-nowrap text-lg font-bold text-red-500">{ad.price.toLocaleString('mk-MK')} <span className="text-white">{ad.currency || '€'}</span></p>
-              {Boolean(ad.negotiable) && <span className="shrink truncate text-xs text-slate-400 uppercase">По договор</span>}
-              {Boolean(ad.negotiable) && Boolean(ad.trade_possible) && <span className="shrink-0 text-xs text-slate-400"> | </span>}
-              {!ad.negotiable && <span className="shrink truncate text-xs text-slate-400 uppercase">Фиксна</span>}
-              {!ad.negotiable && Boolean(ad.trade_possible) && <span className="shrink-0 text-xs text-slate-400"> | </span>}
-              {Boolean(ad.trade_possible) && <span className="shrink truncate text-xs text-slate-400 uppercase">Замена</span>}
+          {/* 3. Title + KP + Price + Meta */}
+          <div className="space-y-0.5">
+            <div className="flex items-start justify-between gap-2">
+              <h1 className="text-xl font-bold leading-tight text-white">{ad.title}</h1>
+              <span className="shrink-0 mt-[5px] rounded-lg border border-yellow-500/20 bg-yellow-500/5 px-2 py-1 text-xs font-bold text-yellow-500/90">KP:{ad.id}</span>
             </div>
-            <div className="flex flex-wrap items-center gap-x-2 justify-end">
-              <span className="text-xs text-slate-400">Состојба: {ad.condition || 'Многу добро'}</span>
-              <span className="text-xs text-slate-400">Превземање: {ad.delivery || 'Лично'}</span>
-            </div>
-          </div>
 
-          <div className="-mt-0.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-slate-400">
-            <span className="inline-flex items-center gap-1"><MapPin className="h-3 w-3" /> {ad.city || ad.location || 'Македонија'}{ad.neighborhood ? `, ${ad.neighborhood}` : ''}</span>
-            <span className="inline-flex items-center gap-1"><CalendarDays className="h-3 w-3" /> {formatPostedAt(ad.created_at)}</span>
-            <span className="inline-flex items-center gap-1"><Eye className="h-3 w-3" /> {Number(ad.views || 0).toLocaleString('mk-MK')} прегледи</span>
+            <div className="flex flex-wrap items-center justify-between gap-x-2">
+              <div className="flex items-center gap-1.5">
+                <p className="shrink-0 whitespace-nowrap text-lg font-bold text-red-500">{ad.price.toLocaleString('mk-MK')} <span className="text-white">{ad.currency || '€'}</span></p>
+                {Boolean(ad.negotiable) && <span className="shrink truncate text-xs text-slate-400 uppercase">По договор</span>}
+                {Boolean(ad.negotiable) && Boolean(ad.trade_possible) && <span className="shrink-0 text-xs text-slate-400"> | </span>}
+                {!ad.negotiable && <span className="shrink truncate text-xs text-slate-400 uppercase">Фиксна</span>}
+                {!ad.negotiable && Boolean(ad.trade_possible) && <span className="shrink-0 text-xs text-slate-400"> | </span>}
+                {Boolean(ad.trade_possible) && <span className="shrink truncate text-xs text-slate-400 uppercase">Замена</span>}
+              </div>
+              <div className="flex flex-wrap items-center gap-x-2 justify-end">
+                <span className="text-xs text-slate-400">Состојба: {ad.condition || 'Многу добро'}</span>
+                <span className="text-xs text-slate-400">Превземање: {ad.delivery || 'Лично'}</span>
+              </div>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-x-3 text-xs text-slate-400">
+              <span className="inline-flex items-center gap-1"><MapPin className="h-3 w-3" /> {ad.city || ad.location || 'Македонија'}{ad.neighborhood ? `, ${ad.neighborhood}` : ''}</span>
+              <span className="inline-flex items-center gap-1"><CalendarDays className="h-3 w-3" /> {formatPostedAt(ad.created_at)}</span>
+              <span className="inline-flex items-center gap-1"><Eye className="h-3 w-3" /> {Number(ad.views || 0).toLocaleString('mk-MK')} прегледи</span>
+            </div>
           </div>
 
           {/* 5. Description */}
