@@ -675,13 +675,13 @@ export default function ProductDetailsClient({ id }: { id: string }) {
 
                           {!Boolean(ad.hide_phone) && (
                             <div className="flex gap-1">
-                              <a href={viberEnabled ? viberUrl(sellerPhone) : '#'} target={viberEnabled ? '_blank' : undefined} rel={viberEnabled ? 'noopener noreferrer' : undefined} className={`flex-1 flex items-center justify-center gap-1 rounded-lg px-1.5 py-2 text-[11px] font-bold transition ${viberEnabled ? 'bg-purple-900/40 text-purple-300 hover:bg-purple-800/50' : 'bg-slate-800/40 text-slate-600 cursor-default pointer-events-none'}`}>
+                              <a href={viberEnabled ? viberUrl(sellerPhone) : '#'} target={viberEnabled ? '_blank' : undefined} rel={viberEnabled ? 'noopener noreferrer' : undefined} className={`flex-1 flex items-center justify-center gap-1 rounded-lg px-1.5 py-2 text-[11px] font-bold transition ${viberEnabled ? 'bg-purple-600 text-white hover:bg-purple-500' : 'bg-slate-800/40 text-slate-600 cursor-default pointer-events-none'}`}>
                                 <ViberIcon className="h-3 w-3" /> Viber
                               </a>
-                              <a href={whatsappEnabled ? waUrl(sellerPhone) : '#'} target={whatsappEnabled ? '_blank' : undefined} rel={whatsappEnabled ? 'noopener noreferrer' : undefined} className={`flex-1 flex items-center justify-center gap-1 rounded-lg px-1.5 py-2 text-[11px] font-bold transition ${whatsappEnabled ? 'bg-emerald-900/40 text-emerald-300 hover:bg-emerald-800/50' : 'bg-slate-800/40 text-slate-600 cursor-default pointer-events-none'}`}>
+                              <a href={whatsappEnabled ? waUrl(sellerPhone) : '#'} target={whatsappEnabled ? '_blank' : undefined} rel={whatsappEnabled ? 'noopener noreferrer' : undefined} className={`flex-1 flex items-center justify-center gap-1 rounded-lg px-1.5 py-2 text-[11px] font-bold transition ${whatsappEnabled ? 'bg-emerald-600 text-white hover:bg-emerald-500' : 'bg-slate-800/40 text-slate-600 cursor-default pointer-events-none'}`}>
                                 <WhatsAppIcon className="h-3 w-3" /> WhatsApp
                               </a>
-                              <a href={telegramEnabled ? tgUrl(sellerPhone) : '#'} target={telegramEnabled ? '_blank' : undefined} rel={telegramEnabled ? 'noopener noreferrer' : undefined} className={`flex-1 flex items-center justify-center gap-1 rounded-lg px-1.5 py-2 text-[11px] font-bold transition ${telegramEnabled ? 'bg-sky-900/40 text-sky-300 hover:bg-sky-800/50' : 'bg-slate-800/40 text-slate-600 cursor-default pointer-events-none'}`}>
+                              <a href={telegramEnabled ? tgUrl(sellerPhone) : '#'} target={telegramEnabled ? '_blank' : undefined} rel={telegramEnabled ? 'noopener noreferrer' : undefined} className={`flex-1 flex items-center justify-center gap-1 rounded-lg px-1.5 py-2 text-[11px] font-bold transition ${telegramEnabled ? 'bg-sky-600 text-white hover:bg-sky-500' : 'bg-slate-800/40 text-slate-600 cursor-default pointer-events-none'}`}>
                                 <TelegramIcon className="h-3 w-3" /> Telegram
                               </a>
                             </div>
@@ -972,8 +972,14 @@ export default function ProductDetailsClient({ id }: { id: string }) {
                           {!Boolean(ad.hide_phone) && (
                               <div className="border-t border-white/10 pt-3 mt-4">
                                 <div className="flex gap-1 px-1">
-                                  <a href={viberEnabled ? viberUrl(sellerPhone) : '#'} target={viberEnabled ? '_blank' : undefined} rel={viberEnabled ? 'noopener noreferrer' : undefined} className={`flex-1 justify-center inline-flex items-center gap-1 rounded-lg px-1.5 py-1.5 text-[11px] font-bold transition ${viberEnabled ? 'bg-purple-900/40 text-purple-300 hover:bg-purple-800/50' : 'bg-slate-800/40 text-slate-600 cursor-default pointer-events-none'}`}>
-                                    <ViberIcon className="h-2.5 w-2.5" /> Viber
+                                  <a href={viberEnabled ? viberUrl(sellerPhone) : '#'} target={viberEnabled ? '_blank' : undefined} rel={viberEnabled ? 'noopener noreferrer' : undefined} className={`flex-1 justify-center inline-flex items-center gap-1 rounded-lg px-1.5 py-1.5 text-[11px] font-bold transition ${viberEnabled ? 'bg-purple-600 text-white hover:bg-purple-500' : 'bg-slate-800/40 text-slate-600 cursor-default pointer-events-none'}`}>
+                                    <ViberIcon className="h-3 w-3" /> Viber
+                                  </a>
+                                  <a href={whatsappEnabled ? waUrl(sellerPhone) : '#'} target={whatsappEnabled ? '_blank' : undefined} rel={whatsappEnabled ? 'noopener noreferrer' : undefined} className={`flex-1 justify-center inline-flex items-center gap-1 rounded-lg px-1.5 py-1.5 text-[11px] font-bold transition ${whatsappEnabled ? 'bg-emerald-600 text-white hover:bg-emerald-500' : 'bg-slate-800/40 text-slate-600 cursor-default pointer-events-none'}`}>
+                                    <WhatsAppIcon className="h-3 w-3" /> WhatsApp
+                                  </a>
+                                  <a href={telegramEnabled ? tgUrl(sellerPhone) : '#'} target={telegramEnabled ? '_blank' : undefined} rel={telegramEnabled ? 'noopener noreferrer' : undefined} className={`flex-1 justify-center inline-flex items-center gap-1 rounded-lg px-1.5 py-1.5 text-[11px] font-bold transition ${telegramEnabled ? 'bg-sky-600 text-white hover:bg-sky-500' : 'bg-slate-800/40 text-slate-600 cursor-default pointer-events-none'}`}>
+                                    <TelegramIcon className="h-3 w-3" /> Telegram
                                   </a>
                                   <a href={whatsappEnabled ? waUrl(sellerPhone) : '#'} target={whatsappEnabled ? '_blank' : undefined} rel={whatsappEnabled ? 'noopener noreferrer' : undefined} className={`flex-1 justify-center inline-flex items-center gap-1 rounded-lg px-1.5 py-1.5 text-[11px] font-bold transition ${whatsappEnabled ? 'bg-emerald-900/40 text-emerald-300 hover:bg-emerald-800/50' : 'bg-slate-800/40 text-slate-600 cursor-default pointer-events-none'}`}>
                                     <WhatsAppIcon className="h-2.5 w-2.5" /> WhatsApp
