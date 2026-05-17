@@ -525,7 +525,7 @@ export default function SellPage() {
                     <label className={labelClass}>Опис *</label>
                     <textarea
                       required
-                      minLength={20}
+                      minLength={5}
                       value={formData.description}
                       onChange={(e) => updateField('description', e.target.value)}
                       placeholder="Опиши состојба, старост, гаранција, што е вклучено, причина за продажба..."
