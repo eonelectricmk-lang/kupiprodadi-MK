@@ -763,12 +763,22 @@ export default function ProductDetailsClient({ id }: { id: string }) {
                 </div>
               </div>
               <div className="bg-[#101f33] py-2 px-3">
-                <p className="leading-none text-xs font-semibold text-white uppercase tracking-tighter">Состојба</p>
-                <p className="mt-0.5 text-xs text-slate-400">{ad.condition || 'Многу добро'}</p>
+                <div className="flex gap-2">
+                  <CheckCircle className="mt-[3px] h-3 w-3 shrink-0 text-emerald-400" />
+                  <div className="min-w-0">
+                    <p className="text-xs font-semibold text-white uppercase tracking-tighter leading-none">Состојба</p>
+                    <p className="mt-0.5 text-xs text-slate-400">{ad.condition || 'Многу добро'}</p>
+                  </div>
+                </div>
               </div>
               <div className="bg-[#101f33] py-2 px-3">
-                <p className="leading-none text-xs font-semibold text-white uppercase tracking-tighter">Превземање</p>
-                <p className="mt-0.5 text-xs text-slate-400">{ad.delivery || 'Лично'}</p>
+                <div className="flex gap-2">
+                  <Truck className="mt-[3px] h-3 w-3 shrink-0 text-emerald-400" />
+                  <div className="min-w-0">
+                    <p className="text-xs font-semibold text-white uppercase tracking-tighter leading-none">Превземање</p>
+                    <p className="mt-0.5 text-xs text-slate-400">{ad.delivery || 'Лично'}</p>
+                  </div>
+                </div>
               </div>
               {Boolean(ad.trade_possible) && (
               <div className="bg-[#101f33] py-2 px-3">
@@ -1103,12 +1113,22 @@ export default function ProductDetailsClient({ id }: { id: string }) {
                   </div>
                 </div>
                 <div className="bg-[#101f33] py-2 px-3">
-                  <p className="leading-none text-xs font-semibold text-white uppercase tracking-tighter">Состојба</p>
-                  <p className="mt-0.5 text-xs text-slate-400">{ad.condition || 'Многу добро'}</p>
+                  <div className="flex gap-2">
+                    <CheckCircle className="mt-[3px] h-3 w-3 shrink-0 text-emerald-400" />
+                    <div className="min-w-0">
+                      <p className="text-xs font-semibold text-white uppercase tracking-tighter leading-none">Состојба</p>
+                      <p className="mt-0.5 text-xs text-slate-400">{ad.condition || 'Многу добро'}</p>
+                    </div>
+                  </div>
                 </div>
                 <div className="bg-[#101f33] py-2 px-3">
-                  <p className="leading-none text-xs font-semibold text-white uppercase tracking-tighter">Превземање</p>
-                  <p className="mt-0.5 text-xs text-slate-400">{ad.delivery || 'Лично'}</p>
+                  <div className="flex gap-2">
+                    <Truck className="mt-[3px] h-3 w-3 shrink-0 text-emerald-400" />
+                    <div className="min-w-0">
+                      <p className="text-xs font-semibold text-white uppercase tracking-tighter leading-none">Превземање</p>
+                      <p className="mt-0.5 text-xs text-slate-400">{ad.delivery || 'Лично'}</p>
+                    </div>
+                  </div>
                 </div>
                 {Boolean(ad.trade_possible) && (
                 <div className="bg-[#101f33] py-2 px-3">
