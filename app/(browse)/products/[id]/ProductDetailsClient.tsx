@@ -996,7 +996,7 @@ export default function ProductDetailsClient({ id }: { id: string }) {
               </span>
             </div>
 
-            <div className="mt-3 rounded-xl border border-white/20 bg-[#101f33] px-3 pb-3 pt-1.5">
+            <div className="mt-3 rounded-xl border border-white/20 bg-[#101f33] px-3 pb-3 pt-3">
               <div className="flex items-start gap-3">
                   <div className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#172945] text-slate-200 border border-white/20">
                   {sellerAvatarUrl ? (
