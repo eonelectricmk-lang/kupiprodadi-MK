@@ -949,7 +949,7 @@ export default function ProductDetailsClient({ id }: { id: string }) {
               </span>
             </div>
 
-            <div className="mt-3 rounded-xl border border-white/20 bg-[#101f33] p-3">
+            <div className="mt-3 rounded-xl border border-white/20 bg-[#101f33] px-3 pb-3 pt-1.5">
               <div className="flex items-center justify-end gap-1.5">
                   {ad.seller_is_active && (
                     <span className="inline-flex items-center gap-1 rounded-lg bg-green-500/10 px-2 py-0.5 text-xs font-bold text-green-400 border border-green-500/20">
