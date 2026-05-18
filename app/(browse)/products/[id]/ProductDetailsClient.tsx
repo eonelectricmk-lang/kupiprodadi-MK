@@ -950,7 +950,7 @@ export default function ProductDetailsClient({ id }: { id: string }) {
             </div>
 
             <div className="mt-3 rounded-xl border border-white/20 bg-[#101f33] px-3 pb-3 pt-1.5">
-              <div className="flex items-center gap-3">
+              <div className="flex items-start gap-3">
                   <div className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#172945] text-slate-200 border border-white/20">
                   {sellerAvatarUrl ? (
                     <img src={sellerAvatarUrl} alt="" className="h-full w-full rounded-full object-cover" />
@@ -968,7 +968,7 @@ export default function ProductDetailsClient({ id }: { id: string }) {
                     <p className="truncate text-xs text-slate-400">{ad.preferred_contact || 'Телефон и порака'}</p>
                   </div>
                 </div>
-                <div className="flex items-center gap-1.5 self-center shrink-0">
+                <div className="flex items-start gap-1.5 shrink-0 mt-0.5">
                   {ad.seller_is_active && (
                     <span className="inline-flex items-center gap-1 rounded-lg bg-green-500/10 px-2 py-0.5 text-xs font-bold text-green-400 border border-green-500/20">
                       <ShieldCheck className="h-3 w-3" /> ПРОВЕРЕН
