@@ -749,7 +749,7 @@ export default function ProductDetailsClient({ id }: { id: string }) {
 
           {/* 7. Info tiles */}
           <div className="rounded-xl border border-white/20 overflow-hidden">
-            <div className="grid grid-cols-2 bg-white/10 gap-px">
+            <div className={`grid ${Boolean(ad.trade_possible) ? 'grid-cols-2' : 'grid-cols-3'} bg-white/10 gap-px`}>
               <div className="bg-[#101f33] py-2 px-3">
                 <div className="flex gap-2">
                   <MapPin className="mt-[3px] h-3 w-3 shrink-0 text-emerald-400" />
